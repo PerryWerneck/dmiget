@@ -34,8 +34,10 @@
 			<Add directory="src/include" />
 		</Compiler>
 		<Unit filename="src/include/dmidecode/value.h" />
+		<Unit filename="src/os/linux/node.cc" />
 		<Unit filename="src/os/linux/paths.cc" />
 		<Unit filename="src/os/linux/private.h" />
+		<Unit filename="src/os/linux/value.cc" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

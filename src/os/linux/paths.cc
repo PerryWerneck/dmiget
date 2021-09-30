@@ -21,18 +21,21 @@
 
  namespace DMI {
 
-	static const Root indexes[] = {
+	static const Node indexes[] = {
 		{
 			"BIOS",
 			"BIOS Information",
-			(const Child []) {
-				{
+			(const Node []) {
+				Node {
+					nullptr,
 					"Vendor"
 				},
 				{
+					nullptr,
 					"Version"
 				},
 				{
+					nullptr,
 					"Release Date"
 				},
 				{

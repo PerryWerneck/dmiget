@@ -17,39 +17,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <dmidecode/value.h>
- #include <stdexcept>
-
- using namespace std;
+ #include "private.h"
 
  namespace DMI {
 
- 	class Node {
-	public:
-		const char *name = nullptr;
-		const char *description = nullptr;
-		const Node *children = nullptr;
-
-		Value * create() const noexcept;
-
-	};
-
-	namespace Linux {
-
-		class Value : public DMI::Value {
-		private:
-			const Node *node;
-
-		public:
-			Value(const Node *node);
-			virtual ~Value();
-
-			const char * getName() const override;
-			const char * getDescription() const override;
-			const std::string asString() const override;
-
-		};
-
+	Value * Node::create() const noexcept {
+		throw runtime_error("Not implemented");
 	}
 
  }

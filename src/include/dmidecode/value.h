@@ -22,7 +22,7 @@
  namespace DMI {
 
 	class Value {
-	private:
+	protected:
 		Value();
 
 	public:
@@ -31,10 +31,10 @@
 		/// @brief Get DMI Value from path.
 		static Value * getFromPath(const char *path);
 
-		const char * getName() const;
-		const char * getDescription() const;
+		virtual const char * getName() const;
+		virtual const char * getDescription() const;
 
-		const std::string asString() const;
+		virtual const std::string asString() const;
 
 	};
 
