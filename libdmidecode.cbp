@@ -38,6 +38,8 @@
 		<Unit filename="src/os/linux/paths.cc" />
 		<Unit filename="src/os/linux/private.h" />
 		<Unit filename="src/os/linux/value.cc" />
+		<Unit filename="src/testprogram/testprogram.cc" />
+		<Unit filename="src/value.cc" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

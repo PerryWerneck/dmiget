@@ -17,28 +17,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <string>
+ #include <iostream>
+ #include <dmidecode/value.h>
+ #include <iostream>
 
- namespace DMI {
+ using namespace std;
 
-	class Value {
-	protected:
-		Value();
+ int main(int argc, const char **argv) {
 
-	public:
-		virtual ~Value();
+	DMI::Value * value = DMI::Value::create("dmi://bios/vendor");
 
-		/// @brief Get DMI Value from path.
-		static Value * create(const char *path);
+	cout << value->as_string() << endl;
 
-		virtual const char * name() const = 0;
-		virtual const char * description() const = 0;
+	delete value;
 
-		virtual const std::string as_string() const = 0;
-
-	};
-
-
-
+	return 0;
  }
-

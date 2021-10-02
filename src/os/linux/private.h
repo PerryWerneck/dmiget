@@ -19,6 +19,8 @@
 
  #include <dmidecode/value.h>
  #include <stdexcept>
+ #include <string>
+ #include <iostream>
 
  using namespace std;
 
@@ -26,27 +28,43 @@
 
  	class Node {
 	public:
+		uint8_t id;
+		const char *name = nullptr;
+		const char *description = nullptr;
+		const Node *children = nullptr;
+	};
+
+	class Type {
+	public:
+		uint8_t id;
 		const char *name = nullptr;
 		const char *description = nullptr;
 		const Node *children = nullptr;
 
-		Value * create() const noexcept;
+		static const Type * find(const string &name);
+		const Node * getChild(const char *name) const;
 
 	};
+
+
+	#define NODE_LIST_TERMINATOR { 0xFF, nullptr, nullptr, nullptr }
 
 	namespace Linux {
 
 		class Value : public DMI::Value {
 		private:
+			const Type *type;
 			const Node *node;
 
+			size_t read(const char *name, char buffer[4096]) const;
+
 		public:
-			Value(const Node *node);
+			Value(const Type *type, const Node *node);
 			virtual ~Value();
 
-			const char * getName() const override;
-			const char * getDescription() const override;
-			const std::string asString() const override;
+			const char * name() const override;
+			const char * description() const override;
+			const std::string as_string() const override;
 
 		};
 

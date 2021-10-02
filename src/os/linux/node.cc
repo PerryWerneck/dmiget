@@ -18,11 +18,31 @@
  */
 
  #include "private.h"
+ #include <cstring>
+ #include <cerrno>
 
  namespace DMI {
 
-	Value * Node::create() const noexcept {
-		throw runtime_error("Not implemented");
+	const Node * Type::getChild(const char *name) const {
+
+		if(children) {
+
+			for(size_t ix = 0; children[ix].id != 0xFF; ix++) {
+
+				if(children[ix].name && !strcasecmp(name,children[ix].name)) {
+					return children+ix;
+				}
+
+				if(children[ix].description && !strcasecmp(name,children[ix].description)) {
+					return children+ix;
+				}
+
+			}
+
+		}
+
+		throw system_error(ENOENT,system_category(),string{"Can't find node '"} + name + "'");
+
 	}
 
  }

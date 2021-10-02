@@ -17,28 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <string>
+ #include <dmidecode/value.h>
 
  namespace DMI {
 
-	class Value {
-	protected:
-		Value();
+	Value::Value() {
+	}
 
-	public:
-		virtual ~Value();
-
-		/// @brief Get DMI Value from path.
-		static Value * create(const char *path);
-
-		virtual const char * name() const = 0;
-		virtual const char * description() const = 0;
-
-		virtual const std::string as_string() const = 0;
-
-	};
-
-
+	Value::~Value() {
+	}
 
  }
-

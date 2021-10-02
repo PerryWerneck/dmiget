@@ -18,24 +18,104 @@
  */
 
  #include "private.h"
+ #include <cstring>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <unistd.h>
 
  namespace DMI {
 
-	Linux::Value::Value(const Node *n) : node(n) {
+	Value * Value::create(const char *path) {
+
+		const char *ptr;
+
+		if(strncasecmp(path,"dmi://",6)) {
+			throw runtime_error("Invalid scheme; the DMI URL should start with dmi://");
+		}
+
+		path += 6;
+
+		// Get type.
+		ptr = strchr(path,'/');
+		if(!ptr) {
+			throw runtime_error("Invalid URL");
+		}
+
+		const Type * type = Type::find(string(path,ptr-path));
+
+		// Get node
+		path = ptr+1;
+
+		const Node *node = nullptr;
+
+		ptr = strchr(path,'/');
+		if(ptr) {
+			node = type->getChild(string(path,ptr-path).c_str());
+		} else {
+			node = type->getChild(path);
+		}
+
+		return new Linux::Value(type,node);
+
+	}
+
+
+	Linux::Value::Value(const Type *t, const Node *n) : type(t), node(n) {
 	}
 
 	Linux::Value::~Value() {
 	}
 
-	const char * Linux::Value::getName() const {
+	const char * Linux::Value::name() const {
 		return node->name ? node->name : "";
 	}
 
-	const char * Linux::Value::getDescription() const {
+	const char * Linux::Value::description() const {
 		return node->description ? node->description : "";
 	}
 
-	const std::string Linux::Value::asString() const {
+	size_t Linux::Value::read(const char *name, char buffer[4096]) const {
+
+		string filename{"/sys/firmware/dmi/"};
+		filename += to_string(type->id);
+		filename += '-';
+		filename += to_string(node->id);
+		filename += '/';
+		filename += name;
+
+		int fd = open(filename.c_str(),O_RDONLY);
+		if(fd < 0) {
+			string msg{"Error opening "};
+			msg += filename;
+			throw system_error(errno,system_category(),msg);
+		}
+
+		memset(buffer,0,4096);
+		auto length = ::read(fd,buffer,4095);
+		if(length < 0) {
+			string msg{"Error reading "};
+			msg += filename;
+			auto err = errno;
+			close(fd);
+			throw system_error(err,system_category(),msg);
+		}
+
+		close(fd);
+
+		return (size_t) length;
+
+	}
+
+	const std::string Linux::Value::as_string() const {
+
+		char buffer[4096];
+		size_t offset = 0;
+
+		// Get header length
+		read("length",buffer);
+		offset = atoi(buffer);
+
+
 		return "NOT IMPLEMENTED";
 	}
 
