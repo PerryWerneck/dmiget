@@ -18,7 +18,7 @@
  */
 
  #include <iostream>
- #include <dmidecode/value.h>
+ #include <dmiget/value.h>
  #include <iostream>
 
  using namespace std;

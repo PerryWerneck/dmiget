@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <dmidecode/value.h>
+ #include <dmiget/value.h>
  #include <stdexcept>
  #include <string>
  #include <iostream>
