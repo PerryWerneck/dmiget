@@ -26,48 +26,54 @@
 
  namespace DMI {
 
- 	class Node {
+ 	class Entry {
 	public:
-		uint8_t id;
+		uint8_t index;
 		const char *name = nullptr;
 		const char *description = nullptr;
-		const Node *children = nullptr;
+		//const Entry *children = nullptr;
+
+		inline const char * getName() const noexcept {
+			return this->name ? this->name : this->description;
+		}
+
 	};
 
 	class Type {
 	public:
 		uint8_t id;
+		uint8_t entry;
 		const char *name = nullptr;
 		const char *description = nullptr;
-		const Node *children = nullptr;
+		const Entry *children = nullptr;
 
 		static const Type * find(const string &name);
-		const Node * getChild(const char *name) const;
+		const Entry * getChild(const char *name) const;
+
+		inline const char * getName() const noexcept {
+			return this->name ? this->name : this->description;
+		}
 
 	};
 
 
-	#define NODE_LIST_TERMINATOR { 0xFF, nullptr, nullptr, nullptr }
+	#define ENTRY_LIST_TERMINATOR { 0xFF, nullptr, nullptr }
 
-	namespace Linux {
+	class Value::Reader {
+	private:
+		const Type *type;
+		const Entry *entry;
 
-		class Value : public DMI::Value {
-		private:
-			const Type *type;
-			const Node *node;
+		size_t read(const char *name, char buffer[4096]) const;
 
-			size_t read(const char *name, char buffer[4096]) const;
+	public:
+		Reader(const Type *type, const Entry *entry);
+		~Reader();
 
-		public:
-			Value(const Type *type, const Node *node);
-			virtual ~Value();
+		const char * name() const;
+		const char * description() const;
+		const std::string as_string() const;
 
-			const char * name() const override;
-			const char * description() const override;
-			const std::string as_string() const override;
-
-		};
-
-	}
+	};
 
  }

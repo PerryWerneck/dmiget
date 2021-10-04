@@ -23,18 +23,16 @@
 
 	class Value {
 	protected:
-		Value();
+		class Reader;
+		Reader * reader = nullptr;
 
 	public:
-		virtual ~Value();
+		Value(const char *path);
+		~Value();
 
-		/// @brief Get DMI Value from path.
-		static Value * create(const char *path);
-
-		virtual const char * name() const = 0;
-		virtual const char * description() const = 0;
-
-		virtual const std::string as_string() const = 0;
+		const char * name() const;
+		const char * description() const;
+		const std::string as_string() const;
 
 	};
 

@@ -23,11 +23,11 @@
 
  namespace DMI {
 
-	const Node * Type::getChild(const char *name) const {
+	const Entry * Type::getChild(const char *name) const {
 
 		if(children) {
 
-			for(size_t ix = 0; children[ix].id != 0xFF; ix++) {
+			for(size_t ix = 0; children[ix].index != 0xFF; ix++) {
 
 				if(children[ix].name && !strcasecmp(name,children[ix].name)) {
 					return children+ix;

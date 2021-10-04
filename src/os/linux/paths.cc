@@ -28,11 +28,11 @@
 
 	static const Type types[] = {
 		{
-			0,
+			0,0,
 			"BIOS",
 			"BIOS Information",
-			(const Node []) {
-				Node {
+			(const Entry []) {
+				{
 					0,
 					nullptr,
 					"Vendor"
@@ -48,10 +48,11 @@
 					"Release Date"
 				},
 
-				NODE_LIST_TERMINATOR
+				ENTRY_LIST_TERMINATOR
 
 			}
 		},
+		/*
 		{
 			1,
 			nullptr,
@@ -267,6 +268,7 @@
 			"TPM",
 			"TPM Device"
 		},
+		*/
 
 
 	};

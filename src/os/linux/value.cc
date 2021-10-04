@@ -25,7 +25,7 @@
 
  namespace DMI {
 
-	Value * Value::create(const char *path) {
+	Value::Value(const char *path) {
 
 		const char *ptr;
 
@@ -46,7 +46,7 @@
 		// Get node
 		path = ptr+1;
 
-		const Node *node = nullptr;
+		const Entry *node = nullptr;
 
 		ptr = strchr(path,'/');
 		if(ptr) {
@@ -55,68 +55,24 @@
 			node = type->getChild(path);
 		}
 
-		return new Linux::Value(type,node);
+		this->reader = new Value::Reader(type,node);
 
 	}
 
-
-	Linux::Value::Value(const Type *t, const Node *n) : type(t), node(n) {
+	Value::~Value() {
+		delete this->reader;
 	}
 
-	Linux::Value::~Value() {
+	const char * Value::name() const {
+		return reader->name();
 	}
 
-	const char * Linux::Value::name() const {
-		return node->name ? node->name : "";
+	const char * Value::description() const {
+		return reader->description();
 	}
 
-	const char * Linux::Value::description() const {
-		return node->description ? node->description : "";
-	}
-
-	size_t Linux::Value::read(const char *name, char buffer[4096]) const {
-
-		string filename{"/sys/firmware/dmi/"};
-		filename += to_string(type->id);
-		filename += '-';
-		filename += to_string(node->id);
-		filename += '/';
-		filename += name;
-
-		int fd = open(filename.c_str(),O_RDONLY);
-		if(fd < 0) {
-			string msg{"Error opening "};
-			msg += filename;
-			throw system_error(errno,system_category(),msg);
-		}
-
-		memset(buffer,0,4096);
-		auto length = ::read(fd,buffer,4095);
-		if(length < 0) {
-			string msg{"Error reading "};
-			msg += filename;
-			auto err = errno;
-			close(fd);
-			throw system_error(err,system_category(),msg);
-		}
-
-		close(fd);
-
-		return (size_t) length;
-
-	}
-
-	const std::string Linux::Value::as_string() const {
-
-		char buffer[4096];
-		size_t offset = 0;
-
-		// Get header length
-		read("length",buffer);
-		offset = atoi(buffer);
-
-
-		return "NOT IMPLEMENTED";
+	const std::string Value::as_string() const {
+		return reader->as_string();
 	}
 
  }

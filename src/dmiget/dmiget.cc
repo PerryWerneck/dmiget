@@ -25,11 +25,15 @@
 
  int main(int argc, const char **argv) {
 
-	DMI::Value * value = DMI::Value::create("dmi://bios/vendor");
+	for(int arg = 1; arg < argc; arg++) {
+ 		cout << DMI::Value(argv[arg]).as_string() << endl;
+	}
 
-	cout << value->as_string() << endl;
-
-	delete value;
+	/*
+	cout << DMI::Value("dmi://bios/vendor").as_string() << endl;
+	cout << DMI::Value("dmi://bios/version").as_string() << endl;
+	cout << DMI::Value("dmi://bios/rdate").as_string() << endl;
+	*/
 
 	return 0;
  }

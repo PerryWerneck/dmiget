@@ -21,10 +21,5 @@
 
  namespace DMI {
 
-	Value::Value() {
-	}
-
-	Value::~Value() {
-	}
 
  }
