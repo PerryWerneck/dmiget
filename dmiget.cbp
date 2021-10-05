@@ -3,6 +3,7 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="dmiget" />
+		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -36,6 +37,7 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
+		<Unit filename="src/libdmiget/include/dmiget/defs.h" />
 		<Unit filename="src/libdmiget/include/dmiget/value.h" />
 		<Unit filename="src/libdmiget/os/linux/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />

@@ -1,0 +1,303 @@
+
+#---[ Library configuration ]------------------------------------------------------------
+
+PACKAGE_NAME=@PACKAGE_NAME@
+PRODUCT_NAME=@PRODUCT_NAME@
+
+LIBRARY_SOURCES= \
+	$(wildcard src/libdmiget/*.cc) \
+	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
+
+APPLICATION_SOURCES= \
+	$(wildcard src/dmiget/*.cc)
+
+TARGETS=@OSNAME@-lib devel application
+
+#---[ Tools ]----------------------------------------------------------------------------
+
+CXX=@CXX@
+LD=@CXX@
+LN_S=@LN_S@
+MKDIR=@MKDIR_P@
+INSTALL=@INSTALL@
+INSTALL_DATA=@INSTALL_DATA@
+INSTALL_PROGRAM=@INSTALL_PROGRAM@
+XGETTEXT=@XGETTEXT@
+MSGCAT=@MSGCAT@
+WINDRES=@WINDRES@
+AR=@AR@
+VALGRIND=@VALGRIND@
+DLLTOOL=@DLLTOOL@
+
+#---[ Paths ]----------------------------------------------------------------------------
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+sbindir=@sbindir@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+localedir=@localedir@
+docdir=@docdir@
+sysconfdir=/etc
+
+BASEDIR=@BASEDIR@
+
+OBJDIR=.obj/core
+OBJDBG=$(OBJDIR)/Debug
+OBJRLS=$(OBJDIR)/Release
+
+BINDIR=$(BASEDIR)/.bin
+BINDBG=$(BINDIR)/Debug
+BINRLS=$(BINDIR)/Release
+
+#---[ Rules ]----------------------------------------------------------------------------
+
+CFLAGS= \
+	@CXXFLAGS@ \
+	-fPIC \
+	-Isrc/libdmiget/include \
+	-DBUILD_DATE=`date +%Y%m%d`
+
+LDFLAGS=\
+	@LDFLAGS@
+
+LIBS= \
+	@LIBS@
+
+#---[ Debug Rules ]----------------------------------------------------------------------
+
+$(OBJDBG)/%.o: \
+	%.cc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJDBG)/%.o: \
+	%.rc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+	@$(WINDRES) $< -O coff -o $@
+
+#---[ Release Rules ]--------------------------------------------------------------------
+
+$(OBJRLS)/%.o: \
+	%.cc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CXX) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJRLS)/%.o: \
+	%.rc
+
+	@echo $< ...
+	@$(MKDIR) $(@D)
+	@$(WINDRES) $< -O coff -o $@
+
+#---[ Release Targets ]------------------------------------------------------------------
+
+all: \
+	$(BINRLS)/@SONAME@
+
+Release: \
+	$(BINRLS)/@SONAME@
+
+$(BINRLS)/@SONAME@: \
+	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-shared \
+		-Wl,-soname,$(@F) \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS)
+
+
+#---[ Install Targets ]------------------------------------------------------------------
+
+install: \
+       $(foreach TARGET, $(TARGETS), install-$(TARGET))
+
+install-linux-lib: \
+	$(BINRLS)/@SONAME@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(libdir)
+
+	@$(MKDIR) \
+		$(DESTDIR)$(libdir)/@PRODUCT_NAME@-modules
+
+	@$(INSTALL_PROGRAM) \
+		$(BINRLS)/@SONAME@ \
+		$(DESTDIR)$(libdir)/@SONAME@
+		
+	@$(LN_S) \
+		@SONAME@ \
+		$(DESTDIR)$(libdir)/$(PACKAGE_NAME)@LIBEXT@
+
+install-windows-lib: \
+	$(BINRLS)/lib$(PACKAGE_NAME)@LIBEXT@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(bindir)
+
+	@$(INSTALL_PROGRAM) \
+		$(BINRLS)/lib$(PACKAGE_NAME)@LIBEXT@ \
+		$(DESTDIR)$(bindir)/$(PACKAGE_NAME)@LIBEXT@
+		
+	@$(MKDIR) \
+		$(DESTDIR)$(libdir)
+
+	@$(DLLTOOL) \
+		--input-def $(BINRLS)/lib$(PACKAGE_NAME).def \
+		--dllname lib$(PACKAGE_NAME).dll \
+		--output-lib $(DESTDIR)$(libdir)/@SONAME@.a
+
+	@$(MKDIR) \
+		$(DESTDIR)$(datarootdir)/$(PACKAGE_NAME)/def
+
+	@$(INSTALL_DATA) \
+		$(BINRLS)/lib$(PACKAGE_NAME).def \
+		$(DESTDIR)$(datarootdir)/$(PACKAGE_NAME)/def
+
+install-devel:
+
+	@$(MKDIR) \
+		$(DESTDIR)$(includedir)/dmiget
+
+	@$(INSTALL_DATA) \
+		src/libdmiget/include/dmiget/*.h \
+		$(DESTDIR)$(includedir)/dmiget
+
+
+#---[ Uninstall Targets ]----------------------------------------------------------------
+
+uninstall: \
+       $(foreach TARGET, $(TARGETS), uninstall-$(TARGET))
+
+uninstall-linux-lib:
+
+	@rm -f \
+		$(DESTDIR)$(libdir)/@SONAME@
+		
+	@rm -f \
+		$(DESTDIR)$(libdir)/lib$(PACKAGE_NAME)@LIBEXT@
+
+uninstall-windows-lib:
+
+	@rm -f \
+		$(DESTDIR)$(bindir)/@SONAME@
+		
+	@rm -f \
+		$(DESTDIR)$(libdir)/@SONAME@.a
+
+uninstall-devel:
+
+	@rm -fr \
+		$(DESTDIR)$(includedir)/dmiget
+
+
+#---[ Debug Targets ]--------------------------------------------------------------------
+
+Debug: \
+	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
+
+$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
+	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \
+	$(BINDBG)/@SONAME@
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-o $@ \
+		$^ \
+		-L$(BINDBG) \
+		-Wl,-rpath,$(BINDBG) \
+		$(LDFLAGS) \
+		$(BINDBG)/@SONAME@ \
+		$(LIBS) 
+
+
+$(BINDBG)/@SONAME@: \
+	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJDBG)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-shared \
+		-Wl,-soname,$(@F) \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS)
+
+
+run: \
+	$(BINDBG)/$(PACKAGE_NAME)-test@EXEEXT@
+
+ifeq ($(VALGRIND),no)
+
+	@LD_LIBRARY_PATH=$(BINDBG) \
+		$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
+
+else
+	@touch valgrind.suppression
+
+	@LD_LIBRARY_PATH=$(BINDBG) \
+		$(VALGRIND) --leak-check=full --track-origins=yes --gen-suppressions=all --suppressions=valgrind.suppression \
+		$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
+endif
+
+#---[ Clean Targets ]--------------------------------------------------------------------
+
+clean: \
+	cleanDebug \
+	cleanRelease
+
+cleanDebug:
+
+	@rm -fr $(OBJDBG)
+	@rm -fr $(BINDBG)
+
+cleanRelease:
+
+	@rm -fr $(OBJRLS)
+	@rm -fr $(BINRLS)
+
+clean: \
+	cleanDebug \
+	cleanRelease
+
+
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).d)
+
+

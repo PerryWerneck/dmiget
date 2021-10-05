@@ -17,6 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ #include <config.h>
+ #include <dmiget/defs.h>
  #include <dmiget/value.h>
  #include <stdexcept>
  #include <string>

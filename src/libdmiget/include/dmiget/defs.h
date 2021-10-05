@@ -17,27 +17,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <dmiget/defs.h>
- #include <string>
+ #pragma once
 
- namespace DMI {
+ #if defined(_WIN32)
 
-	class DMIGET_API Value {
-	protected:
-		class Reader;
-		Reader * reader = nullptr;
+	#define DMIGET_API	__declspec (dllexport)
+	#define DMIGET_PRIVATE
 
-	public:
-		Value(const char *path);
-		~Value();
+ #elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
 
-		const char * name() const;
-		const char * description() const;
-		const std::string as_string() const;
+	#define DMIGET_API
+	#define DMIGET_PRIVATE
 
-	};
+ #else
 
+	#define DMIGET_API	__attribute__((visibility("default")))
+	#define DMIGET_PRIVATE	__attribute__((visibility("hidden")))
 
+ #endif
 
- }
 
