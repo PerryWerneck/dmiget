@@ -59,6 +59,9 @@ CFLAGS= \
 	-fPIC \
 	-Isrc/libdmiget/include \
 	-DBUILD_DATE=`date +%Y%m%d`
+	
+CPPFLAGS= \
+	@CPPFLAGS@
 
 LDFLAGS=\
 	@LDFLAGS@
@@ -76,11 +79,13 @@ $(OBJDBG)/%.o: \
 
 	@$(CXX) \
 		$(CFLAGS) \
+		$(CPPFLAGS) \
 		-DDEBUG=1 \
 		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 
 	@$(CXX) \
 		$(CFLAGS) \
+		$(CPPFLAGS) \
 		-Wall -Wextra -fstack-check \
 		-DDEBUG=1 \
 		-o $@ \
@@ -103,11 +108,13 @@ $(OBJRLS)/%.o: \
 
 	@$(CXX) \
 		$(CFLAGS) \
+		$(CPPFLAGS) \
 		-DNDEBUG=1 \
 		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 
 	@$(CXX) \
 		$(CFLAGS) \
+		$(CPPFLAGS) \
 		-DNDEBUG=1 \
 		-o $@ \
 		-c $<
