@@ -122,10 +122,13 @@ $(OBJRLS)/%.o: \
 #---[ Release Targets ]------------------------------------------------------------------
 
 all: \
-	$(BINRLS)/@SONAME@
+	$(BINRLS)/@SONAME@ \
+	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
+
 
 Release: \
-	$(BINRLS)/@SONAME@
+	$(BINRLS)/@SONAME@ \
+	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
 
 $(BINRLS)/@SONAME@: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
@@ -140,11 +143,33 @@ $(BINRLS)/@SONAME@: \
 		$^ \
 		$(LIBS)
 
+$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
+	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).o) \
+	$(BINRLS)/@SONAME@
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		-o $@ \
+		$^ \
+		-L$(BINRLS) \
+		$(LDFLAGS) \
+		$(LIBS) 
 
 #---[ Install Targets ]------------------------------------------------------------------
 
 install: \
        $(foreach TARGET, $(TARGETS), install-$(TARGET))
+
+install-application: \
+	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
+
+	@$(MKDIR) \
+		$(DESTDIR)$(bindir)
+
+	@$(INSTALL_PROGRAM) \
+		$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@ \
+		$(DESTDIR)$(bindir)/$(PACKAGE_NAME)@EXEEXT@
 
 install-linux-lib: \
 	$(BINRLS)/@SONAME@
@@ -152,16 +177,13 @@ install-linux-lib: \
 	@$(MKDIR) \
 		$(DESTDIR)$(libdir)
 
-	@$(MKDIR) \
-		$(DESTDIR)$(libdir)/@PRODUCT_NAME@-modules
-
 	@$(INSTALL_PROGRAM) \
 		$(BINRLS)/@SONAME@ \
 		$(DESTDIR)$(libdir)/@SONAME@
 		
 	@$(LN_S) \
 		@SONAME@ \
-		$(DESTDIR)$(libdir)/$(PACKAGE_NAME)@LIBEXT@
+		$(DESTDIR)$(libdir)/lib$(PACKAGE_NAME)@LIBEXT@
 
 install-windows-lib: \
 	$(BINRLS)/lib$(PACKAGE_NAME)@LIBEXT@
@@ -202,6 +224,11 @@ install-devel:
 
 uninstall: \
        $(foreach TARGET, $(TARGETS), uninstall-$(TARGET))
+
+uninstall-application:
+
+	@rm -f \
+		$(DESTDIR)$(bindir)/$(PACKAGE_NAME)@EXEEXT@
 
 uninstall-linux-lib:
 
