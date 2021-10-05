@@ -47,6 +47,42 @@
 					"rdate",
 					"Release Date"
 				},
+				{
+					3,
+					"brev",
+					"Bios Revision"
+				},
+
+				ENTRY_LIST_TERMINATOR
+
+			}
+		},
+
+		{
+			1,0,
+			nullptr,
+			"System",
+			(const Entry []) {
+				{
+					0,
+					"Manufacturer",
+					nullptr
+				},
+				{
+					1,
+					"product",
+					"Product Name"
+				},
+				{
+					2,
+					"Version",
+					nullptr
+				},
+				{
+					3,
+					"serial",
+					"Serial Number"
+				},
 
 				ENTRY_LIST_TERMINATOR
 
@@ -54,20 +90,44 @@
 		},
 		/*
 		{
-			1,
-			nullptr,
-			"System"
-		},
-		{
 			2,
 			nullptr,
 			"Base Board"
 		},
+		*/
 		{
-			3,
-			nullptr,
-			"Chassis"
+			3,0,
+			"Chassis",
+			"Chassis Information",
+			(const Entry []) {
+				{
+					0,
+					"Manufacturer",
+					nullptr
+				},
+
+				{
+					1,
+					"Version",
+					nullptr
+				},
+
+				{
+					2,
+					"Serial",
+					"Serial Number"
+				},
+
+				{
+					3,
+					"atag",
+					"Asset Tag"
+				},
+
+				ENTRY_LIST_TERMINATOR
+			}
 		},
+		/*
 		{
 			4,
 			nullptr,
@@ -269,7 +329,6 @@
 			"TPM Device"
 		},
 		*/
-
 
 	};
 

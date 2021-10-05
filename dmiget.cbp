@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="DMIDecode library" />
+		<Option title="dmiget" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DDEBUG=1" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-DNDEBUG=1" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -31,16 +33,16 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=c++17" />
-			<Add directory="src/include" />
+			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
-		<Unit filename="src/include/dmidecode/value.h" />
-		<Unit filename="src/os/linux/node.cc" />
-		<Unit filename="src/os/linux/paths.cc" />
-		<Unit filename="src/os/linux/private.h" />
-		<Unit filename="src/os/linux/reader.cc" />
-		<Unit filename="src/os/linux/value.cc" />
-		<Unit filename="src/value.cc" />
+		<Unit filename="src/libdmiget/include/dmiget/value.h" />
+		<Unit filename="src/libdmiget/os/linux/node.cc" />
+		<Unit filename="src/libdmiget/os/linux/private.h" />
+		<Unit filename="src/libdmiget/os/linux/reader.cc" />
+		<Unit filename="src/libdmiget/os/linux/table.cc" />
+		<Unit filename="src/libdmiget/os/linux/value.cc" />
+		<Unit filename="src/libdmiget/value.cc" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

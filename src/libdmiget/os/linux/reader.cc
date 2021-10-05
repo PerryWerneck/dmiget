@@ -48,6 +48,10 @@
 		filename += '/';
 		filename += name;
 
+#ifdef DEBUG
+		cout << "Reading " << filename << endl;
+#endif // DEBUG
+
 		int fd = open(filename.c_str(),O_RDONLY);
 		if(fd < 0) {
 			string msg{"Error opening "};
