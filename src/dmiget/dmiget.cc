@@ -61,6 +61,5 @@
  		cout << DMI::Value(argv[arg]).as_string() << endl;
 	}
 
-
 	return 0;
  }
