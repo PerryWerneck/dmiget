@@ -57,6 +57,8 @@
 			return dmi.contents != nullptr;
 		}
 
+		bool for_each() const;
+
 	};
 
  }

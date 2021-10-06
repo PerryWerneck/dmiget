@@ -30,13 +30,14 @@
 			uint8_t id = 0;
 			const char *name = nullptr;
 			const char *description = nullptr;
+
+			static const Type * find(uint8_t id);
+
 		};
 
 	private:
 
 		const Type * type = nullptr;
-
-	protected:
 
 	public:
 		constexpr Value() { }

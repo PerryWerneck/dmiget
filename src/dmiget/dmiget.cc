@@ -28,6 +28,8 @@
 
 	DMI::Table table;
 
+	table.for_each();
+
 	/*
 	for(int arg = 1; arg < argc; arg++) {
  		cout << DMI::Value(argv[arg]).as_string() << endl;

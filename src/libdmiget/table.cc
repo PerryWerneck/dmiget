@@ -29,7 +29,7 @@
 
  namespace DMI {
 
-	static void for_each(const uint8_t *buf, uint16_t num, uint32_t len, std::function<bool(const Header &header)> exec) {
+	static bool for_each(const uint8_t *buf, uint16_t num, uint32_t len, std::function<bool(const Header &header)> exec) {
 
 		int i = 0;
 		const uint8_t * data = buf;
@@ -60,13 +60,15 @@
 
 			// Call
 			if(!exec(h)) {
-				break;
+				return false;
 			}
 
 			// Get next
 			data = next;
 
 		}
+
+		return true;
 
 	}
 
@@ -81,7 +83,7 @@
 		memcpy(dmi.contents,d,length);
 
 		// Assign vendor for vendor-specific decodes later
-		for_each(dmi.contents, dmi.num, dmi.len,[this](const Header &header) {
+		DMI::for_each(dmi.contents, dmi.num, dmi.len,[this](const Header &header) {
 
 			if(header.type == 1 && header.length >= 6) {
 
@@ -99,6 +101,20 @@
 		});
 
 		return true;
+	}
+
+	bool Table::for_each() const {
+
+		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this](const Header &header) {
+
+			const Value::Type * type = Value::Type::find(header.type);
+
+			cout << ((unsigned int) header.type) << " (" << type->description << ") " << ((unsigned int) header.length) << endl;
+
+
+			return true;
+		});
+
 	}
 
  }

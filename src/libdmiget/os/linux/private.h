@@ -28,16 +28,6 @@
 
  namespace DMI {
 
-	namespace Linux {
-
-		struct Type : Value::Type {
-
-
-
-			static const Type * find(uint8_t id);
-		};
-
-	}
 
  }
 
