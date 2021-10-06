@@ -19,47 +19,20 @@
 
  #include <iostream>
  #include <dmiget/value.h>
+ #include <dmiget/table.h>
  #include <iostream>
 
  using namespace std;
 
  int main(int argc, const char **argv) {
 
-#ifdef DEBUG
+	DMI::Table table;
 
 	/*
-	cout << DMI::Value("dmi://bios/vendor").as_string() << endl;
-	cout << DMI::Value("dmi://bios/version").as_string() << endl;
-	cout << DMI::Value("dmi://bios/rdate").as_string() << endl;
-	*/
-
-	/*
-	{ DMI_CHASSIS_INFO,     DMI_CHASSIS_INFO_ASSET_TAG_OFFSET               }, = 03
-	{ DMI_SYSTEM_INFO,      DMI_SYSTEM_INFO_SERIAL_NUMBER_OFFSET    		}, = 01
-	{ DMI_CHASSIS_INFO,     DMI_CHASSIS_INFO_SERIAL_NUMBER_OFFSET   		}  = 03
-
-	"chassis/Asset Tag"
-	"system/Asset Tag"
-	"chassis/Serial Number"
-	*/
-
-	/*
-	cout << DMI::Value("dmi://chassis/manufacturer").as_string() << endl;
-	cout << DMI::Value("dmi://chassis/version").as_string() << endl;
-	cout << DMI::Value("dmi://chassis/serial").as_string() << endl;
-	cout << DMI::Value("dmi://chassis/atag").as_string() << endl;
-	*/
-
-	cout << DMI::Value("dmi://system/manufacturer").as_string() << endl;
-	cout << DMI::Value("dmi://system/product").as_string() << endl;
-	cout << DMI::Value("dmi://system/version").as_string() << endl;
-	cout << DMI::Value("dmi://system/serial").as_string() << endl;
-
-#endif // DEBUG
-
 	for(int arg = 1; arg < argc; arg++) {
  		cout << DMI::Value(argv[arg]).as_string() << endl;
 	}
+	*/
 
 	return 0;
  }

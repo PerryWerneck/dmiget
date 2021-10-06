@@ -27,6 +27,7 @@
 
 	Value::Value(const char *path) {
 
+		/*
 		const char *ptr;
 
 		if(strncasecmp(path,"dmi://",6)) {
@@ -56,6 +57,7 @@
 		}
 
 		this->reader = new Value::Reader(type,node);
+		*/
 
 	}
 
@@ -64,15 +66,15 @@
 	}
 
 	const char * Value::name() const {
-		return reader->name();
+//		return reader->name();
 	}
 
 	const char * Value::description() const {
-		return reader->description();
+//		return reader->description();
 	}
 
 	const std::string Value::as_string() const {
-		return reader->as_string();
+//		return reader->as_string();
 	}
 
  }

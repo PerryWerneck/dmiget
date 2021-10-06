@@ -28,8 +28,7 @@
 	class DMIGET_API Table {
 	private:
 
-		size_t length = 0;
-		uint8_t * contents = nullptr;
+        uint32_t version = 0;
 
 		enum Format : uint8_t {
 			Invalid,
@@ -38,15 +37,19 @@
 			Legacy
 		} format = Invalid;
 
-		void set(const Format format, uint8_t *contents, size_t length);
+		bool smbios3_decode(const uint8_t *entry, const uint8_t *buffer);
+
+		// void set(const Format format, uint8_t *contents, size_t length);
 
 	public:
 		Table();
 		~Table();
 
+		/*
 		inline operator bool() const noexcept {
 			return contents != nullptr;
 		}
+		*/
 
 	};
 

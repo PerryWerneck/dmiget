@@ -37,9 +37,12 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
+		<Unit filename="src/libdmiget/decoders/smbios3.cc" />
 		<Unit filename="src/libdmiget/include/dmiget/defs.h" />
 		<Unit filename="src/libdmiget/include/dmiget/table.h" />
 		<Unit filename="src/libdmiget/include/dmiget/value.h" />
+		<Unit filename="src/libdmiget/include/internals.h" />
+		<Unit filename="src/libdmiget/os/linux/constants.cc" />
 		<Unit filename="src/libdmiget/os/linux/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />
 		<Unit filename="src/libdmiget/os/linux/reader.cc" />

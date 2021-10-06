@@ -19,10 +19,23 @@
 
  #include <dmiget/defs.h>
  #include <string>
+ #include <stdint.h>
 
  namespace DMI {
 
 	class DMIGET_API Value {
+	public:
+
+		struct Type {
+			uint8_t id;
+			const char *name;
+			const char *description;
+		};
+
+	private:
+
+		const Type * type = nullptr;
+
 	protected:
 		class Reader;
 		Reader * reader = nullptr;

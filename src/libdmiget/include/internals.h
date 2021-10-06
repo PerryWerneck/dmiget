@@ -17,34 +17,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
+ #pragma once
+
+ #include <config.h>
+ #include <dmiget/defs.h>
+ #include <stdint.h>
+ #include <stddef.h>
+ #include <stdexcept>
 
  namespace DMI {
 
-	static const Linux::Type types[] = {
+ 	bool smbios3_decode(const uint8_t *entry, const uint8_t table);
+ 	bool checksum(const uint8_t *buf, size_t len);
 
-		{
-			0x00,
-			"bios",
-			"BIOS Information"
-		}
+	#if defined(BIGENDIAN)
 
+		#define WORD(x)		(uint16_t)	((x)[0] + ((x)[1] << 8))
+		#define DWORD(x)	(uint32_t) ((x)[0] + ((x)[1] << 8) + ((x)[2] << 16) + ((x)[3] << 24))
+//		#define QWORD(x)	(uint64_t) (DWORD(x), DWORD(x + 4)))
 
-	};
+	#else
 
-	const Linux::Type * Linux::Type::find(uint8_t id) {
+		#define WORD(x)		(uint16_t)(*(const uint16_t *)(x))
+		#define DWORD(x)	(uint32_t)(*(const uint32_t *)(x))
+		#define QWORD(x)	(*(const uint64_t *)(x))
 
-		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
-
-			if(types[ix].id == id) {
-				return &types[ix];
-			}
-
-		}
-
-		throw system_error(ENOENT,system_category(),string{"Cant find dmi type '"} + to_string(id) + "'");
-
-	}
-
+	#endif // BIGENDIAN
 
  }
+

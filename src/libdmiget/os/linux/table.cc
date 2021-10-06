@@ -18,6 +18,7 @@
  */
 
  #include <dmiget/table.h>
+ #include <internals.h>
  #include <cstring>
  #include <cerrno>
  #include <sys/stat.h>
@@ -107,34 +108,17 @@
 
 			// Got sysfs
 			if(entry_point.size() >= 24 && entry_point.has_prefix("_SM3_", 5)) {
-				set(SmBios3,table.contents,table.length);
+				smbios3_decode(entry_point.contents,table.contents);
 			} else if(entry_point.size() >= 32 && entry_point.has_prefix("_SM_", 4)) {
-				set(SmBios,table.contents,table.length);
+//				smbios_decode(entry_point.contents,table.contents);
 			} else if(entry_point.size() >= 31 && entry_point.has_prefix("_DMI_", 5)) {
-				set(Legacy,table.contents,table.length);
+//				legacy_decode(entry_point.contents,table.contents);
 			}
 		}
 
 	}
 
 	Table::~Table() {
-		if(contents) {
-			delete[] contents;
-			contents = nullptr;
-		}
-	}
-
-	void Table::set(const Format format, uint8_t *contents, size_t length) {
-
-		if(this->contents) {
-			delete[] this->contents;
-		}
-
-		this->contents = new uint8_t[length+1];
-		this->contents[length] = 0;
-		this->length = length;
-		memcpy(this->contents,contents,length);
-
 	}
 
  }
