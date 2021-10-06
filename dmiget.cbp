@@ -37,6 +37,7 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
+		<Unit filename="src/libdmiget/decoders/decode.cc" />
 		<Unit filename="src/libdmiget/decoders/smbios3.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/include/dmiget/defs.h" />

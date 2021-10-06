@@ -42,9 +42,7 @@
 			uint32_t version = 0;
 		} dmi;
 
-		void smbios3_decode(const uint8_t *entry);
-
-		// void set(const Format format, uint8_t *contents, size_t length);
+		bool identify(const uint8_t *entry);
 
 	public:
 		Table();

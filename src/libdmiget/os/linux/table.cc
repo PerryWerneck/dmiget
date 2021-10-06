@@ -103,16 +103,13 @@
 
 		File entry_point("/sys/firmware/dmi/tables/smbios_entry_point");
 
-		if(entry_point) {
+		if(entry_point && identify(entry_point.contents)) {
 
 			// Got sysfs
-			if(entry_point.size() >= 24 && entry_point.has_prefix("_SM3_", 5)) {
-				smbios3_decode(entry_point.contents);
-			} else if(entry_point.size() >= 32 && entry_point.has_prefix("_SM_", 4)) {
-//				smbios_decode(entry_point.contents);
-			} else if(entry_point.size() >= 31 && entry_point.has_prefix("_DMI_", 5)) {
-//				legacy_decode(entry_point.contents);
-			}
+#ifdef DEBUG
+			cout << "Got sysfs" << endl;
+#endif // DEBUG
+
 		}
 
 	}
