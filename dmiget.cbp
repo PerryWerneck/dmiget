@@ -40,6 +40,7 @@
 		<Unit filename="src/libdmiget/decoders/decode.cc" />
 		<Unit filename="src/libdmiget/decoders/smbios3.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
+		<Unit filename="src/libdmiget/file.cc" />
 		<Unit filename="src/libdmiget/include/dmiget/defs.h" />
 		<Unit filename="src/libdmiget/include/dmiget/table.h" />
 		<Unit filename="src/libdmiget/include/dmiget/value.h" />
@@ -50,6 +51,8 @@
 		<Unit filename="src/libdmiget/os/linux/reader.cc" />
 		<Unit filename="src/libdmiget/os/linux/table.cc" />
 		<Unit filename="src/libdmiget/os/linux/value.cc" />
+		<Unit filename="src/libdmiget/string.cc" />
+		<Unit filename="src/libdmiget/table.cc" />
 		<Unit filename="src/libdmiget/value.cc" />
 		<Extensions />
 	</Project>

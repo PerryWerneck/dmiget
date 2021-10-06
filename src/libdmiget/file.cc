@@ -17,10 +17,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <dmiget/table.h>
+ #include <config.h>
  #include <internals.h>
- #include <cstring>
- #include <cerrno>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <unistd.h>
  #include <cstring>
  #include <iostream>
 
@@ -28,38 +29,53 @@
 
  namespace DMI {
 
-	Table::Table() {
+	File::File(const char *filename, size_t maxlen) {
 
-		File entry_point("/sys/firmware/dmi/tables/smbios_entry_point");
+		int fd = open(filename,O_RDONLY);
+		if(fd < 0)
+			return;
 
-		if(entry_point && identify(entry_point.content())) {
-
-			// Got sysfs
-#ifdef DEBUG
-			cout << "Got sysfs (base=" << dmi.base << " length=" << dmi.len << ")" << endl;
-#endif // DEBUG
-
-			File dmifile("/sys/firmware/dmi/tables/DMI",dmi.len);
-
-			if(dmifile && dmifile.size() == dmi.len) {
-
-				if(set(dmifile.content(),dmifile.size())) {
-#ifdef DEBUG
-					cout << "Got DMI table from sysfs" << endl;
-#endif // DEBUG
-					return;
-				}
-
+		struct stat statbuf;
+		if (fstat(fd, &statbuf) == 0) {
+			if(statbuf.st_size) {
+				maxlen = statbuf.st_size;
 			}
-
 		}
+
+		contents = new uint8_t[maxlen+1];
+		memset(contents,0,maxlen+1);
+
+		uint8_t * ptr = contents;
+		length = 0;
+		while(this->length < maxlen) {
+			ssize_t bytes = read(fd,ptr,(maxlen - this->length));
+			if(bytes < 0) {
+				if(errno != EINTR) {
+					cerr << filename << ": " << strerror(errno) << endl;
+					delete[] contents;
+					contents = nullptr;
+					length = 0;
+					break;
+				}
+			} else if(bytes == 0) {
+
+				break;
+
+			} else {
+				ptr += bytes;
+				length += bytes;
+			}
+		}
+
+		::close(fd);
 
 	}
 
-	Table::~Table() {
-		if(dmi.contents) {
-			delete[] dmi.contents;
+	File::~File() {
+		if(contents) {
+			delete[] contents;
 		}
 	}
+
 
  }

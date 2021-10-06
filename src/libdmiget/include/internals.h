@@ -21,13 +21,13 @@
 
  #include <config.h>
  #include <dmiget/defs.h>
+ #include <dmiget/value.h>
  #include <stdint.h>
  #include <stddef.h>
  #include <stdexcept>
 
  namespace DMI {
 
- 	bool smbios3_decode(const uint8_t *entry, const uint8_t table);
  	bool checksum(const uint8_t *buf, size_t len);
 
 	#if defined(BIGENDIAN)
@@ -43,6 +43,52 @@
 		#define QWORD(x)	(*(const uint64_t *)(x))
 
 	#endif // BIGENDIAN
+
+	struct Header {
+
+		uint8_t type;
+		uint8_t length;
+		uint16_t handle;
+		const uint8_t *data;
+
+		constexpr Header(const uint8_t *d) : type(d[0]), length(d[1]), handle(WORD(d+2)), data(d) {
+		}
+
+	};
+
+	class File {
+	private:
+		uint8_t * contents = nullptr;
+		size_t length = 0;
+
+	public:
+		File(const char *filename, size_t maxlen = 4096);
+		~File();
+
+		inline operator bool() const {
+			return contents != nullptr;
+		}
+
+		inline size_t size() const noexcept {
+			return length;
+		}
+
+		inline const uint8_t * content() const noexcept {
+			return contents;
+		}
+
+	};
+
+	/// @brief DMI string.
+	class String : public DMI::Value {
+	private:
+		std::string str;
+
+	public:
+		String(const Header &header, uint8_t s, bool filter = true);
+		virtual ~String();
+		const std::string as_string() const override;
+	};
 
  }
 

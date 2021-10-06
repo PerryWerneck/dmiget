@@ -17,38 +17,50 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <dmiget/defs.h>
- #include <string>
- #include <stdint.h>
+ #include <config.h>
+ #include <internals.h>
+ #include <cstring>
 
  namespace DMI {
 
-	class DMIGET_API Value {
-	public:
+	String::String(const Header &header, uint8_t s, bool filter) {
 
-		struct Type {
-			uint8_t id = 0;
-			const char *name = nullptr;
-			const char *description = nullptr;
-		};
+		const char *bp = (const char *) header.data;
 
-	private:
+			bp += header.length;
+			while (s > 1 && *bp) {
+				bp += strlen(bp);
+				bp++;
+				s--;
+			}
 
-		const Type * type = nullptr;
+			if(*bp) {
 
-	protected:
+				char * converted = strdup(bp);
 
-	public:
-		constexpr Value() { }
-		virtual ~Value();
+				if(filter) {
+					for(char *ptr = converted; *ptr; ptr++) {
+						if ( *ptr < 32 || *ptr >= 127) {
+							*ptr = '.';
+						}
+					}
+				}
 
-		const char * name() const;
-		const char * description() const;
-		virtual const std::string as_string() const;
+				// TODO: Strip converted.
 
-	};
+				str.assign(converted);
 
+				free(converted);
 
+			}
+
+	}
+
+	String::~String() {
+	}
+
+	const std::string String::as_string() const {
+		return this->str;
+	}
 
  }
-

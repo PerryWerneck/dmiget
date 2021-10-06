@@ -21,5 +21,19 @@
 
  namespace DMI {
 
+	Value::~Value() {
+	}
+
+	const char * Value::name() const {
+		return "";
+	}
+
+	const char * Value::description() const {
+		return "";
+	}
+
+	const std::string Value::as_string() const {
+		return "";
+	}
 
  }

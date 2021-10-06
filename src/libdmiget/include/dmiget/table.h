@@ -40,19 +40,22 @@
 			uint32_t len = 0;
 			uint16_t num = 0;
 			uint32_t version = 0;
+			uint8_t *contents = nullptr;
 		} dmi;
 
+		/// @brief Identify SMBIOS format.
 		bool identify(const uint8_t *entry);
+
+		/// @brief Set DMI table contents.
+		bool set(const uint8_t *dmi, size_t length);
 
 	public:
 		Table();
 		~Table();
 
-		/*
 		inline operator bool() const noexcept {
-			return contents != nullptr;
+			return dmi.contents != nullptr;
 		}
-		*/
 
 	};
 
