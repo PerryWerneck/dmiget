@@ -102,17 +102,16 @@
 	Table::Table() {
 
 		File entry_point("/sys/firmware/dmi/tables/smbios_entry_point");
-		File table("/sys/firmware/dmi/tables/DMI");
 
-		if(entry_point && table) {
+		if(entry_point) {
 
 			// Got sysfs
 			if(entry_point.size() >= 24 && entry_point.has_prefix("_SM3_", 5)) {
-				smbios3_decode(entry_point.contents,table.contents);
+				smbios3_decode(entry_point.contents);
 			} else if(entry_point.size() >= 32 && entry_point.has_prefix("_SM_", 4)) {
-//				smbios_decode(entry_point.contents,table.contents);
+//				smbios_decode(entry_point.contents);
 			} else if(entry_point.size() >= 31 && entry_point.has_prefix("_DMI_", 5)) {
-//				legacy_decode(entry_point.contents,table.contents);
+//				legacy_decode(entry_point.contents);
 			}
 		}
 

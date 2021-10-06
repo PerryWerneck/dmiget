@@ -17,45 +17,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #pragma once
-
- #include <dmiget/defs.h>
- #include <stdint.h>
- #include <stddef.h>
+ #include <config.h>
+ #include <internals.h>
+ #include <string>
+ #include <iostream>
 
  namespace DMI {
 
-	class DMIGET_API Table {
-	private:
+	bool checksum(const uint8_t *buf, size_t len) {
+		uint8_t sum = 0;
 
-		enum Format : uint8_t {
-			Invalid,
-			SmBios3,
-			SmBios,
-			Legacy
-		} format = Invalid;
+		for(size_t a = 0; a < len; a++)
+			sum += buf[a];
 
-		struct {
-			uint64_t base = 0;
-			uint32_t len = 0;
-			uint16_t num = 0;
-			uint32_t version = 0;
-		} dmi;
-
-		void smbios3_decode(const uint8_t *entry);
-
-		// void set(const Format format, uint8_t *contents, size_t length);
-
-	public:
-		Table();
-		~Table();
-
-		/*
-		inline operator bool() const noexcept {
-			return contents != nullptr;
-		}
-		*/
-
-	};
+		return (sum == 0);
+	}
 
  }
+
