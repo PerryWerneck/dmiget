@@ -33,7 +33,7 @@
 
 		static const struct {
 			const char *prefix;
-			std::function<void(Table &table, const uint8_t *entry)> exec;
+			std::function<bool(Table &table, const uint8_t *entry)> exec;
 		} formats[] = {
 
 			// SMBIOS3
@@ -66,6 +66,7 @@
 					table.dmi.base = QWORD(entry + 0x10);
 					table.dmi.len = DWORD(entry + 0x0C);
 
+					return true;
 				}
 			},
 
@@ -73,7 +74,48 @@
 			{
 				"_SM_",
 				[](Table &table, const uint8_t *entry) {
-					throw runtime_error("Not implemented");
+
+					table.format = SmBios;
+
+					// Don't let checksum run beyond the buffer
+					if (entry[0x05] > 0x20) {
+						throw runtime_error(
+									(string{"Entry point length too large ("}
+										+ to_string((unsigned int) entry[0x05]),
+										+ ", expected"
+										+ to_string(0x1FU)
+										+ ")").c_str()
+						);
+
+					}
+
+					if (!checksum(entry, entry[0x05]) || memcmp(entry + 0x10, "_DMI_", 5) != 0 || !checksum(entry + 0x10, 0x0F)) {
+						throw runtime_error("Chksum mismatch");
+					}
+
+					uint16_t ver = (entry[0x06] << 8) + entry[0x07];
+
+					// Some BIOS report weird SMBIOS version, fix that up
+					switch (ver) {
+					case 0x021F:
+					case 0x0221:
+						ver = 0x0203;
+						break;
+					case 0x0233:
+						ver = 0x0206;
+						break;
+					}
+
+#ifdef DEBUG
+					cout << "SMBIOS " << (ver>>8) << "." << (ver & 0xFF) << endl;
+#endif // DEBUG
+
+					table.dmi.base = DWORD(entry + 0x18);
+					table.dmi.len = WORD(entry + 0x16);
+					table.dmi.num = WORD(entry + 0x1C);
+					table.dmi.version = (ver << 8);
+
+					return true;
 				}
 			},
 
@@ -81,7 +123,23 @@
 			{
 				"_SM_",
 				[](Table &table, const uint8_t *entry) {
-					throw runtime_error("Not implemented");
+
+					table.format = Legacy;
+
+					if (!checksum(entry, 0x0F)) {
+						throw runtime_error("Checksum mismatch");
+					}
+
+#ifdef DEBUG
+					cout << "Legacy DMI " << (entry[0x0E] >> 4) << "." << (entry[0x0E] & 0x0F) << endl;
+#endif // DEBUG
+
+					table.dmi.base = DWORD(entry + 0x08);
+					table.dmi.len = WORD(entry + 0x06);
+					table.dmi.num = WORD(entry + 0x0C);
+					table.dmi.version = ((entry[0x0E] & 0xF0) << 12) + ((entry[0x0E] & 0x0F) << 8);
+
+					return true;
 				}
 			}
 
@@ -93,8 +151,7 @@
 #ifdef DEBUG
 				cerr << "Got " << formats[ix].prefix << endl;
 #endif // DEBUG
-				formats[ix].exec(*this,entry);
-				return true;
+				return formats[ix].exec(*this,entry);
 			}
 
 		}
