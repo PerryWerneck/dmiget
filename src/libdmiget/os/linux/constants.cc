@@ -25,254 +25,537 @@
 
 		{
 			0,
+			false,
 			"bios",
 			"BIOS Information",
+			(const Value::Record []) {
+				{ "vendor",		Value::String,	1,	"Vendor"		},
+				{ "version",	Value::String,	2,	"Version"		},
+				{ "date",		Value::String,	3,	"Release Date"	},
+				{}
+			}
+		},
+		{
+			1,
+			false,
+			"system",
+			"System",
+			(const Value::Record []) {
+				{ "manufacturer",	Value::String,	1,	"Manufacturer"	},
+				{ "name",			Value::String,	2,	"Product Name"	},
+				{ "version",		Value::String,	3,	"Version"		},
+				{ "serial",			Value::String,	4,	"Serial Number"	},
+				{ "sku",			Value::String,	5,	"SKU Number"	},
+				{ "family",			Value::String,	6,	"Family"		},
+				{}
+			}
+		},
+		{
+			2,
+			false,
+			"baseboard",
+			"Base Board",
+			(const Value::Record []) {
+				{ "manufacturer",	Value::String,	1,	"Manufacturer"			},
+				{ "name",			Value::String,	2,	"Product Name"			},
+				{ "version",		Value::String,	3,	"Version"				},
+				{ "serial",			Value::String,	4,	"Serial Number"			},
+				{ "atag",			Value::String,	5,	"Asset Tag"				},
+				{ "location",		Value::String,	6,	"Location In Chassis"	},
+				{}
+			}
+		},
+		{
+			3,
+			false,
+			"Chassis",
+			"Chassis Information",
 			/*
 			(const Value::Record []) {
-				{
-					"vendor",
-					Value::String,
-					0,
-					"Vendor"
-				},
-				{
-					"version",
-					Value::String,
-					1,
-					"Version"
-				},
-				{
-					"release",
-					Value::String,
-					2,
-					"Release"
-				},
-				{
-					"rdate",
-					Value::String,
-					3,
-					"Release Date"
-				},
-
-				{
-				}
+				{ "",	Value::String,	1,	""	},
+				{}
 			}
 			*/
 		},
 		{
-			1,
-			"system",
-			"System"
-		},
-		{
-			2,
-			"baseboard",
-			"Base Board"
-		},
-		{
-			3,
-			"Chassis",
-			"Chassis Information",
-		},
-		{
 			4,
+			false,
 			"processor",
-			"Processor"
+			"Processor",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			5,
+			false,
 			"mcntrl",
-			"Memory Controller"
+			"Memory Controller",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			6,
+			false,
 			"mmodule",
-			"Memory Module"
+			"Memory Module",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			7,
+			false,
 			"cache",
-			"Cache"
+			"Cache",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			8,
+			false,
 			"pconn",
-			"Port Connector"
+			"Port Connector",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			9,
+			false,
 			"slots",
-			"System Slots"
+			"System Slots",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			10,
+			false,
 			"boarddevices",
-			"On Board Devices"
+			"On Board Devices",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			11,
+			false,
 			"oemstrings",
-			"OEM Strings"
+			"OEM Strings",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			12,
+			false,
 			"sysconf",
-			"System Configuration Options"
+			"System Configuration Options",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			13,
+			false,
 			"blanguage",
-			"BIOS Language"
+			"BIOS Language",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			14,
+			false,
 			"gassoc",
-			"Group Associations"
+			"Group Associations",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			15,
+			false,
 			"syslog",
-			"System Event Log"
+			"System Event Log",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			16,
+			false,
 			"pma",
-			"Physical Memory Array"
+			"Physical Memory Array",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			17,
+			false,
 			"mdev",
-			"Memory Device"
+			"Memory Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			18,
+			false,
 			"32bme",
-			"32-bit Memory Error"
+			"32-bit Memory Error",
+			/*
+			(const Value::Record []) {
+				{ "",	false,	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			19,
+			false,
 			"mama",
-			"Memory Array Mapped Address"
+			"Memory Array Mapped Address",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			20,
+			false,
 			"mdma",
-			"Memory Device Mapped Address"
+			"Memory Device Mapped Address",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			21,
+			false,
 			"pointingdevice",
-			"Built-in Pointing Device"
+			"Built-in Pointing Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			22,
+			false,
 			"battery",
-			"Portable Battery"
+			"Portable Battery",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			23,
+			false,
 			"sysreset",
-			"System Reset"
+			"System Reset",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			24,
+			false,
 			"hwsecurity",
-			"Hardware Security"
+			"Hardware Security",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			25,
+			false,
 			"syspowercntrl",
-			"System Power Controls"
+			"System Power Controls",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			26,
+			false,
 			"vprobe",
-			"Voltage Probe"
+			"Voltage Probe",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			27,
+			false,
 			"cooling",
-			"Cooling Device"
+			"Cooling Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			28,
+			false,
 			"temperature",
-			"Temperature Probe"
+			"Temperature Probe",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			29,
+			false,
 			"electricalcurrent",
-			"Electrical Current Probe"
+			"Electrical Current Probe",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			30,
+			false,
 			"ora",
-			"Out-of-band Remote Access"
+			"Out-of-band Remote Access",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			31,
+			false,
 			"bis",
-			"Boot Integrity Services"
+			"Boot Integrity Services",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			32,
+			false,
 			"sysboot",
-			"System Boot"
+			"System Boot",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			33,
+			false,
 			"64bme",
-			"64-bit Memory Error"
+			"64-bit Memory Error",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			34,
+			false,
 			"mdev",
-			"Management Device"
+			"Management Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			35,
+			false,
 			"mdevc",
-			"Management Device Component"
+			"Management Device Component",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			36,
+			false,
 			"mdevtd",
-			"Management Device Threshold Data"
+			"Management Device Threshold Data",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			37,
+			false,
 			"mchannel",
-			"Memory Channel"
+			"Memory Channel",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			38,
+			false,
 			"ipmi",
-			"IPMI Device"
+			"IPMI Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			39,
+			false,
 			"powersupply",
-			"Power Supply"
+			"Power Supply",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			40,
+			false,
 			"additional",
-			"Additional Information"
+			"Additional Information",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			41,
+			false,
 			"onboarddev",
-			"Onboard Device"
+			"Onboard Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			42,
+			false,
 			"mchi",
-			"Management Controller Host Interface"
+			"Management Controller Host Interface",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			43,
+			false,
 			"TPM",
-			"TPM Device"
+			"TPM Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		}
 
 	};
@@ -289,6 +572,7 @@
 
 		static const Value::Type deftype = {
 			0xFF,
+			true,
 			"unknown",
 			"unknown"
 		};

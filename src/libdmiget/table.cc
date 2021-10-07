@@ -136,6 +136,14 @@
 #endif // DEBUG
 
 			if(type->records) {
+
+				/*
+				0 (BIOS Information) 24
+						dmi://bios/1 = 'LENOVO'
+						dmi://bios/2 = '4QCN51WW(V2.15)'
+						dmi://bios/3 = '11/19/2019'
+				*/
+
 				for(const Value::Record *record = type->records;record->name;record++) {
 
 					switch(record->type) {
@@ -143,16 +151,6 @@
 						if(!exec(StringValue(type,record,String(header,record->offset)))) {
 							return false;
 						}
-						/*
-#ifdef DEBUG
-						cout
-							<< "\t"
-							<< type->name << "/" << record->name
-							<< " = '"
-							<< StringValue(type,record,String(header,record->offset))
-							<< "'" << endl;
-#endif // DEBUG
-						*/
 						break;
 
 					default:

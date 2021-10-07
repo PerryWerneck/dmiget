@@ -47,6 +47,7 @@
 
 		struct Type {
 			uint8_t id = 0;
+			bool multiple = false;
 			const char *name = nullptr;
 			const char *description = nullptr;
 			const Record * records = nullptr;
