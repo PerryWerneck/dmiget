@@ -26,18 +26,34 @@
 	class DMIGET_API Value {
 	public:
 
+		struct Record {
+
+			const char *name = nullptr;
+
+			enum Type : uint8_t {
+				Invalid,
+				String
+			} type = Invalid;
+
+			uint8_t offset = 0xFF;
+
+			const char *description = nullptr;
+
+		};
+
 		struct Type {
 			uint8_t id = 0;
 			const char *name = nullptr;
 			const char *description = nullptr;
+			const Record * records = nullptr;
 
 			static const Type * find(uint8_t id);
-
 		};
 
 	private:
 
 		const Type * type = nullptr;
+		const Record * record = nullptr;
 
 	public:
 		constexpr Value() { }

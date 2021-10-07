@@ -26,7 +26,18 @@
 		{
 			0,
 			"bios",
-			"BIOS Information"
+			"BIOS Information",
+			(const Value::Record []) {
+				{
+					"vendor",	// Name
+					Value::Record::String,
+					0x04,
+					"Vendor"
+				},
+
+				{
+				}
+			}
 		},
 		{
 			1,

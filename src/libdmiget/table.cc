@@ -107,10 +107,23 @@
 
 		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this](const Header &header) {
 
+			// Fixup a common mistake
+			//if(header.type == 34) {
+			//	dmi_fixup_type_34(&h, display);
+			//}
+
 			const Value::Type * type = Value::Type::find(header.type);
 
 			cout << ((unsigned int) header.type) << " (" << type->description << ") " << ((unsigned int) header.length) << endl;
 
+			if(type->records) {
+				cout << "*****************" << endl;
+				for(const Value::Record *record = type->records;record->name;record++) {
+					cout << type->name << "/" << record->name << " (" << record->description << ")" << endl;
+
+				}
+				cout << "*****************" << endl;
+			}
 
 			return true;
 		});
