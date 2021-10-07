@@ -20,8 +20,10 @@
  #pragma once
 
  #include <dmiget/defs.h>
+ #include <dmiget/value.h>
  #include <stdint.h>
  #include <stddef.h>
+ #include <functional>
 
  namespace DMI {
 
@@ -57,7 +59,7 @@
 			return dmi.contents != nullptr;
 		}
 
-		bool for_each() const;
+		bool for_each(std::function<bool(const DMI::Value &value)> exec) const;
 
 	};
 

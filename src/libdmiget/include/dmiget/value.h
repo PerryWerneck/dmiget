@@ -17,6 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ #pragma once
+
  #include <dmiget/defs.h>
  #include <string>
  #include <stdint.h>
@@ -26,14 +28,16 @@
 	class DMIGET_API Value {
 	public:
 
+		enum ContentType : uint8_t {
+			Invalid,
+			String
+		};
+
 		struct Record {
 
 			const char *name = nullptr;
 
-			enum Type : uint8_t {
-				Invalid,
-				String
-			} type = Invalid;
+			ContentType type = Invalid;
 
 			uint8_t offset = 0xFF;
 
@@ -50,22 +54,35 @@
 			static const Type * find(uint8_t id);
 		};
 
-	private:
+	protected:
 
 		const Type * type = nullptr;
 		const Record * record = nullptr;
 
 	public:
 		constexpr Value() { }
+		constexpr Value(const Type *t, const Record *r) : type(t), record(r) { }
+
 		virtual ~Value();
+
+		std::string url() const;
 
 		const char * name() const;
 		const char * description() const;
-		virtual const std::string as_string() const;
+		virtual std::string as_string() const;
 
 	};
 
-
-
  }
 
+ namespace std {
+
+	inline string to_string(const DMI::Value &value) {
+		return value.as_string();
+	}
+
+	inline ostream& operator<< (ostream& os, const DMI::Value &value) {
+		return os << value.as_string();
+	}
+
+ }

@@ -28,7 +28,10 @@
 
 	DMI::Table table;
 
-	table.for_each();
+	table.for_each([](const DMI::Value &value){
+		cout << "\t" << value.url() << " = '" << value << "'" << endl;
+		return true;
+	});
 
 	/*
 	for(int arg = 1; arg < argc; arg++) {

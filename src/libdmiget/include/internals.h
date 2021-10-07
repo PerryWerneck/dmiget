@@ -84,10 +84,13 @@
 	private:
 		std::string str;
 
+		void set(const char *bp, bool filter);
+
 	public:
+		String(const char *bp, bool filter = true);
 		String(const Header &header, uint8_t s, bool filter = true);
 		virtual ~String();
-		const std::string as_string() const override;
+		std::string as_string() const override;
 	};
 
  }

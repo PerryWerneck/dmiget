@@ -32,8 +32,24 @@
 		return "";
 	}
 
-	const std::string Value::as_string() const {
+	std::string Value::as_string() const {
 		return "";
 	}
+
+	std::string Value::url() const {
+
+		if(!(type && record)) {
+			return "";
+		}
+
+		std::string rc{"dmi://"};
+
+		rc += type->name;
+		rc += "/";
+		rc += record->name;
+
+		return rc;
+	}
+
 
  }

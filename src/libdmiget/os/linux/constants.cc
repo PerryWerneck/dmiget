@@ -27,17 +27,37 @@
 			0,
 			"bios",
 			"BIOS Information",
+			/*
 			(const Value::Record []) {
 				{
-					"vendor",	// Name
-					Value::Record::String,
-					0x04,
+					"vendor",
+					Value::String,
+					0,
 					"Vendor"
+				},
+				{
+					"version",
+					Value::String,
+					1,
+					"Version"
+				},
+				{
+					"release",
+					Value::String,
+					2,
+					"Release"
+				},
+				{
+					"rdate",
+					Value::String,
+					3,
+					"Release Date"
 				},
 
 				{
 				}
 			}
+			*/
 		},
 		{
 			1,

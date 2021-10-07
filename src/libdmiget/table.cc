@@ -29,6 +29,23 @@
 
  namespace DMI {
 
+	class StringValue : public DMI::Value {
+	private:
+		string value;
+
+	public:
+		StringValue(const Value::Type *t, const Value::Record *r, const DMI::String &v) : DMI::Value(t,r), value(v.as_string()) {
+		}
+
+		virtual ~StringValue() {
+		}
+
+		std::string as_string() const override {
+			return this->value;
+		}
+
+	};
+
 	static bool for_each(const uint8_t *buf, uint16_t num, uint32_t len, std::function<bool(const Header &header)> exec) {
 
 		int i = 0;
@@ -103,9 +120,9 @@
 		return true;
 	}
 
-	bool Table::for_each() const {
+	bool Table::for_each(std::function<bool(const DMI::Value &value)> exec) const {
 
-		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this](const Header &header) {
+		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this,exec](const Header &header) {
 
 			// Fixup a common mistake
 			//if(header.type == 34) {
@@ -114,15 +131,58 @@
 
 			const Value::Type * type = Value::Type::find(header.type);
 
+#ifdef DEBUG
 			cout << ((unsigned int) header.type) << " (" << type->description << ") " << ((unsigned int) header.length) << endl;
+#endif // DEBUG
 
 			if(type->records) {
-				cout << "*****************" << endl;
 				for(const Value::Record *record = type->records;record->name;record++) {
-					cout << type->name << "/" << record->name << " (" << record->description << ")" << endl;
+
+					switch(record->type) {
+					case Value::String:
+						if(!exec(StringValue(type,record,String(header,record->offset)))) {
+							return false;
+						}
+						/*
+#ifdef DEBUG
+						cout
+							<< "\t"
+							<< type->name << "/" << record->name
+							<< " = '"
+							<< StringValue(type,record,String(header,record->offset))
+							<< "'" << endl;
+#endif // DEBUG
+						*/
+						break;
+
+					default:
+						cerr << "DMI\tUnexpected record type" << endl;
+					}
+
 
 				}
-				cout << "*****************" << endl;
+			} else if(type->name) {
+
+				const char *bp = (const char *) header.data;
+				size_t index = 0;
+
+				bp += header.length;
+				while(*bp) {
+
+					string name = to_string(++index);
+
+					Value::Record record;
+					record.name = name.c_str();
+					record.type = Value::String;
+					record.description = "String";
+
+					if(!exec(StringValue(type,&record,String(bp)))) {
+						return false;
+					}
+					bp += strlen(bp);
+					bp++;
+				}
+
 			}
 
 			return true;
