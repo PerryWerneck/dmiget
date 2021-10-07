@@ -135,7 +135,7 @@
 		{
 			8,
 			true,
-			"pconn",
+			"ports",
 			"Port Connector",
 
 			(const Value::Record []) {
@@ -149,12 +149,10 @@
 			true,
 			"slots",
 			"System Slots",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "designation",	Value::String,	1,	"Designation"	},
 				{}
 			}
-			*/
 		},
 		{
 			10,
@@ -207,14 +205,12 @@
 		{
 			14,
 			true,
-			"gassoc",
+			"group",
 			"Group Associations",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "name",	Value::String,	1,	"Name"	},
 				{}
 			}
-			*/
 		},
 		{
 			15,
@@ -243,14 +239,17 @@
 		{
 			17,
 			true,
-			"mdev",
+			"memory",
 			"Memory Device",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "locator",		Value::String,	1,	"Locator"		},
+				{ "bank",			Value::String,	2,	"Bank Locator"	},
+				{ "manufacturer",	Value::String,	3,	"Manufacturer"	},
+				{ "serial",			Value::String,	4,	"Serial Number"	},
+				{ "atag",			Value::String,	5,	"Asset Tag"		},
+				{ "partnumber",		Value::String,	6,	"Part Number"	},
 				{}
 			}
-			*/
 		},
 		{
 			18,
