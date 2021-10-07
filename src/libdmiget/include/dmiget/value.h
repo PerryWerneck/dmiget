@@ -57,12 +57,13 @@
 
 	protected:
 
+		const uint8_t typeindex = 1;
 		const Type * type = nullptr;
 		const Record * record = nullptr;
 
 	public:
 		constexpr Value() { }
-		constexpr Value(const Type *t, const Record *r) : type(t), record(r) { }
+		constexpr Value(const Type *t, const Record *r, const uint8_t i = 1) : typeindex(i), type(t), record(r) { }
 
 		virtual ~Value();
 

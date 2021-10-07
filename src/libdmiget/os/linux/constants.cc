@@ -68,26 +68,35 @@
 		{
 			3,
 			false,
-			"Chassis",
+			"chassis",
 			"Chassis Information",
-			/*
+
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "manufacturer",	Value::String,	1,	"Manufacturer"	},
+				{ "version",		Value::String,	2,	"Version"		},
+				{ "serial",			Value::String,	3,	"Serial Number"	},
+				{ "atag",			Value::String,	4,	"Asset Tag"		},
+				{ "sku",			Value::String,	5,	"SKU Number"	},
 				{}
 			}
-			*/
+
 		},
 		{
 			4,
 			false,
 			"processor",
 			"Processor",
-			/*
+
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "socket",			Value::String,	1,	"Socket Designation"	},
+				{ "manufacturer",	Value::String,	2,	"Manufacturer"	},
+			//	{ "",	Value::String,	3,	""	},
+			//	{ "",	Value::String,	4,	""	},
+			//	{ "",	Value::String,	5,	""	},
+			//	{ "",	Value::String,	6,	""	},
 				{}
 			}
-			*/
+
 		},
 		{
 			5,
@@ -115,31 +124,29 @@
 		},
 		{
 			7,
-			false,
+			true,
 			"cache",
 			"Cache",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "socket",	Value::String,	1,	"Socket Designation"	},
 				{}
 			}
-			*/
 		},
 		{
 			8,
-			false,
+			true,
 			"pconn",
 			"Port Connector",
-			/*
+
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "internal",	Value::String,	1,	"Internal Reference Designator"	},
+				{ "external",	Value::String,	2,	"External Reference Designator"	},
 				{}
 			}
-			*/
 		},
 		{
 			9,
-			false,
+			true,
 			"slots",
 			"System Slots",
 			/*
@@ -188,7 +195,7 @@
 		{
 			13,
 			false,
-			"blanguage",
+			"language",
 			"BIOS Language",
 			/*
 			(const Value::Record []) {
@@ -199,7 +206,7 @@
 		},
 		{
 			14,
-			false,
+			true,
 			"gassoc",
 			"Group Associations",
 			/*
@@ -235,7 +242,7 @@
 		},
 		{
 			17,
-			false,
+			true,
 			"mdev",
 			"Memory Device",
 			/*
@@ -259,7 +266,7 @@
 		},
 		{
 			19,
-			false,
+			true,
 			"mama",
 			"Memory Array Mapped Address",
 			/*

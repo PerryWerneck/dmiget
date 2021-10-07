@@ -34,7 +34,7 @@
 		string value;
 
 	public:
-		StringValue(const Value::Type *t, const Value::Record *r, const DMI::String &v) : DMI::Value(t,r), value(v.as_string()) {
+		StringValue(const Value::Type *t, const Value::Record *r, const uint8_t i, const DMI::String &v) : DMI::Value(t,r,i), value(v.as_string()) {
 		}
 
 		virtual ~StringValue() {
@@ -122,7 +122,10 @@
 
 	bool Table::for_each(std::function<bool(const DMI::Value &value)> exec) const {
 
-		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this,exec](const Header &header) {
+		uint8_t typeindex[0x0100];
+		memset(typeindex,0,sizeof(typeindex));
+
+		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this,exec,&typeindex](const Header &header) {
 
 			// Fixup a common mistake
 			//if(header.type == 34) {
@@ -130,6 +133,7 @@
 			//}
 
 			const Value::Type * type = Value::Type::find(header.type);
+			typeindex[type->id]++;
 
 #ifdef DEBUG
 			cout << ((unsigned int) header.type) << " (" << type->description << ") " << ((unsigned int) header.length) << endl;
@@ -137,18 +141,11 @@
 
 			if(type->records) {
 
-				/*
-				0 (BIOS Information) 24
-						dmi://bios/1 = 'LENOVO'
-						dmi://bios/2 = '4QCN51WW(V2.15)'
-						dmi://bios/3 = '11/19/2019'
-				*/
-
 				for(const Value::Record *record = type->records;record->name;record++) {
 
 					switch(record->type) {
 					case Value::String:
-						if(!exec(StringValue(type,record,String(header,record->offset)))) {
+						if(!exec(StringValue(type,record,typeindex[type->id],String(header,record->offset)))) {
 							return false;
 						}
 						break;
@@ -174,7 +171,7 @@
 					record.type = Value::String;
 					record.description = "String";
 
-					if(!exec(StringValue(type,&record,String(bp)))) {
+					if(!exec(StringValue(type,&record,typeindex[type->id],String(bp)))) {
 						return false;
 					}
 					bp += strlen(bp);

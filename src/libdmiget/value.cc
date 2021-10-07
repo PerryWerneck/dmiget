@@ -46,6 +46,12 @@
 
 		rc += type->name;
 		rc += "/";
+
+		if(type->multiple) {
+			rc += std::to_string((int) typeindex);
+			rc += "/";
+		}
+
 		rc += record->name;
 
 		return rc;
