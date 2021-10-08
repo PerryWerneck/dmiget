@@ -17,12 +17,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
- #include <cstring>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <unistd.h>
+ #include <config.h>
+ #include <internals.h>
+ #include <string>
+ #include <iostream>
 
  namespace DMI {
 
+	bool checksum(const uint8_t *buf, size_t len) {
+		uint8_t sum = 0;
+
+		for(size_t a = 0; a < len; a++)
+			sum += buf[a];
+
+		return (sum == 0);
+	}
+
  }
+

@@ -28,6 +28,12 @@
 
  namespace DMI {
 
+
+ }
+
+ /*
+ namespace DMI {
+
  	class Entry {
 	public:
 		uint8_t index;
@@ -79,3 +85,4 @@
 	};
 
  }
+ */

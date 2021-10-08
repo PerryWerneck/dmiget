@@ -17,12 +17,49 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
+ #include <dmiget/table.h>
+ #include <internals.h>
  #include <cstring>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <unistd.h>
+ #include <cerrno>
+ #include <cstring>
+ #include <iostream>
+
+ using namespace std;
 
  namespace DMI {
+
+	Table::Table() {
+
+		File entry_point("/sys/firmware/dmi/tables/smbios_entry_point");
+
+		if(entry_point && identify(entry_point.content())) {
+
+			// Got sysfs
+#ifdef DEBUG
+			cout << "Got sysfs (base=" << dmi.base << " length=" << dmi.len << ")" << endl;
+#endif // DEBUG
+
+			File dmifile("/sys/firmware/dmi/tables/DMI",dmi.len);
+
+			if(dmifile && dmifile.size() == dmi.len) {
+
+				if(set(dmifile.content(),dmifile.size())) {
+#ifdef DEBUG
+					cout << "Got DMI table from sysfs" << endl;
+#endif // DEBUG
+					return;
+				}
+
+			}
+
+		}
+
+	}
+
+	Table::~Table() {
+		if(dmi.contents) {
+			delete[] dmi.contents;
+		}
+	}
 
  }

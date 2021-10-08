@@ -23,26 +23,5 @@
 
  namespace DMI {
 
-	const Entry * Type::getChild(const char *name) const {
-
-		if(children) {
-
-			for(size_t ix = 0; children[ix].index != 0xFF; ix++) {
-
-				if(children[ix].name && !strcasecmp(name,children[ix].name)) {
-					return children+ix;
-				}
-
-				if(children[ix].description && !strcasecmp(name,children[ix].description)) {
-					return children+ix;
-				}
-
-			}
-
-		}
-
-		throw system_error(ENOENT,system_category(),string{"Can't find node '"} + name + "'");
-
-	}
 
  }

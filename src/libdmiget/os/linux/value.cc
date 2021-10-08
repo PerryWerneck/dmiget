@@ -25,54 +25,5 @@
 
  namespace DMI {
 
-	Value::Value(const char *path) {
-
-		const char *ptr;
-
-		if(strncasecmp(path,"dmi://",6)) {
-			throw runtime_error("Invalid scheme; the DMI URL should start with dmi://");
-		}
-
-		path += 6;
-
-		// Get type.
-		ptr = strchr(path,'/');
-		if(!ptr) {
-			throw runtime_error("Invalid URL");
-		}
-
-		const Type * type = Type::find(string(path,ptr-path));
-
-		// Get node
-		path = ptr+1;
-
-		const Entry *node = nullptr;
-
-		ptr = strchr(path,'/');
-		if(ptr) {
-			node = type->getChild(string(path,ptr-path).c_str());
-		} else {
-			node = type->getChild(path);
-		}
-
-		this->reader = new Value::Reader(type,node);
-
-	}
-
-	Value::~Value() {
-		delete this->reader;
-	}
-
-	const char * Value::name() const {
-		return reader->name();
-	}
-
-	const char * Value::description() const {
-		return reader->description();
-	}
-
-	const std::string Value::as_string() const {
-		return reader->as_string();
-	}
 
  }

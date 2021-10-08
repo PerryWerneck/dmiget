@@ -6,6 +6,7 @@ PRODUCT_NAME=@PRODUCT_NAME@
 
 LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/*.cc) \
+	$(wildcard src/libdmiget/decoders/*.cc) \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
 
 APPLICATION_SOURCES= \

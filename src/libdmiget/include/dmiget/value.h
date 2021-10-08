@@ -17,27 +17,88 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ #pragma once
+
  #include <dmiget/defs.h>
  #include <string>
+ #include <stdint.h>
 
  namespace DMI {
 
 	class DMIGET_API Value {
+	public:
+
+		enum ContentType : uint8_t {
+			Invalid,
+			String
+		};
+
+		struct Record {
+
+			const char *name = nullptr;
+
+			ContentType type = Invalid;
+
+			uint8_t offset = 0xFF;
+
+			const char *description = nullptr;
+
+		};
+
+		struct Type {
+			uint8_t id = 0;
+			bool multiple = false;
+			const char *name = nullptr;
+			const char *description = nullptr;
+			const Record * records = nullptr;
+
+			static const Type * find(uint8_t id);
+		};
+
 	protected:
-		class Reader;
-		Reader * reader = nullptr;
+
+		struct {
+			std::string name;
+			std::string description;
+		} info;
+
+		const uint8_t typeindex = 1;
+		const Type * type = nullptr;
 
 	public:
-		Value(const char *path);
-		~Value();
+		Value() { }
 
-		const char * name() const;
-		const char * description() const;
-		const std::string as_string() const;
+		Value(const Type *type, const Record *record, const uint8_t typeindex = 1);
+		virtual ~Value();
+
+		std::string url() const;
+
+		inline const char * name() const {
+			return info.name.c_str();
+		}
+
+		const char * description() const {
+			return info.name.c_str();
+		}
+
+		virtual std::string as_string() const;
 
 	};
 
-
-
  }
 
+ namespace std {
+
+	inline string to_string(const DMI::Value &value) {
+		return value.as_string();
+	}
+
+	inline ostream& operator<< (ostream& os, const DMI::Value &value) {
+		return os << value.as_string();
+	}
+
+	inline ostream& operator<< (ostream& os, const DMI::Value *value) {
+		return os << value->as_string();
+	}
+
+ }

@@ -17,12 +17,65 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
+ #include <config.h>
+ #include <internals.h>
  #include <cstring>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <unistd.h>
+ #include <iostream>
+
+ using namespace std;
 
  namespace DMI {
+
+	void String::set(const char *bp, bool filter) {
+
+		if(*bp) {
+
+			char * converted = strdup(bp);
+
+			if(filter) {
+				for(char *ptr = converted; *ptr; ptr++) {
+					if ( *ptr < 32 || *ptr >= 127) {
+						*ptr = '.';
+					}
+				}
+			}
+
+			// TODO: Strip converted.
+
+			str.assign(converted);
+
+			free(converted);
+
+		} else {
+			str.clear();
+		}
+
+	}
+
+	String::String(const char *bp, bool filter) {
+		set(bp,filter);
+	}
+
+	String::String(const Header &header, uint8_t s, bool filter) {
+
+		const char *bp = (const char *) header.data;
+
+		bp += header.length;
+		while (s > 1 && *bp) {
+			bp += strlen(bp);
+			bp++;
+			s--;
+		}
+
+		set(bp,filter);
+
+	}
+
+	String::~String() {
+	}
+
+	std::string String::as_string() const {
+		return this->str;
+	}
 
  }

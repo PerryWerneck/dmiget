@@ -18,339 +18,573 @@
  */
 
  #include "private.h"
- #include <cstring>
- #include <cerrno>
- #include <system_error>
-
- using namespace std;
 
  namespace DMI {
 
-	static const Type types[] = {
+	static const Value::Type types[] = {
+
 		{
-			0,0,
-			"BIOS",
+			0,
+			false,
+			"bios",
 			"BIOS Information",
-			(const Entry []) {
-				{
-					0,
-					nullptr,
-					"Vendor"
-				},
-				{
-					1,
-					nullptr,
-					"Version"
-				},
-				{
-					2,
-					"rdate",
-					"Release Date"
-				},
-				{
-					3,
-					"brev",
-					"Bios Revision"
-				},
-
-				ENTRY_LIST_TERMINATOR
-
+			(const Value::Record []) {
+				{ "vendor",		Value::String,	1,	"Vendor"		},
+				{ "version",	Value::String,	2,	"Version"		},
+				{ "date",		Value::String,	3,	"Release Date"	},
+				{}
 			}
 		},
-
 		{
-			1,0,
-			nullptr,
+			1,
+			false,
+			"system",
 			"System",
-			(const Entry []) {
-				{
-					0,
-					"Manufacturer",
-					nullptr
-				},
-				{
-					1,
-					"product",
-					"Product Name"
-				},
-				{
-					2,
-					"Version",
-					nullptr
-				},
-				{
-					3,
-					"serial",
-					"Serial Number"
-				},
-
-				ENTRY_LIST_TERMINATOR
-
+			(const Value::Record []) {
+				{ "manufacturer",	Value::String,	1,	"Manufacturer"	},
+				{ "name",			Value::String,	2,	"Product Name"	},
+				{ "version",		Value::String,	3,	"Version"		},
+				{ "serial",			Value::String,	4,	"Serial Number"	},
+				{ "sku",			Value::String,	5,	"SKU Number"	},
+				{ "family",			Value::String,	6,	"Family"		},
+				{}
 			}
 		},
-		/*
 		{
 			2,
-			nullptr,
-			"Base Board"
-		},
-		*/
-		{
-			3,0,
-			"Chassis",
-			"Chassis Information",
-			(const Entry []) {
-				{
-					0,
-					"Manufacturer",
-					nullptr
-				},
-
-				{
-					1,
-					"Version",
-					nullptr
-				},
-
-				{
-					2,
-					"Serial",
-					"Serial Number"
-				},
-
-				{
-					3,
-					"atag",
-					"Asset Tag"
-				},
-
-				ENTRY_LIST_TERMINATOR
+			false,
+			"baseboard",
+			"Base Board",
+			(const Value::Record []) {
+				{ "manufacturer",	Value::String,	1,	"Manufacturer"			},
+				{ "name",			Value::String,	2,	"Product Name"			},
+				{ "version",		Value::String,	3,	"Version"				},
+				{ "serial",			Value::String,	4,	"Serial Number"			},
+				{ "atag",			Value::String,	5,	"Asset Tag"				},
+				{ "location",		Value::String,	6,	"Location In Chassis"	},
+				{}
 			}
 		},
-		/*
+		{
+			3,
+			false,
+			"chassis",
+			"Chassis Information",
+
+			(const Value::Record []) {
+				{ "manufacturer",	Value::String,	1,	"Manufacturer"	},
+				{ "version",		Value::String,	2,	"Version"		},
+				{ "serial",			Value::String,	3,	"Serial Number"	},
+				{ "atag",			Value::String,	4,	"Asset Tag"		},
+				{ "sku",			Value::String,	5,	"SKU Number"	},
+				{}
+			}
+
+		},
 		{
 			4,
-			nullptr,
-			"Processor"
+			false,
+			"processor",
+			"Processor",
+
+			(const Value::Record []) {
+				{ "socket",			Value::String,	1,	"Socket Designation"	},
+				{ "manufacturer",	Value::String,	2,	"Manufacturer"	},
+			//	{ "",	Value::String,	3,	""	},
+			//	{ "",	Value::String,	4,	""	},
+			//	{ "",	Value::String,	5,	""	},
+			//	{ "",	Value::String,	6,	""	},
+				{}
+			}
+
 		},
 		{
 			5,
-			nullptr,
-			"Memory Controller"
+			false,
+			"mcntrl",
+			"Memory Controller",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			6,
-			nullptr,
-			"Memory Module"
+			false,
+			"mmodule",
+			"Memory Module",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			7,
-			nullptr,
-			"Cache"
+			true,
+			"cache",
+			"Cache",
+			(const Value::Record []) {
+				{ "socket",	Value::String,	1,	"Socket Designation"	},
+				{}
+			}
 		},
 		{
 			8,
-			nullptr,
-			"Port Connector"
+			true,
+			"ports",
+			"Port Connector",
+
+			(const Value::Record []) {
+				{ "internal",	Value::String,	1,	"Internal Reference Designator"	},
+				{ "external",	Value::String,	2,	"External Reference Designator"	},
+				{}
+			}
 		},
 		{
 			9,
-			nullptr,
-			"System Slots"
+			true,
+			"slots",
+			"System Slots",
+			(const Value::Record []) {
+				{ "designation",	Value::String,	1,	"Designation"	},
+				{}
+			}
 		},
 		{
 			10,
-			nullptr,
-			"On Board Devices"
+			false,
+			"boarddevices",
+			"On Board Devices",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			11,
-			nullptr,
-			"OEM Strings"
+			false,
+			"oemstrings",
+			"OEM Strings",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			12,
+			false,
 			"sysconf",
-			"System Configuration Options"
+			"System Configuration Options",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			13,
-			nullptr,
-			"BIOS Language"
+			false,
+			"language",
+			"BIOS Language",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			14,
-			nullptr,
-			"Group Associations"
+			true,
+			"group",
+			"Group Associations",
+			(const Value::Record []) {
+				{ "name",	Value::String,	1,	"Name"	},
+				{}
+			}
 		},
 		{
 			15,
+			false,
 			"syslog",
-			"System Event Log"
+			"System Event Log",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			16,
-			nullptr,
-			"Physical Memory Array"
+			false,
+			"pma",
+			"Physical Memory Array",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			17,
-			nullptr,
-			"Memory Device"
+			true,
+			"memory",
+			"Memory Device",
+			(const Value::Record []) {
+				{ "locator",		Value::String,	1,	"Locator"		},
+				{ "bank",			Value::String,	2,	"Bank Locator"	},
+				{ "manufacturer",	Value::String,	3,	"Manufacturer"	},
+				{ "serial",			Value::String,	4,	"Serial Number"	},
+				{ "atag",			Value::String,	5,	"Asset Tag"		},
+				{ "partnumber",		Value::String,	6,	"Part Number"	},
+				{}
+			}
 		},
 		{
 			18,
-			nullptr,
-			"32-bit Memory Error"
+			false,
+			"32bme",
+			"32-bit Memory Error",
+			/*
+			(const Value::Record []) {
+				{ "",	false,	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			19,
-			nullptr,
-			"Memory Array Mapped Address"
+			true,
+			"mama",
+			"Memory Array Mapped Address",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			20,
-			nullptr,
-			"Memory Device Mapped Address"
+			false,
+			"mdma",
+			"Memory Device Mapped Address",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			21,
-			nullptr,
-			"Built-in Pointing Device"
+			false,
+			"pointingdevice",
+			"Built-in Pointing Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			22,
-			nullptr,
-			"Portable Battery"
+			false,
+			"battery",
+			"Portable Battery",
+			(const Value::Record []) {
+				{ "location",		Value::String,	1,	"Location"			},
+				{ "manufacturer",	Value::String,	2,	"Manufacturer"		},
+				{ "date",			Value::String,	3,	"Manufacture Date"	},
+				{ "serial",			Value::String,	4,	"Serial Number"		},
+				{ "name",			Value::String,	5,	"Name"				},
+				// { "",			Value::String,	6,	""	},
+				{}
+			}
+
 		},
 		{
 			23,
-			nullptr,
-			"System Reset"
+			false,
+			"sysreset",
+			"System Reset",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			24,
-			nullptr,
-			"Hardware Security"
+			false,
+			"hwsecurity",
+			"Hardware Security",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			25,
-			nullptr,
-			"System Power Controls"
+			false,
+			"syspowercntrl",
+			"System Power Controls",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			26,
-			nullptr,
-			"Voltage Probe"
+			false,
+			"vprobe",
+			"Voltage Probe",
+			(const Value::Record []) {
+				{ "description",	Value::String,	1,	"Description"	},
+				{}
+			}
 		},
 		{
 			27,
-			nullptr,
-			"Cooling Device"
+			false,
+			"cooling",
+			"Cooling Device",
+			(const Value::Record []) {
+				{ "description",	Value::String,	1,	"Description"	},
+				{}
+			}
 		},
 		{
 			28,
-			nullptr,
-			"Temperature Probe"
+			false,
+			"temperature",
+			"Temperature Probe",
+			(const Value::Record []) {
+				{ "description",	Value::String,	1,	"Description"	},
+				{}
+			}
 		},
 		{
 			29,
-			nullptr,
-			"Electrical Current Probe"
+			false,
+			"electricalcurrent",
+			"Electrical Current Probe",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			30,
-			nullptr,
-			"Out-of-band Remote Access"
+			false,
+			"ora",
+			"Out-of-band Remote Access",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			31,
-			nullptr,
-			"Boot Integrity Services"
+			false,
+			"bis",
+			"Boot Integrity Services",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			32,
+			false,
 			"sysboot",
-			"System Boot"
+			"System Boot",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			33,
-			nullptr,
-			"64-bit Memory Error"
+			false,
+			"64bme",
+			"64-bit Memory Error",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			34,
-			nullptr,
-			"Management Device"
+			false,
+			"mdev",
+			"Management Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			35,
-			nullptr,
-			"Management Device Component"
+			false,
+			"mdevc",
+			"Management Device Component",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			36,
-			nullptr,
-			"Management Device Threshold Data"
+			false,
+			"mdevtd",
+			"Management Device Threshold Data",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			37,
-			nullptr,
-			"Memory Channel"
+			false,
+			"mchannel",
+			"Memory Channel",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			38,
+			false,
 			"ipmi",
-			"IPMI Device"
+			"IPMI Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			39,
-			nullptr,
-			"Power Supply"
+			false,
+			"powersupply",
+			"Power Supply",
+			(const Value::Record []) {
+				{ "location",		Value::String,	1,	"Location"			},
+				{ "name",			Value::String,	2,	"Name"				},
+				{ "manufacturer",	Value::String,	3,	"Manufacturer"		},
+				{ "serial",			Value::String,	4,	"Serial Number"		},
+				{ "atag",			Value::String,	5,	"Asset Tag"			},
+				{ "modelpn",		Value::String,	6,	"Model Part Number"	},
+				{ "revision",		Value::String,	7,	"Revision"			},
+				{}
+			}
 		},
 		{
 			40,
-			nullptr,
-			"Additional Information"
+			false,
+			"additional",
+			"Additional Information",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			41,
-			nullptr,
-			"Onboard Device"
+			false,
+			"onboarddev",
+			"Onboard Device",
+			(const Value::Record []) {
+				{ "reference",	Value::String,	1,	"Reference Designation"	},
+				{}
+			}
 		},
 		{
 			42,
-			nullptr,
-			"Management Controller Host Interface"
+			false,
+			"mchi",
+			"Management Controller Host Interface",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
 		},
 		{
 			43,
+			false,
 			"TPM",
-			"TPM Device"
-		},
-		*/
+			"TPM Device",
+			/*
+			(const Value::Record []) {
+				{ "",	Value::String,	1,	""	},
+				{}
+			}
+			*/
+		}
 
 	};
 
+	const Value::Type * Value::Type::find(uint8_t id) {
 
-	const Type * Type::find(const string &name) {
+		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
 
-		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0]));ix++) {
-
-			if(types[ix].name && !strcasecmp(types[ix].name,name.c_str())) {
-				return types+ix;
-			}
-
-			if(types[ix].description && !strcasecmp(types[ix].description,name.c_str())) {
-				return types+ix;
+			if(types[ix].id == id) {
+				return &types[ix];
 			}
 
 		}
 
-		throw system_error(ENOENT,system_category(),string{"Can't find type '"} + name + "'");
+		static const Value::Type deftype = {
+			0xFF,
+			true,
+			"unknown",
+			"unknown"
+		};
 
+		return &deftype;
 	}
 
 
  }
-
