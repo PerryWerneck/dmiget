@@ -135,10 +135,6 @@
 			const Value::Type * type = Value::Type::find(header.type);
 			typeindex[type->id]++;
 
-#ifdef DEBUG
-			cout << ((unsigned int) header.type) << " (" << type->description << ") " << ((unsigned int) header.length) << endl;
-#endif // DEBUG
-
 			if(type->records) {
 
 				for(const Value::Record *record = type->records;record->name;record++) {
@@ -151,7 +147,7 @@
 						break;
 
 					default:
-						cerr << "DMI\tUnexpected record type" << endl;
+						throw runtime_error("Unexpected DMI record type");
 					}
 
 
@@ -164,9 +160,6 @@
 				bp += header.length;
 				while(*bp) {
 
-#ifndef DEBUG
-					// FIXME: Record is not static.
-#endif // DEBUG
 					Value::Record record;
 					record.offset = ++index;
 					record.type = Value::String;
@@ -185,6 +178,35 @@
 		});
 
 	}
+
+	std::shared_ptr<DMI::Value> Table::find(const char *url) const {
+
+		std::shared_ptr<DMI::Value> found;
+
+		for_each([&found,url](shared_ptr<DMI::Value> value){
+
+			if(!strcasecmp(value->url().c_str(),url)) {
+				found = value;
+				return false;
+			}
+
+			return true;
+		});
+
+		return found;
+	}
+
+	std::string Table::operator[](const char *url) const {
+
+		auto value = find(url);
+
+		if(value) {
+			return value->as_string();
+		}
+
+		return "";
+	}
+
 
  }
 

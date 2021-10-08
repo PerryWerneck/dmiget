@@ -21,23 +21,73 @@
  #include <dmiget/value.h>
  #include <dmiget/table.h>
  #include <iostream>
+ #include <getopt.h>
 
  using namespace std;
 
- int main(int argc, const char **argv) {
+ int main(int argc, char **argv) {
 
-	DMI::Table table;
+	static struct option options[] = {
+		{ "all",		no_argument,		0,	'a' },
+		{ "urls",		no_argument,		0,	'U' },
+		{ "values",		no_argument,		0,	'V' },
+		{ "delimiter",	required_argument,	0,	'd' },
+	};
 
-	table.for_each([](shared_ptr<DMI::Value> value){
-		cout << "\t" << value->url() << " = '" << value << "'" << endl;
-		return true;
-	});
+	try {
 
-	/*
-	for(int arg = 1; arg < argc; arg++) {
- 		cout << DMI::Value(argv[arg]).as_string() << endl;
+		string delimiter{"\t"};
+
+		int long_index =0;
+		int opt;
+		while((opt = getopt_long(argc, argv, "UVad:", options, &long_index )) != -1) {
+
+			switch(opt) {
+			case 'd':
+				delimiter = optarg;
+				break;
+
+			case 'U':
+				DMI::Table().for_each([](shared_ptr<DMI::Value> value){
+					cout << value->url() << endl;
+					return true;
+				});
+				break;
+
+			case 'V':
+				DMI::Table().for_each([](shared_ptr<DMI::Value> value){
+					cout << value << endl;
+					return true;
+				});
+				break;
+
+			case 'a':
+				DMI::Table().for_each([&delimiter](shared_ptr<DMI::Value> value){
+					cout << value->url() << delimiter << value << endl;
+					return true;
+				});
+				break;
+
+			}
+
+		}
+
+		if(optind < argc) {
+
+			DMI::Table table;
+			for(; optind < argc; optind++) {
+				cout << table[argv[optind]] << endl;
+			}
+
+		}
+
+
+	} catch(const exception &e) {
+
+		cerr << endl << e.what() << endl;
+		return -1;
 	}
-	*/
 
 	return 0;
+
  }

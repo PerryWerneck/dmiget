@@ -62,6 +62,9 @@
 
 		bool for_each(std::function<bool(std::shared_ptr<DMI::Value> value)> exec) const;
 
+		std::shared_ptr<DMI::Value> find(const char *url) const;
+		std::string operator[](const char *url) const;
+
 	};
 
  }
