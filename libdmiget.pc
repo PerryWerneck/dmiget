@@ -1,0 +1,15 @@
+prefix=/mingw64
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+version_major=1
+version_minor=0
+
+Name: dmiget
+Description: "dmiget development"
+Version: 1.0
+Libs: -ldmiget
+Libs.private: 
+Cflags:
+

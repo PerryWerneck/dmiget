@@ -50,6 +50,7 @@
 
 		int i = 0;
 		const uint8_t * data = buf;
+
 		while ((i < num || !num) && data + 4 <= buf + len) {
 
 			Header h{data};
@@ -59,8 +60,12 @@
 			// is invalid, but we cannot reliably locate the next entry.
 			// Also stop at end-of-table marker if so instructed.
 			//
-			if(h.length < 4 || h.type == 127)
+			if(h.length < 4 || h.type == 127) {
+#ifdef DEBUG
+				cout << "Aborting length=" << ((int) h.length) << " (min=4) type=" << ((int) h.type) << " (127=END)"<< endl;
+#endif // DEBUG
 				break;
+			}
 
 			i++;
 
@@ -104,12 +109,12 @@
 
 			if(header.type == 1 && header.length >= 6) {
 
-				cout << ((unsigned int) header.type) << " " << ((unsigned int) header.length) << endl;
+				//cout << ((unsigned int) header.type) << " " << ((unsigned int) header.length) << endl;
 
 				String vendor(header,header.data[0x04],0);
 				String product(header,header.data[0x05],0);
 
-				cout << "Vendor: '" << vendor.as_string() << "' Product: '" << product.as_string() << "'" << endl;
+				//cout << "Vendor: '" << vendor.as_string() << "' Product: '" << product.as_string() << "'" << endl;
 
 				return false;
 			}
