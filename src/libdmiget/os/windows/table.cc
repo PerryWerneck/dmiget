@@ -32,6 +32,9 @@
 
 	Table::Table() {
 
+		// References:
+		// https://chen-jiao.github.io/articles/2016/11/09/How-to-access-SMBIOS-in-Windows.html
+
 		// Use GetSystemFirmwareTable
 		{
 			DWORD smbiosdatasize = GetSystemFirmwareTable('RSMB',0,NULL,0);
