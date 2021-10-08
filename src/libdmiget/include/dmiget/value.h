@@ -57,20 +57,30 @@
 
 	protected:
 
+		struct {
+			std::string name;
+			std::string description;
+		} info;
+
 		const uint8_t typeindex = 1;
 		const Type * type = nullptr;
-		const Record * record = nullptr;
 
 	public:
-		constexpr Value() { }
-		constexpr Value(const Type *t, const Record *r, const uint8_t i = 1) : typeindex(i), type(t), record(r) { }
+		Value() { }
 
+		Value(const Type *type, const Record *record, const uint8_t typeindex = 1);
 		virtual ~Value();
 
 		std::string url() const;
 
-		const char * name() const;
-		const char * description() const;
+		inline const char * name() const {
+			return info.name.c_str();
+		}
+
+		const char * description() const {
+			return info.name.c_str();
+		}
+
 		virtual std::string as_string() const;
 
 	};
@@ -85,6 +95,10 @@
 
 	inline ostream& operator<< (ostream& os, const DMI::Value &value) {
 		return os << value.as_string();
+	}
+
+	inline ostream& operator<< (ostream& os, const DMI::Value *value) {
+		return os << value->as_string();
 	}
 
  }

@@ -28,8 +28,8 @@
 
 	DMI::Table table;
 
-	table.for_each([](const DMI::Value &value){
-		cout << "\t" << value.url() << " = '" << value << "'" << endl;
+	table.for_each([](shared_ptr<DMI::Value> value){
+		cout << "\t" << value->url() << " = '" << value << "'" << endl;
 		return true;
 	});
 

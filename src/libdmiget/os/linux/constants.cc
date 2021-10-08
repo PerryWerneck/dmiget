@@ -304,12 +304,16 @@
 			false,
 			"battery",
 			"Portable Battery",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "location",		Value::String,	1,	"Location"			},
+				{ "manufacturer",	Value::String,	2,	"Manufacturer"		},
+				{ "date",			Value::String,	3,	"Manufacture Date"	},
+				{ "serial",			Value::String,	4,	"Serial Number"		},
+				{ "name",			Value::String,	5,	"Name"				},
+				// { "",			Value::String,	6,	""	},
 				{}
 			}
-			*/
+
 		},
 		{
 			23,
@@ -352,36 +356,30 @@
 			false,
 			"vprobe",
 			"Voltage Probe",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "description",	Value::String,	1,	"Description"	},
 				{}
 			}
-			*/
 		},
 		{
 			27,
 			false,
 			"cooling",
 			"Cooling Device",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "description",	Value::String,	1,	"Description"	},
 				{}
 			}
-			*/
 		},
 		{
 			28,
 			false,
 			"temperature",
 			"Temperature Probe",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "description",	Value::String,	1,	"Description"	},
 				{}
 			}
-			*/
 		},
 		{
 			29,
@@ -508,12 +506,16 @@
 			false,
 			"powersupply",
 			"Power Supply",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "location",		Value::String,	1,	"Location"			},
+				{ "name",			Value::String,	2,	"Name"				},
+				{ "manufacturer",	Value::String,	3,	"Manufacturer"		},
+				{ "serial",			Value::String,	4,	"Serial Number"		},
+				{ "atag",			Value::String,	5,	"Asset Tag"			},
+				{ "modelpn",		Value::String,	6,	"Model Part Number"	},
+				{ "revision",		Value::String,	7,	"Revision"			},
 				{}
 			}
-			*/
 		},
 		{
 			40,
@@ -532,12 +534,10 @@
 			false,
 			"onboarddev",
 			"Onboard Device",
-			/*
 			(const Value::Record []) {
-				{ "",	Value::String,	1,	""	},
+				{ "reference",	Value::String,	1,	"Reference Designation"	},
 				{}
 			}
-			*/
 		},
 		{
 			42,

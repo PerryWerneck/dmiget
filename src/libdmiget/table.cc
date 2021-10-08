@@ -120,7 +120,7 @@
 		return true;
 	}
 
-	bool Table::for_each(std::function<bool(const DMI::Value &value)> exec) const {
+	bool Table::for_each(std::function<bool(std::shared_ptr<DMI::Value> value)> exec) const {
 
 		uint8_t typeindex[0x0100];
 		memset(typeindex,0,sizeof(typeindex));
@@ -145,7 +145,7 @@
 
 					switch(record->type) {
 					case Value::String:
-						if(!exec(StringValue(type,record,typeindex[type->id],String(header,record->offset)))) {
+						if(!exec(make_shared<StringValue>(type,record,typeindex[type->id],String(header,record->offset)))) {
 							return false;
 						}
 						break;
@@ -164,14 +164,15 @@
 				bp += header.length;
 				while(*bp) {
 
-					string name = to_string(++index);
-
+#ifndef DEBUG
+					// FIXME: Record is not static.
+#endif // DEBUG
 					Value::Record record;
-					record.name = name.c_str();
+					record.offset = ++index;
 					record.type = Value::String;
-					record.description = "String";
+					record.description = "OEM String";
 
-					if(!exec(StringValue(type,&record,typeindex[type->id],String(bp)))) {
+					if(!exec(make_shared<StringValue>(type,&record,typeindex[type->id],String(bp)))) {
 						return false;
 					}
 					bp += strlen(bp);

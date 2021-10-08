@@ -18,18 +18,30 @@
  */
 
  #include <dmiget/value.h>
+ #include <string>
 
+ using namespace std;
  namespace DMI {
 
+	Value::Value(const Type *t, const Record *record, const uint8_t i) : typeindex(i), type(t) {
+
+		if(record) {
+
+			if(record->name) {
+				info.name = record->name;
+			} else {
+				info.name = to_string( (int) record->offset);
+			}
+
+			if(record->description) {
+				info.description = record->description;
+			}
+
+		}
+
+	}
+
 	Value::~Value() {
-	}
-
-	const char * Value::name() const {
-		return "";
-	}
-
-	const char * Value::description() const {
-		return "";
 	}
 
 	std::string Value::as_string() const {
@@ -38,7 +50,7 @@
 
 	std::string Value::url() const {
 
-		if(!(type && record)) {
+		if(!type) {
 			return "";
 		}
 
@@ -52,7 +64,7 @@
 			rc += "/";
 		}
 
-		rc += record->name;
+		rc += info.name;
 
 		return rc;
 	}

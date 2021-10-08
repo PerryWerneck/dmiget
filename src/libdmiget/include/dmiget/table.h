@@ -24,6 +24,7 @@
  #include <stdint.h>
  #include <stddef.h>
  #include <functional>
+ #include <memory>
 
  namespace DMI {
 
@@ -59,7 +60,7 @@
 			return dmi.contents != nullptr;
 		}
 
-		bool for_each(std::function<bool(const DMI::Value &value)> exec) const;
+		bool for_each(std::function<bool(std::shared_ptr<DMI::Value> value)> exec) const;
 
 	};
 
