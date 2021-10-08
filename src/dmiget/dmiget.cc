@@ -76,7 +76,7 @@
 
 			DMI::Table table;
 			for(; optind < argc; optind++) {
-				cout << table[argv[optind]] << endl;
+				cout << table[(const char *) argv[optind]] << endl;
 			}
 
 		}
