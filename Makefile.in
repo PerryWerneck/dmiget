@@ -45,7 +45,7 @@ sysconfdir=/etc
 
 BASEDIR=@BASEDIR@
 
-OBJDIR=.obj/core
+OBJDIR=$(BASEDIR)/.obj
 OBJDBG=$(OBJDIR)/Debug
 OBJRLS=$(OBJDIR)/Release
 
@@ -162,6 +162,7 @@ $(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
 		$^ \
 		-L$(BINRLS) \
 		$(LDFLAGS) \
+		$(BINRLS)/@SONAME@ \
 		$(LIBS) 
 
 #---[ Install Targets ]------------------------------------------------------------------
@@ -227,6 +228,10 @@ install-devel:
 		src/libdmiget/include/dmiget/*.h \
 		$(DESTDIR)$(includedir)/dmiget
 
+	@mkdir -p $(DESTDIR)$(libdir)/pkgconfig
+	@$(INSTALL_DATA) \
+		libdmiget.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/libdmiget.pc
 
 #---[ Uninstall Targets ]----------------------------------------------------------------
 

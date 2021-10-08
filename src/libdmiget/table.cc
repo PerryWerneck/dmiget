@@ -104,12 +104,12 @@
 
 			if(header.type == 1 && header.length >= 6) {
 
-				cout << ((unsigned int) header.type) << " " << ((unsigned int) header.length) << endl;
+				//cout << ((unsigned int) header.type) << " " << ((unsigned int) header.length) << endl;
 
 				String vendor(header,header.data[0x04],0);
 				String product(header,header.data[0x05],0);
 
-				cout << "Vendor: '" << vendor.as_string() << "' Product: '" << product.as_string() << "'" << endl;
+				//cout << "Vendor: '" << vendor.as_string() << "' Product: '" << product.as_string() << "'" << endl;
 
 				return false;
 			}
