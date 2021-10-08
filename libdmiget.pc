@@ -1,6 +1,6 @@
-prefix=/usr/x86_64-w64-mingw32/sys-root/mingw
+prefix=/mingw64
 exec_prefix=${prefix}
-libdir=/usr/x86_64-w64-mingw32/sys-root/mingw/lib
+libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 version_major=1

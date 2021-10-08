@@ -39,28 +39,39 @@
 		{
 			DWORD smbiosdatasize = GetSystemFirmwareTable('RSMB',0,NULL,0);
 
-#ifdef DEBUG
-			cout << "smbiosdatasize=" << smbiosdatasize << endl;
-#endif // DEBUG
+//#ifdef DEBUG
+//			cout << "smbiosdatasize=" << smbiosdatasize << endl;
+//#endif // DEBUG
 
 			if(smbiosdatasize) {
-				dmi.len = (uint32_t) smbiosdatasize;
-				dmi.contents = new uint8_t[smbiosdatasize+1];
-				memset(dmi.contents,0,smbiosdatasize+1);
 
-				DWORD bytesread = GetSystemFirmwareTable('RSMB',0,dmi.contents,smbiosdatasize);
+				uint8_t buffer[smbiosdatasize+1];
 
-				if(bytesread != smbiosdatasize) {
-					cerr << "Invalid data length reading SMBIOS from GetSystemFirmwareTable" << endl;
-					delete[] dmi.contents;
-					dmi.contents = nullptr;
-					dmi.len = 0;
+				DWORD bytesread = GetSystemFirmwareTable('RSMB',0,buffer,smbiosdatasize);
+
+				if(bytesread == smbiosdatasize) {
+
+					#pragma pack(1)
+					struct RawSMBIOSData {
+						BYTE    Used20CallingMethod;
+						BYTE    SMBIOSMajorVersion;
+						BYTE    SMBIOSMinorVersion;
+						BYTE    DmiRevision;
+						DWORD    Length;
+						BYTE    SMBIOSTableData[];
+					};
+					#pragma pack()
+
+					RawSMBIOSData * data = (RawSMBIOSData *) buffer;
+
+//#ifdef DEBUG
+//					cout << "Version: " << ((int) data->SMBIOSMajorVersion) << "." << ((int) data->SMBIOSMinorVersion) << endl;
+//#endif // DEBUG
+					set(data->SMBIOSTableData,data->Length);
+
+				} else {
+					cerr << "Invalid response on GetSystemFirmwareTable()" << endl;
 				}
-#ifdef DEBUG
-				else {
-					cout << "Got SMBIOS from GetSystemFirmwareTable" << endl;
-				}
-#endif // DEBUG
 			}
 		}
 

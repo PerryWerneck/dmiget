@@ -27,6 +27,15 @@
 
  int main(int argc, char **argv) {
 
+#ifdef DEBUG
+
+	DMI::Table().for_each([](shared_ptr<DMI::Value> value){
+		cout << value->url() << " = " << value << endl;
+		return true;
+	});
+
+#else
+
 	static struct option options[] = {
 		{ "all",		no_argument,		0,	'a' },
 		{ "urls",		no_argument,		0,	'U' },
@@ -87,6 +96,7 @@
 		cerr << endl << e.what() << endl;
 		return -1;
 	}
+#endif // DEBUG
 
 	return 0;
 

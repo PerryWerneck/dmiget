@@ -60,7 +60,7 @@ CFLAGS= \
 	-fPIC \
 	-Isrc/libdmiget/include \
 	-DBUILD_DATE=`date +%Y%m%d`
-	
+
 CPPFLAGS= \
 	@CPPFLAGS@
 
@@ -163,7 +163,7 @@ $(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
 		-L$(BINRLS) \
 		$(LDFLAGS) \
 		$(BINRLS)/@SONAME@ \
-		$(LIBS) 
+		$(LIBS)
 
 #---[ Install Targets ]------------------------------------------------------------------
 
@@ -189,7 +189,7 @@ install-linux-lib: \
 	@$(INSTALL_PROGRAM) \
 		$(BINRLS)/@SONAME@ \
 		$(DESTDIR)$(libdir)/@SONAME@
-		
+
 	@$(LN_S) \
 		@SONAME@ \
 		$(DESTDIR)$(libdir)/lib$(PACKAGE_NAME)@LIBEXT@
@@ -203,7 +203,7 @@ install-windows-lib: \
 	@$(INSTALL_PROGRAM) \
 		$(BINRLS)/lib$(PACKAGE_NAME)@LIBEXT@ \
 		$(DESTDIR)$(bindir)/$(PACKAGE_NAME)@LIBEXT@
-		
+
 	@$(MKDIR) \
 		$(DESTDIR)$(libdir)
 
@@ -247,7 +247,7 @@ uninstall-linux-lib:
 
 	@rm -f \
 		$(DESTDIR)$(libdir)/@SONAME@
-		
+
 	@rm -f \
 		$(DESTDIR)$(libdir)/lib$(PACKAGE_NAME)@LIBEXT@
 
@@ -255,7 +255,7 @@ uninstall-windows-lib:
 
 	@rm -f \
 		$(DESTDIR)$(bindir)/@SONAME@
-		
+
 	@rm -f \
 		$(DESTDIR)$(libdir)/@SONAME@.a
 
@@ -283,7 +283,7 @@ $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 		-Wl,-rpath,$(BINDBG) \
 		$(LDFLAGS) \
 		$(BINDBG)/@SONAME@ \
-		$(LIBS) 
+		$(LIBS)
 
 
 $(BINDBG)/@SONAME@: \
@@ -301,7 +301,7 @@ $(BINDBG)/@SONAME@: \
 
 
 run: \
-	$(BINDBG)/$(PACKAGE_NAME)-test@EXEEXT@
+	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
 
 ifeq ($(VALGRIND),no)
 
