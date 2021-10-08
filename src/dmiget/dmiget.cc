@@ -25,16 +25,12 @@
 
  using namespace std;
 
+ static const DMI::Table & getSingleton() {
+	static DMI::Table table;
+	return table;
+ }
+
  int main(int argc, char **argv) {
-
-#ifdef DEBUG
-
-	DMI::Table().for_each([](shared_ptr<DMI::Value> value){
-		cout << value->url() << " = " << value << endl;
-		return true;
-	});
-
-#else
 
 	static struct option options[] = {
 		{ "all",		no_argument,		0,	'a' },
@@ -57,21 +53,21 @@
 				break;
 
 			case 'U':
-				DMI::Table().for_each([](shared_ptr<DMI::Value> value){
+				getSingleton().for_each([](shared_ptr<DMI::Value> value){
 					cout << value->url() << endl;
 					return true;
 				});
 				break;
 
 			case 'V':
-				DMI::Table().for_each([](shared_ptr<DMI::Value> value){
+				getSingleton().for_each([](shared_ptr<DMI::Value> value){
 					cout << value << endl;
 					return true;
 				});
 				break;
 
 			case 'a':
-				DMI::Table().for_each([&delimiter](shared_ptr<DMI::Value> value){
+				getSingleton().for_each([&delimiter](shared_ptr<DMI::Value> value){
 					cout << value->url() << delimiter << value << endl;
 					return true;
 				});
@@ -83,9 +79,8 @@
 
 		if(optind < argc) {
 
-			DMI::Table table;
 			for(; optind < argc; optind++) {
-				cout << table[(const char *) argv[optind]] << endl;
+				cout << getSingleton()[(const char *) argv[optind]] << endl;
 			}
 
 		}
@@ -96,7 +91,6 @@
 		cerr << endl << e.what() << endl;
 		return -1;
 	}
-#endif // DEBUG
 
 	return 0;
 

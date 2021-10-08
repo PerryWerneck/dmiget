@@ -306,14 +306,14 @@ run: \
 ifeq ($(VALGRIND),no)
 
 	@LD_LIBRARY_PATH=$(BINDBG) \
-		$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
+		$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@ -a
 
 else
 	@touch valgrind.suppression
 
 	@LD_LIBRARY_PATH=$(BINDBG) \
 		$(VALGRIND) --leak-check=full --track-origins=yes --gen-suppressions=all --suppressions=valgrind.suppression \
-		$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
+		$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@ -a
 endif
 
 #---[ Clean Targets ]--------------------------------------------------------------------
