@@ -1,0 +1,15 @@
+prefix=/usr/x86_64-w64-mingw32/sys-root/mingw
+exec_prefix=${prefix}
+libdir=/usr/x86_64-w64-mingw32/sys-root/mingw/lib
+includedir=${prefix}/include
+
+version_major=1
+version_minor=0
+
+Name: dmiget
+Description: "dmiget development"
+Version: 1.0
+Libs: -ldmiget
+Libs.private: 
+Cflags:
+

@@ -26,6 +26,11 @@
  #include <stddef.h>
  #include <stdexcept>
 
+ #ifdef _WIN32
+
+
+ #endif // _WIN32
+
  namespace DMI {
 
  	bool checksum(const uint8_t *buf, size_t len);
