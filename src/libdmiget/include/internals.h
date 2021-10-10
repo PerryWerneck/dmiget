@@ -61,6 +61,26 @@
 
 	};
 
+	struct Value::Record {
+
+		const char *name = nullptr;
+		std::shared_ptr<DMI::Value>(*value_factory)(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
+		uint8_t offset = 0xFF;
+		const char *description = nullptr;
+
+	};
+
+	struct Value::Type {
+		uint8_t id = 0;
+		bool multiple = false;
+		const char *name = nullptr;
+		const char *description = nullptr;
+		const Record * records = nullptr;
+
+		static const Type * find(uint8_t id);
+	};
+
+
 	class File {
 	private:
 		uint8_t * contents = nullptr;
@@ -97,6 +117,8 @@
 		virtual ~String();
 		std::string as_string() const override;
 	};
+
+	std::shared_ptr<DMI::Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
 
  }
 

@@ -29,23 +29,6 @@
 
  namespace DMI {
 
-	class StringValue : public DMI::Value {
-	private:
-		string value;
-
-	public:
-		StringValue(const Value::Type *t, const Value::Record *r, const uint8_t i, const DMI::String &v) : DMI::Value(t,r,i), value(v.as_string()) {
-		}
-
-		virtual ~StringValue() {
-		}
-
-		std::string as_string() const override {
-			return this->value;
-		}
-
-	};
-
 	static bool for_each(const uint8_t *buf, uint16_t num, uint32_t len, std::function<bool(const Header &header)> exec) {
 
 		int i = 0;
@@ -144,19 +127,15 @@
 
 				for(const Value::Record *record = type->records;record->name;record++) {
 
-					switch(record->type) {
-					case Value::String:
-						if(!exec(make_shared<StringValue>(type,record,typeindex[type->id],String(header,record->offset)))) {
+					auto value = record->value_factory(header,type,record,typeindex[type->id]);
+					if(value) {
+						if(!exec(value)) {
 							return false;
 						}
-						break;
-
-					default:
-						throw runtime_error("Unexpected DMI record type");
 					}
 
-
 				}
+
 			} else if(type->name) {
 
 				const char *bp = (const char *) header.data;
@@ -167,12 +146,12 @@
 
 					Value::Record record;
 					record.offset = ++index;
-					record.type = Value::String;
 					record.description = "OEM String";
 
-					if(!exec(make_shared<StringValue>(type,&record,typeindex[type->id],String(bp)))) {
-						return false;
-					}
+					//if(!exec(make_shared<StringValue>(type,&record,typeindex[type->id],String(bp)))) {
+					//	return false;
+					//}
+
 					bp += strlen(bp);
 					bp++;
 				}
