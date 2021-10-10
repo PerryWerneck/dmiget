@@ -23,30 +23,6 @@
 
  namespace DMI {
 
-	std::shared_ptr<DMI::Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index) {
-
-		class StringValue : public DMI::Value {
-		private:
-			string value;
-
-		public:
-			StringValue(const Value::Type *t, const Value::Record *r, const uint8_t i, const DMI::String &v) : DMI::Value(t,r,i), value(v.as_string()) {
-			}
-
-			virtual ~StringValue() {
-			}
-
-			std::string as_string() const override {
-				return this->value;
-			}
-
-		};
-
-		return make_shared<StringValue>(type,record,index,String(header,record->offset));
-
-	}
-
-
 	static const Value::Type types[] = {
 
 		{

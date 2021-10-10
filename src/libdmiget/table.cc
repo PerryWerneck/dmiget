@@ -148,9 +148,9 @@
 					record.offset = ++index;
 					record.description = "OEM String";
 
-					//if(!exec(make_shared<StringValue>(type,&record,typeindex[type->id],String(bp)))) {
-					//	return false;
-					//}
+					if(!exec(make_shared<StringValue>(type,&record,typeindex[type->id],String(bp)))) {
+						return false;
+					}
 
 					bp += strlen(bp);
 					bp++;
