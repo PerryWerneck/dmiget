@@ -22,38 +22,18 @@
  #include <dmiget/defs.h>
  #include <string>
  #include <stdint.h>
+ #include <functional>
+ #include <memory>
 
  namespace DMI {
+
+	struct Header;
 
 	class DMIGET_API Value {
 	public:
 
-		enum ContentType : uint8_t {
-			Invalid,
-			String
-		};
-
-		struct Record {
-
-			const char *name = nullptr;
-
-			ContentType type = Invalid;
-
-			uint8_t offset = 0xFF;
-
-			const char *description = nullptr;
-
-		};
-
-		struct Type {
-			uint8_t id = 0;
-			bool multiple = false;
-			const char *name = nullptr;
-			const char *description = nullptr;
-			const Record * records = nullptr;
-
-			static const Type * find(uint8_t id);
-		};
+		struct Record;
+		struct Type;
 
 	protected:
 
@@ -82,6 +62,7 @@
 		}
 
 		virtual std::string as_string() const;
+		virtual unsigned int as_uint() const;
 
 	};
 

@@ -17,6 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ #include <config.h>
+ #include <internals.h>
  #include <dmiget/value.h>
  #include <string>
 
@@ -46,6 +48,10 @@
 
 	std::string Value::as_string() const {
 		return "";
+	}
+
+	unsigned int Value::as_uint() const {
+		return 0;
 	}
 
 	std::string Value::url() const {

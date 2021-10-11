@@ -61,6 +61,26 @@
 
 	};
 
+	struct Value::Record {
+
+		const char *name = nullptr;
+		std::shared_ptr<DMI::Value>(*value_factory)(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
+		uint8_t offset = 0xFF;
+		const char *description = nullptr;
+
+	};
+
+	struct Value::Type {
+		uint8_t id = 0;
+		bool multiple = false;
+		const char *name = nullptr;
+		const char *description = nullptr;
+		const Record * records = nullptr;
+
+		static const Type * find(uint8_t id);
+	};
+
+
 	class File {
 	private:
 		uint8_t * contents = nullptr;
@@ -97,6 +117,27 @@
 		virtual ~String();
 		std::string as_string() const override;
 	};
+
+	/// @brief String value.
+	class StringValue : public DMI::Value {
+	private:
+		std::string value;
+
+	public:
+		StringValue(const Value::Type *t, const Value::Record *r, const uint8_t i, const DMI::String &v) : DMI::Value(t,r,i), value(v.as_string()) {
+		}
+
+		virtual ~StringValue() {
+		}
+
+		std::string as_string() const override {
+			return this->value;
+		}
+
+	};
+
+	std::shared_ptr<DMI::Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
+	std::shared_ptr<DMI::Value> firmware_revision_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
 
  }
 
