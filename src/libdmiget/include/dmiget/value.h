@@ -62,6 +62,7 @@
 		}
 
 		virtual std::string as_string() const;
+		virtual unsigned int as_uint() const;
 
 	};
 

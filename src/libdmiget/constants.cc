@@ -34,7 +34,8 @@
 				{ "vendor",					string_factory,				1,		"Vendor"			},
 				{ "version",				string_factory,				2,		"Version"			},
 				{ "date",					string_factory,				3,		"Release Date"		},
-				{ "firmwareversion",		firmware_revision_factory,	0x16,	"Firmware Revision" },
+				{ "biosrev",				firmware_revision_factory,	0x14,	"BIOS Revision"		},
+				{ "firmwarerev",			firmware_revision_factory,	0x16,	"Firmware Revision" },
 				{}
 			}
 		},

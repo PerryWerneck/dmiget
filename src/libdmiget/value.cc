@@ -50,6 +50,10 @@
 		return "";
 	}
 
+	unsigned int Value::as_uint() const {
+		return 0;
+	}
+
 	std::string Value::url() const {
 
 		if(!type) {

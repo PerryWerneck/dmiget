@@ -31,6 +31,10 @@
 		VersionValue(const Value::Type *t, const Value::Record *r, const uint8_t i, int p1, int p2) : DMI::Value(t,r,i), ma(p1), mi(p2) {
 		}
 
+		unsigned int as_uint() const override {
+			return (ma << 8) | (mi & 0xFF);
+		}
+
 		std::string as_string() const override {
 			string value = to_string(ma);
 			value += '.';
@@ -46,7 +50,7 @@
 
 	shared_ptr<DMI::Value> firmware_revision_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index) {
 
-		if (header.data[record->offset] != 0xFF && header.data[record->offset+1] != 0xFF) {
+		if(header.length > (record->offset+1) && header.data[record->offset] != 0xFF && header.data[record->offset+1] != 0xFF) {
 			return make_shared<VersionValue>(type,record,index,header.data[record->offset], header.data[record->offset+1]);
 		}
 
