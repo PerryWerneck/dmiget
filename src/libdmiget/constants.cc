@@ -31,9 +31,10 @@
 			"bios",
 			"BIOS Information",
 			(const Value::Record []) {
-				{ "vendor",			string_factory,	1,	"Vendor"		},
-				{ "version",		string_factory,	2,	"Version"		},
-				{ "date",			string_factory,	3,	"Release Date"	},
+				{ "vendor",					string_factory,				1,		"Vendor"			},
+				{ "version",				string_factory,				2,		"Version"			},
+				{ "date",					string_factory,				3,		"Release Date"		},
+				{ "firmwareversion",		firmware_revision_factory,	0x16,	"Firmware Revision" },
 				{}
 			}
 		},
