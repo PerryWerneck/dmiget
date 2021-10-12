@@ -55,11 +55,13 @@ dnl Check for OS specifics
 dnl ---------------------------------------------------------------------------
 
 CFLAGS="$CFLAGS -I$ac_pwd/src/libdmiget/include"
+DLL_LDFLAGS="-shared -Wl,-soname,\$(@F)"
 
 case "$host" in
 	*-mingw32)
 		CFLAGS="$CFLAGS -pthread -D_WIN32_WINNT=0x0600"
 		LDFLAGS="$LDFLAGS -pthread"
+		DLL_LDFLAGS="$DLL_LDFLAGS -Wl,--output-def,\$(@D)/libdmiget.def"
 		AC_SUBST(LIBEXT,.dll)
 		AC_SUBST(EXEEXT,.exe)
 		AC_SUBST(SONAME,libdmiget.dll)
@@ -76,12 +78,15 @@ case "$host" in
 
 esac
 
+AC_SUBST(DLL_LDFLAGS)
+
 dnl ---------------------------------------------------------------------------
 dnl Check for tools
 dnl ---------------------------------------------------------------------------
 
 AC_PATH_TOOL([VALGRIND], [valgrind], [no])
 AC_PATH_TOOL([AR], [ar], [ar])
+AC_PATH_TOOL([DLLTOOL], [dlltool], [dlltool])
 
 dnl ---------------------------------------------------------------------------
 dnl Check for doxygen
