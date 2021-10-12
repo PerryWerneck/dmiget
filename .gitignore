@@ -57,7 +57,7 @@ vgcore.*
 .obj
 *.depend
 *.bak
-
+*.pc
 
 
 

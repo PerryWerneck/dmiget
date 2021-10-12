@@ -229,8 +229,8 @@ install-devel:
 
 	@mkdir -p $(DESTDIR)$(libdir)/pkgconfig
 	@$(INSTALL_DATA) \
-		libdmiget.pc \
-		$(DESTDIR)$(libdir)/pkgconfig/libdmiget.pc
+		dmiget.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/dmiget.pc
 
 #---[ Uninstall Targets ]----------------------------------------------------------------
 
@@ -292,6 +292,7 @@ $(BINDBG)/@SONAME@: \
 	@echo $< ...
 	@$(LD) \
 		@DLL_LDFLAGS@ \
+		-Wl,-rpath,$(BINDBG) \
 		-o $@ \
 		$(LDFLAGS) \
 		$^ \

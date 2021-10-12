@@ -213,7 +213,7 @@ dnl ---------------------------------------------------------------------------
 
 dnl AC_CONFIG_FILES(doxygen/doxyfile)
 AC_CONFIG_FILES(Makefile)
-AC_CONFIG_FILES(libdmiget.pc)
+AC_CONFIG_FILES(dmiget.pc)
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.
