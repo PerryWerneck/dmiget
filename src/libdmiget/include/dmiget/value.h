@@ -70,15 +70,15 @@
 
  namespace std {
 
-	inline string to_string(const DMI::Value &value) {
+	inline string to_string(const ::DMI::Value &value) {
 		return value.as_string();
 	}
 
-	inline ostream& operator<< (ostream& os, const DMI::Value &value) {
+	inline ostream& operator<< (ostream& os, const ::DMI::Value &value) {
 		return os << value.as_string();
 	}
 
-	inline ostream& operator<< (ostream& os, const DMI::Value *value) {
+	inline ostream& operator<< (ostream& os, const ::DMI::Value *value) {
 		return os << value->as_string();
 	}
 

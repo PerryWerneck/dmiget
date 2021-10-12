@@ -20,13 +20,14 @@
  #pragma once
 
  #include <dmiget/defs.h>
- #include <dmiget/value.h>
  #include <stdint.h>
  #include <stddef.h>
  #include <functional>
  #include <memory>
 
  namespace DMI {
+
+	class Value;
 
 	class DMIGET_API Table {
 	private:
