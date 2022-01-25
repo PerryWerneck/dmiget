@@ -167,9 +167,16 @@
 
 		std::shared_ptr<DMI::Value> found;
 
-		for_each([&found,url](shared_ptr<DMI::Value> value){
+		if(!strncasecmp(url,"dmi:",4)) {
+			url += 4;
+		}
 
-			if(!strcasecmp(value->url().c_str(),url)) {
+		while(*url && *url == '/') {
+			url++;
+		}
+
+		for_each([&found,url](shared_ptr<DMI::Value> value){
+			if(!strcasecmp(value->url().c_str()+6,url)) {
 				found = value;
 				return false;
 			}
