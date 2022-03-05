@@ -27,7 +27,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	static bool for_each(const uint8_t *buf, uint16_t num, uint32_t len, std::function<bool(const Header &header)> exec) {
 

@@ -21,7 +21,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	class VersionValue : public DMI::Value {
 	private:

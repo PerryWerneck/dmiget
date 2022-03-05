@@ -21,7 +21,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	static const Value::Type types[] = {
 

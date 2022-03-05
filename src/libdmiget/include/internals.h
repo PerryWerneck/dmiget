@@ -31,7 +31,9 @@
 
  #endif // _WIN32
 
- namespace DMI {
+ namespace DMI = DMIget;
+
+ namespace DMIget {
 
  	bool checksum(const uint8_t *buf, size_t len);
 

@@ -25,7 +25,7 @@
  #include <functional>
  #include <memory>
 
- namespace DMI {
+ namespace DMIget {
 
 	class Value;
 

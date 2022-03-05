@@ -25,7 +25,7 @@
  #include <functional>
  #include <memory>
 
- namespace DMI {
+ namespace DMIget {
 
 	struct Header;
 
@@ -70,15 +70,15 @@
 
  namespace std {
 
-	inline string to_string(const ::DMI::Value &value) {
+	inline string to_string(const ::DMIget::Value &value) {
 		return value.as_string();
 	}
 
-	inline ostream& operator<< (ostream& os, const ::DMI::Value &value) {
+	inline ostream& operator<< (ostream& os, const ::DMIget::Value &value) {
 		return os << value.as_string();
 	}
 
-	inline ostream& operator<< (ostream& os, const ::DMI::Value *value) {
+	inline ostream& operator<< (ostream& os, const ::DMIget::Value *value) {
 		return os << value->as_string();
 	}
 

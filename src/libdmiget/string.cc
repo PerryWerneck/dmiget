@@ -24,7 +24,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	void String::set(const char *bp, bool filter) {
 

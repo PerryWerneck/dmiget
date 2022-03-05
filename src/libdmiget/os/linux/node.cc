@@ -21,7 +21,7 @@
  #include <cstring>
  #include <cerrno>
 
- namespace DMI {
+ namespace DMIget {
 
 
  }

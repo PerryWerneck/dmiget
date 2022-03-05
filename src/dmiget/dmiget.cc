@@ -24,6 +24,7 @@
  #include <getopt.h>
 
  using namespace std;
+ namespace DMI = DMIget;
 
  static const DMI::Table & getSingleton() {
 	static DMI::Table table;

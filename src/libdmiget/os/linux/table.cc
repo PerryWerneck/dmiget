@@ -26,7 +26,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	Table::Table() {
 
