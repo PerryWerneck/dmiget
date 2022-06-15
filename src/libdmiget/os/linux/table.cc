@@ -47,9 +47,24 @@
 #ifdef DEBUG
 					cout << "Got DMI table from sysfs" << endl;
 #endif // DEBUG
-					return;
 				}
 
+			}
+
+		}
+
+	}
+
+	Table::Table(const char *filename) {
+
+		File dmifile(filename);
+
+		if(dmifile) {
+
+			if(set(dmifile.content(),dmifile.size())) {
+#ifdef DEBUG
+				cout << "Got DMI table with " << dmifile.size() << " bytes from " << filename << endl;
+#endif // DEBUG
 			}
 
 		}

@@ -26,52 +26,89 @@
  using namespace std;
  namespace DMI = DMIget;
 
- static const DMI::Table & getSingleton() {
-	static DMI::Table table;
-	return table;
- }
-
  int main(int argc, char **argv) {
 
 	static struct option options[] = {
-		{ "all",		no_argument,		0,	'a' },
-		{ "urls",		no_argument,		0,	'U' },
-		{ "values",		no_argument,		0,	'V' },
-		{ "delimiter",	required_argument,	0,	'd' },
+		{ "all",			no_argument,		0,	'a' },
+		{ "urls",			no_argument,		0,	'U' },
+		{ "values",			no_argument,		0,	'V' },
+		{ "input-file",		required_argument,	0,	'i' },
+		{ "delimiter",		required_argument,	0,	'd' },
 	};
 
 	try {
 
 		string delimiter{"\t"};
+		const char *filename = nullptr;
 
 		int long_index =0;
 		int opt;
-		while((opt = getopt_long(argc, argv, "UVad:", options, &long_index )) != -1) {
+		while((opt = getopt_long(argc, argv, "UVad:i:", options, &long_index )) != -1) {
 
 			switch(opt) {
 			case 'd':
 				delimiter = optarg;
 				break;
 
+			case 'i':
+				filename = optarg;
+				break;
+
 			case 'U':
-				getSingleton().for_each([](shared_ptr<DMI::Value> value){
-					cout << value->url() << endl;
-					return true;
-				});
+				{
+					const DMI::Table * table = nullptr;
+
+					if(filename) {
+						table = new DMI::Table(filename);
+					} else {
+						table = new DMI::Table();
+					}
+
+					table->for_each([](shared_ptr<DMI::Value> value){
+						cout << value->url() << endl;
+						return true;
+					});
+
+					delete table;
+				}
 				break;
 
 			case 'V':
-				getSingleton().for_each([](shared_ptr<DMI::Value> value){
-					cout << value << endl;
-					return true;
-				});
+				{
+					const DMI::Table * table = nullptr;
+
+					if(filename) {
+						table = new DMI::Table(filename);
+					} else {
+						table = new DMI::Table();
+					}
+
+					table->for_each([](shared_ptr<DMI::Value> value){
+						cout << value << endl;
+						return true;
+					});
+
+					delete table;
+				}
 				break;
 
 			case 'a':
-				getSingleton().for_each([&delimiter](shared_ptr<DMI::Value> value){
-					cout << value->url() << delimiter << value << endl;
-					return true;
-				});
+				{
+					const DMI::Table * table = nullptr;
+
+					if(filename) {
+						table = new DMI::Table(filename);
+					} else {
+						table = new DMI::Table();
+					}
+
+					table->for_each([delimiter](shared_ptr<DMI::Value> value){
+						cout << value->url() << delimiter << value << endl;
+						return true;
+					});
+
+					delete table;
+				}
 				break;
 
 			}
@@ -80,10 +117,19 @@
 
 		if(optind < argc) {
 
-			for(; optind < argc; optind++) {
-				cout << getSingleton()[(const char *) argv[optind]] << endl;
+			const DMI::Table * table = nullptr;
+
+			if(filename) {
+				table = new DMI::Table(filename);
+			} else {
+				table = new DMI::Table();
 			}
 
+			for(; optind < argc; optind++) {
+				cout << table->find((const char *) argv[optind]) << endl;
+			}
+
+			delete table;
 		}
 
 
