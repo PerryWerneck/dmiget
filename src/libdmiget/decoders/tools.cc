@@ -22,7 +22,7 @@
  #include <string>
  #include <iostream>
 
- namespace DMI {
+ namespace DMIget {
 
 	bool checksum(const uint8_t *buf, size_t len) {
 		uint8_t sum = 0;

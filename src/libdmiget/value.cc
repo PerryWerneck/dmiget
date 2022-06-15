@@ -23,7 +23,9 @@
  #include <string>
 
  using namespace std;
- namespace DMI {
+ namespace DMI = DMIget;
+
+ namespace DMIget {
 
 	Value::Value(const Type *t, const Record *record, const uint8_t i) : typeindex(i), type(t) {
 

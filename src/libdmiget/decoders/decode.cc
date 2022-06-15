@@ -27,7 +27,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	bool Table::identify(const uint8_t *entry) {
 

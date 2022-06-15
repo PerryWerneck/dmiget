@@ -27,7 +27,7 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 	File::File(const char *filename, size_t maxlen) {
 

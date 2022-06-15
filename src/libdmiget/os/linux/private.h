@@ -26,13 +26,13 @@
 
  using namespace std;
 
- namespace DMI {
+ namespace DMIget {
 
 
  }
 
  /*
- namespace DMI {
+ namespace DMIget {
 
  	class Entry {
 	public:

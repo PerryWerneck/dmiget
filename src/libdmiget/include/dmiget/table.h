@@ -25,7 +25,7 @@
  #include <functional>
  #include <memory>
 
- namespace DMI {
+ namespace DMIget {
 
 	class Value;
 
@@ -54,6 +54,7 @@
 		bool set(const uint8_t *dmi, size_t length);
 
 	public:
+		Table(const char *filename);
 		Table();
 		~Table();
 
