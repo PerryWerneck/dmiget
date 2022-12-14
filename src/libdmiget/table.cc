@@ -92,12 +92,8 @@
 
 			if(header.type == 1 && header.length >= 6) {
 
-				//cout << ((unsigned int) header.type) << " " << ((unsigned int) header.length) << endl;
-
 				String vendor(header,header.data[0x04],0);
 				String product(header,header.data[0x05],0);
-
-				//cout << "Vendor: '" << vendor.as_string() << "' Product: '" << product.as_string() << "'" << endl;
 
 				return false;
 			}
@@ -114,11 +110,6 @@
 		memset(typeindex,0,sizeof(typeindex));
 
 		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this,exec,&typeindex](const Header &header) {
-
-			// Fixup a common mistake
-			//if(header.type == 34) {
-			//	dmi_fixup_type_34(&h, display);
-			//}
 
 			const Value::Type * type = Value::Type::find(header.type);
 			typeindex[type->id]++;

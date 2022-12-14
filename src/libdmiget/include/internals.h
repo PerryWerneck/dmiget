@@ -41,7 +41,6 @@
 
 		#define WORD(x)		(uint16_t)	((x)[0] + ((x)[1] << 8))
 		#define DWORD(x)	(uint32_t) ((x)[0] + ((x)[1] << 8) + ((x)[2] << 16) + ((x)[3] << 24))
-//		#define QWORD(x)	(uint64_t) (DWORD(x), DWORD(x + 4)))
 
 	#else
 

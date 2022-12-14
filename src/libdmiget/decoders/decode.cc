@@ -57,10 +57,6 @@
 						throw runtime_error("Chksum mismatch");
 					}
 
-//#ifdef DEBUG
-//					cout << "SMBIOS " << ((unsigned int) entry[7]) << "." << ((unsigned int) entry[8]) << "." << ((unsigned int) entry[9]) << endl;
-//#endif // DEBUG
-
 					table.dmi.version = (entry[0x07] << 16) + (entry[0x08] << 8) + entry[0x09];
 
 					table.dmi.base = QWORD(entry + 0x10);
