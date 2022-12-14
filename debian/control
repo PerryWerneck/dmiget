@@ -1,0 +1,35 @@
+Source: dmiget
+Section: unknown
+Priority: optional
+Maintainer: Perry Werneck <perry.werneck@gmail.com>
+Build-Depends: debhelper (>= 7), autotools-dev, autoconf, automake, pkg-config, gettext
+
+Package: libdmiget
+Architecture: any
+Section: libs
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Provides: libdmiget (= ${binary:Version}), libdmiget (= 1.0)
+Description: Udjat core library.
+ Get DMI information using URL format.
+
+Package: dmiget
+Architecture: any
+Section: libs
+Depends: ${misc:Depends}, libdmiget (= ${binary:Version})
+Description: libudjat development files.
+ Get DMI information using URL format.
+
+Package: libdmiget-dev
+Architecture: any
+Provides: libdmiget-dev (= ${binary:Version})
+Section: libdevel
+Depends: ${misc:Depends}, pkg-config, libdmiget (= ${binary:Version})
+Description: libudjat development files.
+ Development files for libdmiget.
+
+Package: libdmiget-dbg
+Architecture: any
+Depends: libudjat (= ${binary:Version})
+Description: Debugging symbols for libdmiget
+ This package contains the debugging symbols for libdmiget.
+
