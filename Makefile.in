@@ -156,12 +156,11 @@ $(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
 
 	@$(MKDIR) $(@D)
 	@echo $< ...
-	@$(LD) \
+	$(LD) \
 		-o $@ \
 		$^ \
 		-L$(BINRLS) \
 		$(LDFLAGS) \
-		$(BINRLS)/@SONAME@ \
 		$(LIBS)
 
 #---[ Install Targets ]------------------------------------------------------------------

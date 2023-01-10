@@ -21,6 +21,7 @@
  #include <sysinfoapi.h>
 
  #include <dmiget/table.h>
+ #include <internals.h>
  #include <cstring>
  #include <cerrno>
  #include <cstring>
@@ -30,6 +31,22 @@
 
  namespace DMIget {
 
+	Table::Table(const char *filename) {
+
+		File dmifile(filename);
+
+		if(dmifile) {
+
+			if(set(dmifile.content(),dmifile.size())) {
+#ifdef DEBUG
+				cout << "Got DMI table with " << dmifile.size() << " bytes from " << filename << endl;
+#endif // DEBUG
+			}
+
+		}
+
+	}
+
 	Table::Table() {
 
 		// References:
@@ -38,10 +55,6 @@
 		// Use GetSystemFirmwareTable
 		{
 			DWORD smbiosdatasize = GetSystemFirmwareTable('RSMB',0,NULL,0);
-
-//#ifdef DEBUG
-//			cout << "smbiosdatasize=" << smbiosdatasize << endl;
-//#endif // DEBUG
 
 			if(smbiosdatasize) {
 
