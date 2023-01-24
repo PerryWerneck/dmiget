@@ -28,6 +28,7 @@
 
  int main(int argc, char **argv) {
 
+	/// @brief Command line arguments.
 	static struct option options[] = {
 		{ "all",			no_argument,		0,	'a' },
 		{ "urls",			no_argument,		0,	'U' },
@@ -46,15 +47,11 @@
 		while((opt = getopt_long(argc, argv, "UVad:i:", options, &long_index )) != -1) {
 
 			switch(opt) {
-			case 'd':
-				delimiter = optarg;
-				break;
-
-			case 'i':
+			case 'i':	// Load table from filename.
 				filename = optarg;
 				break;
 
-			case 'U':
+			case 'U':	// List URLs
 				{
 					const DMI::Table * table = nullptr;
 
@@ -73,7 +70,7 @@
 				}
 				break;
 
-			case 'V':
+			case 'V':	// List values
 				{
 					const DMI::Table * table = nullptr;
 
@@ -92,7 +89,11 @@
 				}
 				break;
 
-			case 'a':
+			case 'd':	// Setup delimiter for 'all' output
+				delimiter = optarg;
+				break;
+
+			case 'a':	// List URLs and values.
 				{
 					const DMI::Table * table = nullptr;
 
