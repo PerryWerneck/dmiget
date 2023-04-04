@@ -1,3 +1,4 @@
+---
 name: MSYS2
 on:
   push:
@@ -8,7 +9,7 @@ on:
       - master
 jobs:
   msys2-mingw:
-  	name: Publish Mingw 64
+    name: Publish Mingw 64
     runs-on: windows-latest
     defaults:
       run:
@@ -24,7 +25,8 @@ jobs:
         with:
           msystem: mingw64
           update: true
-          install: git dos2unix mingw-w64-x86_64-gcc automake autoconf make pkgconf gettext-devel libtool xz
+          install: git dos2unix mingw-w64-x86_64-gcc automake autoconf make pkgconf
+            gettext-devel libtool xz
       - name: CI-Build
         run: ./win/ci-build.sh
       - uses: ncipollo/release-action@v1
