@@ -9,7 +9,7 @@ source=()
 #  grep AC_INIT ${startdir}/configure.ac | cut -d[ -f3 | cut -d] -f1
 #}
 
-pkgver=1.1
+pkgver=1.0
 pkgrel=1
 pkgdesc="Detect when running under virtual machine"
 url="https://github.com/PerryWerneck/dmiget"
