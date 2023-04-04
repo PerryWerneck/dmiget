@@ -62,7 +62,7 @@ DLL_LDFLAGS="-shared -Wl,-soname,\$(@F)"
 
 case "$host" in
 	*-mingw32)
-		CFLAGS="$CFLAGS -pthread -D_WIN32_WINNT=0x0600"
+		CFLAGS="$CFLAGS -pthread "
 		LDFLAGS="$LDFLAGS -pthread"
 		DLL_LDFLAGS="$DLL_LDFLAGS -Wl,--output-def,\$(@D)/libdmiget.def"
 		AC_SUBST(LIBEXT,.dll)
