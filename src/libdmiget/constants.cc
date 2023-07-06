@@ -28,7 +28,7 @@
 		{
 			0,
 			false,
-			"bios",
+			"BIOS",
 			"BIOS Information",
 			(const Value::Record []) {
 				{ "vendor",					string_factory,				1,		"Vendor"			},
@@ -42,7 +42,7 @@
 		{
 			1,
 			false,
-			"system",
+			"System",
 			"System",
 			(const Value::Record []) {
 				{ "manufacturer",	string_factory,	1,	"Manufacturer"	},
@@ -57,7 +57,7 @@
 		{
 			2,
 			false,
-			"baseboard",
+			"BaseBoard",
 			"Base Board",
 			(const Value::Record []) {
 				{ "manufacturer",	string_factory,	1,	"Manufacturer"			},
@@ -72,7 +72,7 @@
 		{
 			3,
 			false,
-			"chassis",
+			"Chassis",
 			"Chassis Information",
 
 			(const Value::Record []) {
@@ -88,7 +88,7 @@
 		{
 			4,
 			false,
-			"processor",
+			"Processor",
 			"Processor",
 
 			(const Value::Record []) {
@@ -105,7 +105,7 @@
 		{
 			5,
 			false,
-			"mcntrl",
+			"MemoryController",
 			"Memory Controller",
 			/*
 			(const Value::Record []) {
@@ -117,7 +117,7 @@
 		{
 			6,
 			false,
-			"mmodule",
+			"MemoryModule",
 			"Memory Module",
 			/*
 			(const Value::Record []) {
@@ -129,7 +129,7 @@
 		{
 			7,
 			true,
-			"cache",
+			"Cache",
 			"Cache",
 			(const Value::Record []) {
 				{ "socket",	string_factory,	1,	"Socket Designation"	},
@@ -139,7 +139,7 @@
 		{
 			8,
 			true,
-			"ports",
+			"PortConnectors",
 			"Port Connector",
 
 			(const Value::Record []) {
@@ -151,7 +151,7 @@
 		{
 			9,
 			true,
-			"slots",
+			"Slots",
 			"System Slots",
 			(const Value::Record []) {
 				{ "designation",	string_factory,	1,	"Designation"	},
@@ -161,7 +161,7 @@
 		{
 			10,
 			false,
-			"boarddevices",
+			"OnBoardDevices",
 			"On Board Devices",
 			/*
 			(const Value::Record []) {
@@ -173,7 +173,7 @@
 		{
 			11,
 			false,
-			"oemstrings",
+			"OEMstrings",
 			"OEM Strings",
 			/*
 			(const Value::Record []) {
@@ -185,7 +185,7 @@
 		{
 			12,
 			false,
-			"sysconf",
+			"SysConfigOpts",
 			"System Configuration Options",
 			/*
 			(const Value::Record []) {
@@ -197,7 +197,7 @@
 		{
 			13,
 			false,
-			"language",
+			"BIOSLanguage",
 			"BIOS Language",
 			/*
 			(const Value::Record []) {
@@ -209,7 +209,7 @@
 		{
 			14,
 			true,
-			"group",
+			"GroupAssociations",
 			"Group Associations",
 			(const Value::Record []) {
 				{ "name",	string_factory,	1,	"Name"	},
@@ -219,7 +219,7 @@
 		{
 			15,
 			false,
-			"syslog",
+			"EventLog",
 			"System Event Log",
 			/*
 			(const Value::Record []) {
@@ -231,7 +231,7 @@
 		{
 			16,
 			false,
-			"pma",
+			"PhysicalMemoryArray",
 			"Physical Memory Array",
 			/*
 			(const Value::Record []) {
@@ -243,7 +243,7 @@
 		{
 			17,
 			true,
-			"memory",
+			"MemoryDevice",
 			"Memory Device",
 			(const Value::Record []) {
 				{ "locator",		string_factory,	1,	"Locator"		},
@@ -258,7 +258,7 @@
 		{
 			18,
 			false,
-			"32bme",
+			"32BitMemoryError",
 			"32-bit Memory Error",
 			/*
 			(const Value::Record []) {
@@ -270,7 +270,7 @@
 		{
 			19,
 			true,
-			"mama",
+			"MemoryArrayAddressMap",
 			"Memory Array Mapped Address",
 			/*
 			(const Value::Record []) {
@@ -282,7 +282,7 @@
 		{
 			20,
 			false,
-			"mdma",
+			"MemoryDeviceAddressMap",
 			"Memory Device Mapped Address",
 			/*
 			(const Value::Record []) {
@@ -294,7 +294,7 @@
 		{
 			21,
 			false,
-			"pointingdevice",
+			"BuiltinPointingDevice",
 			"Built-in Pointing Device",
 			/*
 			(const Value::Record []) {
@@ -306,7 +306,7 @@
 		{
 			22,
 			false,
-			"battery",
+			"PortableBattery",
 			"Portable Battery",
 			(const Value::Record []) {
 				{ "location",		string_factory,	1,	"Location"			},
@@ -322,7 +322,7 @@
 		{
 			23,
 			false,
-			"sysreset",
+			"SystemReset",
 			"System Reset",
 			/*
 			(const Value::Record []) {
@@ -334,7 +334,7 @@
 		{
 			24,
 			false,
-			"hwsecurity",
+			"HWsecurity",
 			"Hardware Security",
 			/*
 			(const Value::Record []) {
@@ -346,7 +346,7 @@
 		{
 			25,
 			false,
-			"syspowercntrl",
+			"SysPowerCtrl",
 			"System Power Controls",
 			/*
 			(const Value::Record []) {
@@ -358,7 +358,7 @@
 		{
 			26,
 			false,
-			"vprobe",
+			"VoltageProbe",
 			"Voltage Probe",
 			(const Value::Record []) {
 				{ "description",	string_factory,	1,	"Description"	},
@@ -368,7 +368,7 @@
 		{
 			27,
 			false,
-			"cooling",
+			"CoolingDevice",
 			"Cooling Device",
 			(const Value::Record []) {
 				{ "description",	string_factory,	1,	"Description"	},
@@ -378,7 +378,7 @@
 		{
 			28,
 			false,
-			"temperature",
+			"TemperatureProbe",
 			"Temperature Probe",
 			(const Value::Record []) {
 				{ "description",	string_factory,	1,	"Description"	},
@@ -388,7 +388,7 @@
 		{
 			29,
 			false,
-			"electricalcurrent",
+			"ElectricalCurrentProbe",
 			"Electrical Current Probe",
 			/*
 			(const Value::Record []) {
@@ -400,7 +400,7 @@
 		{
 			30,
 			false,
-			"ora",
+			"RemoteAccess",
 			"Out-of-band Remote Access",
 			/*
 			(const Value::Record []) {
@@ -412,7 +412,7 @@
 		{
 			31,
 			false,
-			"bis",
+			"BootIntegritySrv",
 			"Boot Integrity Services",
 			/*
 			(const Value::Record []) {
@@ -424,7 +424,7 @@
 		{
 			32,
 			false,
-			"sysboot",
+			"SystemBoot",
 			"System Boot",
 			/*
 			(const Value::Record []) {
@@ -436,7 +436,7 @@
 		{
 			33,
 			false,
-			"64bme",
+			"64BitMemoryError",
 			"64-bit Memory Error",
 			/*
 			(const Value::Record []) {
@@ -448,7 +448,7 @@
 		{
 			34,
 			false,
-			"mdev",
+			"ManagementDevice",
 			"Management Device",
 			/*
 			(const Value::Record []) {
@@ -460,7 +460,7 @@
 		{
 			35,
 			false,
-			"mdevc",
+			"ManagementDeviceComponent",
 			"Management Device Component",
 			/*
 			(const Value::Record []) {
@@ -472,7 +472,7 @@
 		{
 			36,
 			false,
-			"mdevtd",
+			"ManagementDeviceThreshold",
 			"Management Device Threshold Data",
 			/*
 			(const Value::Record []) {
@@ -484,7 +484,7 @@
 		{
 			37,
 			false,
-			"mchannel",
+			"MemoryChannel",
 			"Memory Channel",
 			/*
 			(const Value::Record []) {
@@ -496,7 +496,7 @@
 		{
 			38,
 			false,
-			"ipmi",
+			"IPMIdevice",
 			"IPMI Device",
 			/*
 			(const Value::Record []) {
@@ -508,7 +508,7 @@
 		{
 			39,
 			false,
-			"powersupply",
+			"PowerSupply",
 			"Power Supply",
 			(const Value::Record []) {
 				{ "location",		string_factory,	1,	"Location"			},
@@ -524,7 +524,7 @@
 		{
 			40,
 			false,
-			"additional",
+			"AdditionalInfo",
 			"Additional Information",
 			/*
 			(const Value::Record []) {
@@ -536,7 +536,7 @@
 		{
 			41,
 			false,
-			"onboarddev",
+			"OnboardDevice",
 			"Onboard Device",
 			(const Value::Record []) {
 				{ "reference",	string_factory,	1,	"Reference Designation"	},
@@ -546,7 +546,7 @@
 		{
 			42,
 			false,
-			"mchi",
+			"MgmntCtrltHostIntf",
 			"Management Controller Host Interface",
 			/*
 			(const Value::Record []) {
@@ -558,7 +558,7 @@
 		{
 			43,
 			false,
-			"TPM",
+			"TPMDevice",
 			"TPM Device",
 			/*
 			(const Value::Record []) {
