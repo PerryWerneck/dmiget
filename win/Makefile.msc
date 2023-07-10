@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later 
+
+# Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+.cc.obj:
+	@echo $@ ...
+	@$(CPP) \
+		/c \
+		/nologo /Ox /W3 /GL /MD \
+		/I".\src\libdmiget\include" \
+		/EHsc \
+		/Fo"$@" \
+		$<
+
+all: \
+	dmiget.dll \
+	dmiget.static.lib
+
+dmiget.exe: \
+	src\dmiget\dmiget.obj \
+	dmiget.static.lib
+	
+	@echo Build exe file....
+	link \
+		/nologo \
+		/OUT:"$@" \
+		src\dmiget\dmiget.obj
+
+dmiget.static.lib: \
+	src/libdmiget/*.cc \
+	src/libdmiget/os/windows/*.cc \
+	src/libdmiget/decoders/*.cc
+	@$(MAKE) \
+		/f win\Makefile.msc \
+		$(**:.cc=.obj)
+
+	@lib \
+		/NOLOGO \
+		/OUT:"$@" \
+		$(**:.cc=.obj) \
+
+dmiget.dll: \
+	src/libdmiget/*.cc \
+	src/libdmiget/os/windows/*.cc \
+	src/libdmiget/decoders/*.cc
+	@$(MAKE) \
+		/f win\Makefile.msc \
+		$(**:.cc=.obj)
+
+	@link \
+		/NOLOGO \
+		/DLL \
+		/OUT:"$@" \
+		/IMPLIB:dmiget.dll.lib \
+		$(**:.cc=.obj)
+
+clean: \
+	src/libdmiget/*.cc \
+	src/libdmiget/os/windows/*.cc \
+	src/libdmiget/decoders/*.cc
+	del /Q \
+		*.lib \
+		*.dll \
+		$(**:.cc=.obj) \
+		testprogram.*
