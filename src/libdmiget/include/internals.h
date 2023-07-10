@@ -19,22 +19,24 @@
 
  #pragma once
 
-#ifdef HAVE_CONFIG_H
+ #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #ifdef _WIN32
+	#include <windows.h>
+ #endif // _WIN32
+
  #include <dmiget/defs.h>
  #include <dmiget/value.h>
+ #include <iostream>
  #include <stdint.h>
  #include <stddef.h>
  #include <stdexcept>
 
- #ifdef _WIN32
-
-
- #endif // _WIN32
-
- namespace DMI = DMIget;
+ #ifndef _MSC_VER
+	 namespace alias DMI = DMIget;
+ #endif // _MSC_VER
 
  namespace DMIget {
 
@@ -68,7 +70,7 @@
 	struct Value::Record {
 
 		const char *name = nullptr;
-		std::shared_ptr<DMI::Value>(*value_factory)(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
+		std::shared_ptr<Value>(*value_factory)(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
 		uint8_t offset = 0xFF;
 		const char *description = nullptr;
 
@@ -109,7 +111,7 @@
 	};
 
 	/// @brief DMI string.
-	class String : public DMI::Value {
+	class String : public Value {
 	private:
 		std::string str;
 
@@ -123,12 +125,12 @@
 	};
 
 	/// @brief String value.
-	class StringValue : public DMI::Value {
+	class StringValue : public Value {
 	private:
 		std::string value;
 
 	public:
-		StringValue(const Value::Type *t, const Value::Record *r, const uint8_t i, const DMI::String &v) : DMI::Value(t,r,i), value(v.as_string()) {
+		StringValue(const Value::Type *t, const Value::Record *r, const uint8_t i, const String &v) : Value(t,r,i), value(v.as_string()) {
 		}
 
 		virtual ~StringValue() {
@@ -140,8 +142,9 @@
 
 	};
 
-	std::shared_ptr<DMI::Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
-	std::shared_ptr<DMI::Value> firmware_revision_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
+	std::shared_ptr<Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
+	std::shared_ptr<Value> firmware_revision_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index);
 
  }
 
+ 

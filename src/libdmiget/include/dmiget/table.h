@@ -23,6 +23,7 @@
  #include <stdint.h>
  #include <stddef.h>
  #include <functional>
+ #include <string>
  #include <memory>
 
  namespace DMIget {

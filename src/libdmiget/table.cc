@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <dmiget/table.h>
  #include <internals.h>
+ #include <dmiget/table.h>
  #include <cstring>
  #include <cerrno>
  #include <cstring>
@@ -26,6 +26,19 @@
  #include <functional>
 
  using namespace std;
+
+ #ifdef _MSC_VER
+	#define strncasecmp  _strnicmp
+	#define ftruncate    _chsize
+	#define strtoull     _strtoui64
+	#define strtoll      _strtoi64
+
+	static __inline int strcasecmp (const char *s1, const char *s2) {
+		size_t size1 = strlen(s1);
+		size_t sisz2 = strlen(s2);
+		return _strnicmp(s1, s2, sisz2 > size1 ? sisz2 : size1);
+	}
+ #endif // _MSC_VER
 
  namespace DMIget {
 
@@ -84,11 +97,11 @@
 		}
 
 		dmi.contents = new uint8_t[length];
-		dmi.len = length;
+		dmi.len = (uint32_t) length;
 		memcpy(dmi.contents,d,length);
 
 		// Assign vendor for vendor-specific decodes later
-		DMI::for_each(dmi.contents, dmi.num, dmi.len,[this](const Header &header) {
+		::DMIget::for_each(dmi.contents, dmi.num, dmi.len, [this](const Header &header) {
 
 			if(header.type == 1 && header.length >= 6) {
 
@@ -104,12 +117,12 @@
 		return true;
 	}
 
-	bool Table::for_each(std::function<bool(std::shared_ptr<DMI::Value> value)> exec) const {
+	bool Table::for_each(std::function<bool(std::shared_ptr<Value> value)> exec) const {
 
 		uint8_t typeindex[0x0100];
 		memset(typeindex,0,sizeof(typeindex));
 
-		return DMI::for_each(dmi.contents, dmi.num, dmi.len,[this,exec,&typeindex](const Header &header) {
+		return ::DMIget::for_each(dmi.contents, dmi.num, dmi.len,[this,exec,&typeindex](const Header &header) {
 
 			const Value::Type * type = Value::Type::find(header.type);
 			typeindex[type->id]++;
@@ -154,9 +167,9 @@
 
 	}
 
-	std::shared_ptr<DMI::Value> Table::find(const char *url) const {
+	std::shared_ptr<Value> Table::find(const char *url) const {
 
-		std::shared_ptr<DMI::Value> found;
+		std::shared_ptr<Value> found;
 
 		if(!strncasecmp(url,"dmi:",4)) {
 			url += 4;
@@ -166,7 +179,7 @@
 			url++;
 		}
 
-		for_each([&found,url](shared_ptr<DMI::Value> value){
+		for_each([&found,url](shared_ptr<Value> value){
 			if(!strcasecmp(value->url().c_str()+6,url)) {
 				found = value;
 				return false;

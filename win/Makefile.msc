@@ -26,20 +26,20 @@
 		$<
 
 all: \
-	dmiget.dll \
-	dmiget.static.lib
+	bin\dmiget.dll \
+	lib\dmiget.static.lib
 
-dmiget.exe: \
+bin\dmiget.exe: \
 	src\dmiget\dmiget.obj \
 	dmiget.static.lib
-	
 	@echo Build exe file....
+	@if NOT EXIST "bin" mkdir "bin"
 	link \
 		/nologo \
-		/OUT:"$@" \
+		/OUT:"$@" /LTCG \
 		src\dmiget\dmiget.obj
 
-dmiget.static.lib: \
+lib\dmiget.static.lib: \
 	src/libdmiget/*.cc \
 	src/libdmiget/os/windows/*.cc \
 	src/libdmiget/decoders/*.cc
@@ -47,12 +47,13 @@ dmiget.static.lib: \
 		/f win\Makefile.msc \
 		$(**:.cc=.obj)
 
+	@if NOT EXIST "lib" mkdir "lib"
 	@lib \
 		/NOLOGO \
 		/OUT:"$@" \
 		$(**:.cc=.obj) \
 
-dmiget.dll: \
+bin\dmiget.dll: \
 	src/libdmiget/*.cc \
 	src/libdmiget/os/windows/*.cc \
 	src/libdmiget/decoders/*.cc
@@ -60,11 +61,13 @@ dmiget.dll: \
 		/f win\Makefile.msc \
 		$(**:.cc=.obj)
 
+	@if NOT EXIST "bin" mkdir "bin"
+	@if NOT EXIST "lib" mkdir "lib"
 	@link \
 		/NOLOGO \
-		/DLL \
+		/DLL /LTCG \
 		/OUT:"$@" \
-		/IMPLIB:dmiget.dll.lib \
+		/IMPLIB:lib\dmiget.dll.lib \
 		$(**:.cc=.obj)
 
 clean: \
@@ -74,5 +77,7 @@ clean: \
 	del /Q \
 		*.lib \
 		*.dll \
+		bin \
+		lib \
 		$(**:.cc=.obj) \
 		testprogram.*
