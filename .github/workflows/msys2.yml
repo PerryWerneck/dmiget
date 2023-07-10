@@ -25,7 +25,9 @@ jobs:
           install: git dos2unix mingw-w64-x86_64-gcc automake autoconf make pkgconf
             gettext-devel libtool xz
       - name: CI-Build
-        run: ./win/ci-build.sh
+        run: |
+          dos2unix PKGBUILD.mingw
+          makepkg BUILDDIR=/tmp/pkg -f -p PKGBUILD.mingw
       - uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.gettag.outputs.tag }}
