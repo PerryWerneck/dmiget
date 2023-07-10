@@ -23,7 +23,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #ifdef _WIN32
+ #ifdef _MSC_VER
 	#include <windows.h>
  #endif // _WIN32
 
@@ -33,10 +33,6 @@
  #include <stdint.h>
  #include <stddef.h>
  #include <stdexcept>
-
- #ifndef _MSC_VER
-	 namespace alias DMI = DMIget;
- #endif // _MSC_VER
 
  namespace DMIget {
 
@@ -147,4 +143,3 @@
 
  }
 
- 
