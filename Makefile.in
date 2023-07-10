@@ -73,6 +73,7 @@ BINRLS=$(BINDIR)/Release
 
 CFLAGS= \
 	@CXXFLAGS@ \
+	-DHAVE_CONFIG_H=1 \
 	-fPIC \
 	-Isrc/libdmiget/include \
 	-DBUILD_DATE=`date +%Y%m%d`
