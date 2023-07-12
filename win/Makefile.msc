@@ -27,7 +27,8 @@
 
 all: \
 	bin\dmiget.dll \
-	lib\dmiget.static.lib
+	lib\dmiget.static.lib \
+	bin\dmiget.exe
 
 bin\dmiget.exe: \
 	src\dmiget\dmiget.obj \
