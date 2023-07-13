@@ -147,6 +147,55 @@
 
 			}
 
+		} else if(argument[0] == '-') {
+
+			argument++;
+
+			if(argument[1]) {
+				cerr << "Unexpected argument" << endl;
+				return -1;
+			}
+
+			for(const Worker &worker : workers) {
+
+				found = (worker.short_arg == argument[0]);
+				if(found) {
+
+					const char *value = "";
+
+					if(worker.required) {
+
+						if(argc == 1) {
+							cerr << "An argument is required" << endl;
+							exit(-1);
+						}
+
+						value = *(++argv);
+						--argc;
+
+						if(value[0] == '-') {
+							cerr << "An argument is required" << endl;
+							exit(-1);
+						}
+
+					}
+
+					worker.method(value);
+					break;
+
+				}
+
+			}
+
+		} else {
+
+			// It's an URL
+			found = true;
+
+			auto table = TableFactory();
+			cout << table->find(argument) << endl;
+			delete table;
+
 		}
 
 		if(!found) {
@@ -155,122 +204,6 @@
 		}
 
 	}
-
-	/*
-
-	/// @brief Command line arguments.
-	static struct option options[] = {
-		{ "all",			no_argument,		0,	'a' },
-		{ "urls",			no_argument,		0,	'U' },
-		{ "values",			no_argument,		0,	'V' },
-		{ "input-file",		required_argument,	0,	'i' },
-		{ "delimiter",		required_argument,	0,	'd' },
-	};
-
-	try {
-
-		string delimiter{"\t"};
-		const char *filename = nullptr;
-
-		int long_index =0;
-		int opt;
-		while((opt = getopt_long(argc, argv, "UVad:i:", options, &long_index )) != -1) {
-
-			switch(opt) {
-			case 'i':	// Load table from filename.
-				filename = optarg;
-				break;
-
-			case 'U':	// List URLs
-				{
-					const DMI::Table * table = nullptr;
-
-					if(filename) {
-						table = new DMI::Table(filename);
-					} else {
-						table = new DMI::Table();
-					}
-
-					table->for_each([](shared_ptr<DMI::Value> value){
-						cout << value->url() << endl;
-						return true;
-					});
-
-					delete table;
-				}
-				break;
-
-			case 'V':	// List values
-				{
-					const DMI::Table * table = nullptr;
-
-					if(filename) {
-						table = new DMI::Table(filename);
-					} else {
-						table = new DMI::Table();
-					}
-
-					table->for_each([](shared_ptr<DMI::Value> value){
-						cout << value << endl;
-						return true;
-					});
-
-					delete table;
-				}
-				break;
-
-			case 'd':	// Setup delimiter for 'all' output
-				delimiter = optarg;
-				break;
-
-			case 'a':	// List URLs and values.
-				{
-					const DMI::Table * table = nullptr;
-
-					if(filename) {
-						table = new DMI::Table(filename);
-					} else {
-						table = new DMI::Table();
-					}
-
-					table->for_each([delimiter](shared_ptr<DMI::Value> value){
-						cout << value->url() << delimiter << value << endl;
-						return true;
-					});
-
-					delete table;
-				}
-				break;
-
-			}
-
-		}
-
-		if(optind < argc) {
-
-			const DMI::Table * table = nullptr;
-
-			if(filename) {
-				table = new DMI::Table(filename);
-			} else {
-				table = new DMI::Table();
-			}
-
-			for(; optind < argc; optind++) {
-				cout << table->find((const char *) argv[optind]) << endl;
-			}
-
-			delete table;
-		}
-
-
-	} catch(const exception &e) {
-
-		cerr << endl << e.what() << endl;
-		return -1;
-	}
-
-	*/
 
 	return 0;
 
