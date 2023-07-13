@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - master
+  push:
+    branches:
+      - develop
 jobs:
   msys2-mingw:
     name: Publish Mingw 64
@@ -32,6 +35,32 @@ jobs:
         with:
           tag: ${{ steps.gettag.outputs.tag }}
           artifacts: "*.pkg.tar.zst"
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          omitBody: true
+          omitPrereleaseDuringUpdate: true
+          replacesArtifacts: true
+  msvc:
+    runs-on: windows-latest
+    name: Publish MSVC 64
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oprypin/find-latest-tag@v1
+        id: gettag
+        with:
+          repository: PerryWerneck/dmiget
+          releases-only: true
+      - uses: ilammy/msvc-dev-cmd@v1.4.1
+      - name: CI-Build
+        run: |
+			nmake -f Makefile.msc
+			xcopy /s /i /y src\libdmiget\include\dmiget\*.h include\dmiget
+			7z a msvc-dmiget-x86_64.zip .\lib .\bin .\include
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.gettag.outputs.tag }}
+          artifacts: "msvc-dmiget-x86_64.zip"
           allowUpdates: true
           draft: false
           makeLatest: true
