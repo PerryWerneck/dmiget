@@ -21,7 +21,6 @@
  #include <dmiget/value.h>
  #include <dmiget/table.h>
  #include <iostream>
- #include <getopt.h>
  #include <functional>
  #include <cstring>
 
