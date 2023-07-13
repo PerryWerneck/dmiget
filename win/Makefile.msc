@@ -32,13 +32,13 @@ all: \
 
 bin\dmiget.exe: \
 	src\dmiget\dmiget.obj \
-	dmiget.static.lib
+	lib\dmiget.static.lib
 	@echo Build exe file....
 	@if NOT EXIST "bin" mkdir "bin"
 	link \
 		/nologo \
 		/OUT:"$@" /LTCG \
-		src\dmiget\dmiget.obj
+		src\dmiget\dmiget.obj lib\dmiget.static.lib
 
 lib\dmiget.static.lib: \
 	src/libdmiget/*.cc \
