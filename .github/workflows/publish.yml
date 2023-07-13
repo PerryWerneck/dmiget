@@ -54,9 +54,9 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1.4.1
       - name: CI-Build
         run: |
-			nmake -f Makefile.msc
-			xcopy /s /i /y src\libdmiget\include\dmiget\*.h include\dmiget
-			7z a msvc-dmiget-x86_64.zip .\lib .\bin .\include
+          nmake -f Makefile.msc
+          xcopy /s /i /y src\libdmiget\include\dmiget\*.h include\dmiget
+          7z a msvc-dmiget-x86_64.zip .\lib .\bin .\include
       - uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.gettag.outputs.tag }}
