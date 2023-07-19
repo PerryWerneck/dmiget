@@ -48,16 +48,22 @@
 		<Unit filename="src/libdmiget/include/dmiget/table.h" />
 		<Unit filename="src/libdmiget/include/dmiget/value.h" />
 		<Unit filename="src/libdmiget/include/internals.h" />
+		<Unit filename="src/libdmiget/include/pydmiget.h" />
+		<Unit filename="src/libdmiget/os/linux/file.cc" />
 		<Unit filename="src/libdmiget/os/linux/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />
 		<Unit filename="src/libdmiget/os/linux/reader.cc" />
 		<Unit filename="src/libdmiget/os/linux/table.cc" />
 		<Unit filename="src/libdmiget/os/linux/value.cc" />
+		<Unit filename="src/libdmiget/os/windows/file.cc" />
 		<Unit filename="src/libdmiget/os/windows/native_win32.h" />
 		<Unit filename="src/libdmiget/os/windows/table.cc" />
 		<Unit filename="src/libdmiget/string.cc" />
 		<Unit filename="src/libdmiget/table.cc" />
 		<Unit filename="src/libdmiget/value.cc" />
+		<Unit filename="src/python/init.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
