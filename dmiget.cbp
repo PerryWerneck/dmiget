@@ -61,9 +61,7 @@
 		<Unit filename="src/libdmiget/string.cc" />
 		<Unit filename="src/libdmiget/table.cc" />
 		<Unit filename="src/libdmiget/value.cc" />
-		<Unit filename="src/python/init.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="src/python/init.cc" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -79,7 +79,7 @@ PyMODINIT_FUNC PyInit_dmi(void)
 		return NULL;
 
 	//
-	// Create custom type
+	// Create custom types
 	//
 	Py_INCREF(&pydmi_node_type);
     if (PyModule_AddObject(module, "node", (PyObject *) &pydmi_node_type) < 0) {

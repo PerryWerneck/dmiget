@@ -205,6 +205,23 @@ dnl ---------------------------------------------------------------------------
 PKG_CHECK_EXISTS
 
 dnl ---------------------------------------------------------------------------
+dnl Check for Python
+dnl ---------------------------------------------------------------------------
+
+PKG_CHECK_MODULES( [PYTHON], [python3], AC_DEFINE(HAVE_PYTHON3,1,[ Do we have python3? ]), AC_MSG_ERROR([Python devel is unavailable]))
+
+AC_SUBST(PYTHON_LIBS)
+AC_SUBST(PYTHON_CFLAGS)
+
+AC_ARG_WITH([python-sitelib], [AS_HELP_STRING([--with-python-sitelib], [Set python-sitelib])], [ app_cv_python_sitelib="$withval" ],[ app_cv_python_sitelib=`python3 -c 'import site; print(site.getsitepackages().pop(0))'` ])
+AC_DEFINE_UNQUOTED(PYTHON_SITELIB, $app_cv_python_sitelib,[ The python sitelib ])
+AC_SUBST(PYTHON_SITELIB,$app_cv_python_sitelib)
+
+AC_ARG_WITH([python-version], [AS_HELP_STRING([--with-python-version], [Set Python Version])], [ app_cv_python_version="$withval" ],[ app_cv_python_version=`$PKG_CONFIG --modversion python3` ])
+AC_DEFINE_UNQUOTED(PYTHON_VERSION, $app_cv_python_version,[ The python version])
+AC_SUBST(PYTHON_VERSION,$app_cv_python_version)
+
+dnl ---------------------------------------------------------------------------
 dnl Output config
 dnl ---------------------------------------------------------------------------
 
