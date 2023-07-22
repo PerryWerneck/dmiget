@@ -4,7 +4,18 @@
 ![CodeQL](https://github.com/PerryWerneck/dmiget/workflows/CodeQL/badge.svg?branch=master)
 [![build result](https://build.opensuse.org/projects/home:PerryWerneck:udjat/packages/dmiget/badge.svg?type=percent)](https://build.opensuse.org/package/show/home:PerryWerneck:udjat/dmiget)
 
-Example:
+## Installation
+
+### Pre build packages
+
+You can download installation package for supported linux distributions in [Open Build Service](https://software.opensuse.org/download.html?project=home%3APerryWerneck%3Audjat&package=dmiget)
+
+[<img src="https://raw.githubusercontent.com/PerryWerneck/pw3270/develop/branding/obs-badge-en.svg" alt="Download from open build service" height="80px">](https://software.opensuse.org/download.html?project=home%3APerryWerneck%3Audjat&package=dmiget)
+[<img src="https://github.com/PerryWerneck/PerryWerneck/blob/master/badges/msys-msvc-badge.svg" alt="Download from githut" height="80px">](https://github.com/PerryWerneck/dmiget/releases)
+
+## Examples:
+
+Command-line:
 
 ```shell
 dmiget dmi://bios/vendor
