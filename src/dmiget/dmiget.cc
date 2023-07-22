@@ -65,7 +65,7 @@
 			}
 		},
 		{
-			'i',"urls","",false,[](const char *) {
+			'u',"urls","",false,[](const char *) {
 
 				auto table = TableFactory();
 
@@ -79,7 +79,7 @@
 			}
 		},
 		{
-			'V',"values","",true,[](const char *filename) {
+			'V',"values","",true,[](const char *) {
 
 				auto table = TableFactory();
 
@@ -93,7 +93,7 @@
 			}
 		},
 		{
-			'N',"names","",true,[](const char *filename) {
+			'N',"names","",true,[](const char *) {
 
 				auto table = TableFactory();
 
@@ -192,7 +192,12 @@
 			found = true;
 
 			auto table = TableFactory();
-			cout << table->find(argument) << endl;
+			auto value = table->find(argument);
+			if(value) {
+				cout << table->find(argument) << endl;
+			} else {
+				cout << "" << endl;
+			}
 			delete table;
 
 		}

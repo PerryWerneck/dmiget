@@ -26,7 +26,7 @@
  #include <string>
 
  using namespace std;
- 
+
  namespace DMIget {
 
 	Value::Value(const Type *t, const Record *record, const uint8_t i) : typeindex(i), type(t) {
@@ -50,6 +50,10 @@
 	Value::~Value() {
 	}
 
+	const char * Value::node() const {
+		return type->name;
+	}
+
 	std::string Value::as_string() const {
 		return "";
 	}
@@ -64,9 +68,9 @@
 			return "";
 		}
 
-		std::string rc{"dmi://"};
+		std::string rc{"dmi:///"};
 
-		rc += type->name;
+		rc += node();
 		rc += "/";
 
 		if(type->multiple) {
