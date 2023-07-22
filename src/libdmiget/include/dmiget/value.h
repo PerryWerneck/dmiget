@@ -53,6 +53,8 @@
 
 		std::string url() const;
 
+		const char * node() const;
+
 		inline const char * name() const {
 			return info.name.c_str();
 		}

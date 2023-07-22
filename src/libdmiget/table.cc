@@ -167,9 +167,23 @@
 
 	}
 
-	std::shared_ptr<Value> Table::find(const char *url) const {
+	std::shared_ptr<Value> Table::find(const char *node, const char *name) const {
 
 		std::shared_ptr<Value> found;
+
+		for_each([&found,node,name](shared_ptr<Value> value){
+			if(!(strcasecmp(value->name(),name) || strcasecmp(value->node(),node))) {
+				found = value;
+				return false;
+			}
+			return true;
+		});
+
+		return found;
+
+	}
+
+	std::shared_ptr<Value> Table::find(const char *url) const {
 
 		if(!strncasecmp(url,"dmi:",4)) {
 			url += 4;
@@ -179,6 +193,18 @@
 			url++;
 		}
 
+		const char *separator = strchr(url,'/');
+		if(!separator) {
+			throw runtime_error("Malformed URL");
+		}
+
+		return find(
+			string{url,(size_t) (separator-url)}.c_str(),
+			string{separator+1}.c_str()
+		);
+
+		/*
+		cout << "-------------->" << url << "<----------------" << endl;
 		for_each([&found,url](shared_ptr<Value> value){
 			if(!strcasecmp(value->url().c_str()+6,url)) {
 				found = value;
@@ -189,6 +215,7 @@
 		});
 
 		return found;
+		*/
 	}
 
 	std::string Table::operator[](const char *url) const {
@@ -202,6 +229,29 @@
 		return "";
 	}
 
+	DMIGET_API char * dmi_table_get(const char *node, const char *name) {
+
+		auto value = Table{}.find(node,name);
+
+		if(value) {
+			return strdup(value->as_string().c_str());
+		}
+
+		return strdup("");
+
+	}
+
+	DMIGET_API char * dmi_table_get_url(const char *url) {
+
+		auto value = Table{}.find(url);
+
+		if(value) {
+			return strdup(value->as_string().c_str());
+		}
+
+		return strdup("");
+
+	}
 
  }
 
