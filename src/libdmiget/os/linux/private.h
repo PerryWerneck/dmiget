@@ -19,7 +19,10 @@
 
  #pragma once
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <dmiget/defs.h>
  #include <dmiget/value.h>
  #include <stdexcept>

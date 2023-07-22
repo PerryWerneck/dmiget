@@ -23,8 +23,29 @@
  #include <stdint.h>
  #include <stddef.h>
  #include <functional>
+ #include <string>
  #include <memory>
 
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+
+	/// @brief Get DMI value.
+	/// @param node Node name.
+	/// @param name Value name.
+	/// @return String with dmi:///node/name value or empty if not found (release it with free())
+	DMIGET_API char * dmi_table_get(const char *node, const char *name);
+
+	/// @brief Get DMI value.
+	/// @param url URL dmi:///node/name.
+	/// @return String with value or empty if not found (release it with free())
+	DMIGET_API char * dmi_table_get_url(const char *url);
+
+ #ifdef __cplusplus
+ }
+ #endif
+
+ #ifdef __cplusplus
  namespace DMIget {
 
 	class Value;
@@ -64,9 +85,11 @@
 
 		bool for_each(std::function<bool(std::shared_ptr<Value> value)> exec) const;
 
+		std::shared_ptr<Value> find(const char *node, const char *name) const;
 		std::shared_ptr<Value> find(const char *url) const;
 		std::string operator[](const char *url) const;
 
 	};
 
  }
+ #endif // __cplusplus

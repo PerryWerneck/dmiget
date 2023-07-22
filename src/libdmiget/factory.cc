@@ -23,12 +23,12 @@
 
  namespace DMIget {
 
-	class VersionValue : public DMI::Value {
+	class VersionValue : public Value {
 	private:
 		int ma, mi;
 
 	public:
-		VersionValue(const Value::Type *t, const Value::Record *r, const uint8_t i, int p1, int p2) : DMI::Value(t,r,i), ma(p1), mi(p2) {
+		VersionValue(const Value::Type *t, const Value::Record *r, const uint8_t i, int p1, int p2) : Value(t,r,i), ma(p1), mi(p2) {
 		}
 
 		unsigned int as_uint() const override {
@@ -44,17 +44,17 @@
 
 	};
 
-	shared_ptr<DMI::Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index) {
+	shared_ptr<Value> string_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index) {
 		return make_shared<StringValue>(type,record,index,String(header,record->offset));
 	}
 
-	shared_ptr<DMI::Value> firmware_revision_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index) {
+	shared_ptr<Value> firmware_revision_factory(const Header &header, const Value::Type *type, const Value::Record *record, uint8_t index) {
 
 		if(header.length > (record->offset+1) && header.data[record->offset] != 0xFF && header.data[record->offset+1] != 0xFF) {
 			return make_shared<VersionValue>(type,record,index,header.data[record->offset], header.data[record->offset+1]);
 		}
 
-		return shared_ptr<DMI::Value>();
+		return shared_ptr<Value>();
 	}
 
 

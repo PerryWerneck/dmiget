@@ -23,549 +23,440 @@
 
  namespace DMIget {
 
+	static const Value::Record EmptyTable[] = {
+		{}
+	};
+
+	static const Value::Record BiosInformation[] = {
+		{ "vendor",					string_factory,				1,		"Vendor"			},
+		{ "version",				string_factory,				2,		"Version"			},
+		{ "date",					string_factory,				3,		"Release Date"		},
+		{ "biosrev",				firmware_revision_factory,	0x14,	"BIOS Revision"		},
+		{ "firmwarerev",			firmware_revision_factory,	0x16,	"Firmware Revision" },
+		{}
+	};
+
+	static const Value::Record System[] = {
+		{ "manufacturer",	string_factory,	1,	"Manufacturer"	},
+		{ "name",			string_factory,	2,	"Product Name"	},
+		{ "version",		string_factory,	3,	"Version"		},
+		{ "serial",			string_factory,	4,	"Serial Number"	},
+		{ "sku",			string_factory,	5,	"SKU Number"	},
+		{ "family",			string_factory,	6,	"Family"		},
+		{}
+	};
+
+	static const Value::Record BaseBoard[] = {
+		{ "manufacturer",	string_factory,	1,	"Manufacturer"			},
+		{ "name",			string_factory,	2,	"Product Name"			},
+		{ "version",		string_factory,	3,	"Version"				},
+		{ "serial",			string_factory,	4,	"Serial Number"			},
+		{ "atag",			string_factory,	5,	"Asset Tag"				},
+		{ "location",		string_factory,	6,	"Location In Chassis"	},
+		{}
+	};
+
+	static const Value::Record Chassis[] = {
+		{ "manufacturer",	string_factory,	1,	"Manufacturer"	},
+		{ "version",		string_factory,	2,	"Version"		},
+		{ "serial",			string_factory,	3,	"Serial Number"	},
+		{ "atag",			string_factory,	4,	"Asset Tag"		},
+		{ "sku",			string_factory,	5,	"SKU Number"	},
+		{}
+	};
+
+	static const Value::Record Processor[] = {
+		{ "socket",			string_factory,	1,	"Socket Designation"	},
+		{ "manufacturer",	string_factory,	2,	"Manufacturer"	},
+	//	{ "",	string_factory,	3,	""	},
+	//	{ "",	string_factory,	4,	""	},
+	//	{ "",	string_factory,	5,	""	},
+	//	{ "",	string_factory,	6,	""	},
+		{}
+	};
+
+
+	static const Value::Record Cache[] = {
+		{ "socket",	string_factory,	1,	"Socket Designation"	},
+		{}
+	};
+
+	static const Value::Record PortConnectors[] = {
+		{ "internal",	string_factory,	1,	"Internal Reference Designator"	},
+		{ "external",	string_factory,	2,	"External Reference Designator"	},
+		{}
+	};
+
+	static const Value::Record Slots[] = {
+		{ "designation",	string_factory,	1,	"Designation"	},
+		{}
+	};
+
+	static const Value::Record GroupAssociations[] = {
+		{ "name",	string_factory,	1,	"Name"	},
+		{}
+	};
+
+	static const Value::Record MemoryDevice[] = {
+		{ "locator",		string_factory,	1,	"Locator"		},
+		{ "bank",			string_factory,	2,	"Bank Locator"	},
+		{ "manufacturer",	string_factory,	3,	"Manufacturer"	},
+		{ "serial",			string_factory,	4,	"Serial Number"	},
+		{ "atag",			string_factory,	5,	"Asset Tag"		},
+		{ "partnumber",		string_factory,	6,	"Part Number"	},
+		{}
+	};
+
+	static const Value::Record PortableBattery[] = {
+		{ "location",		string_factory,	1,	"Location"			},
+		{ "manufacturer",	string_factory,	2,	"Manufacturer"		},
+		{ "date",			string_factory,	3,	"Manufacture Date"	},
+		{ "serial",			string_factory,	4,	"Serial Number"		},
+		{ "name",			string_factory,	5,	"Name"				},
+		// { "",			string_factory,	6,	""	},
+		{}
+	};
+
+	static const Value::Record TemperatureProbe[] = {
+		{ "description",	string_factory,	1,	"Description"	},
+		{}
+	};
+
+	static const Value::Record OnboardDevice[] = {
+		{ "reference",	string_factory,	1,	"Reference Designation"	},
+		{}
+	};
+
+	static const Value::Record PowerSupply[] = {
+		{ "location",		string_factory,	1,	"Location"			},
+		{ "name",			string_factory,	2,	"Name"				},
+		{ "manufacturer",	string_factory,	3,	"Manufacturer"		},
+		{ "serial",			string_factory,	4,	"Serial Number"		},
+		{ "atag",			string_factory,	5,	"Asset Tag"			},
+		{ "modelpn",		string_factory,	6,	"Model Part Number"	},
+		{ "revision",		string_factory,	7,	"Revision"			},
+		{}
+	};
+
+	static const Value::Record VoltageProbe[] = {
+		{ "description",	string_factory,	1,	"Description"	},
+		{}
+	};
+
+	static const Value::Record CoolingDevice[] = {
+		{ "description",	string_factory,	1,	"Description"	},
+		{}
+	};
+
 	static const Value::Type types[] = {
 
 		{
 			0,
 			false,
-			"bios",
+			"BIOS",
 			"BIOS Information",
-			(const Value::Record []) {
-				{ "vendor",					string_factory,				1,		"Vendor"			},
-				{ "version",				string_factory,				2,		"Version"			},
-				{ "date",					string_factory,				3,		"Release Date"		},
-				{ "biosrev",				firmware_revision_factory,	0x14,	"BIOS Revision"		},
-				{ "firmwarerev",			firmware_revision_factory,	0x16,	"Firmware Revision" },
-				{}
-			}
+			BiosInformation
 		},
 		{
 			1,
 			false,
-			"system",
 			"System",
-			(const Value::Record []) {
-				{ "manufacturer",	string_factory,	1,	"Manufacturer"	},
-				{ "name",			string_factory,	2,	"Product Name"	},
-				{ "version",		string_factory,	3,	"Version"		},
-				{ "serial",			string_factory,	4,	"Serial Number"	},
-				{ "sku",			string_factory,	5,	"SKU Number"	},
-				{ "family",			string_factory,	6,	"Family"		},
-				{}
-			}
+			"System",
+			System
 		},
 		{
 			2,
 			false,
-			"baseboard",
+			"BaseBoard",
 			"Base Board",
-			(const Value::Record []) {
-				{ "manufacturer",	string_factory,	1,	"Manufacturer"			},
-				{ "name",			string_factory,	2,	"Product Name"			},
-				{ "version",		string_factory,	3,	"Version"				},
-				{ "serial",			string_factory,	4,	"Serial Number"			},
-				{ "atag",			string_factory,	5,	"Asset Tag"				},
-				{ "location",		string_factory,	6,	"Location In Chassis"	},
-				{}
-			}
+			BaseBoard
 		},
 		{
 			3,
 			false,
-			"chassis",
+			"Chassis",
 			"Chassis Information",
-
-			(const Value::Record []) {
-				{ "manufacturer",	string_factory,	1,	"Manufacturer"	},
-				{ "version",		string_factory,	2,	"Version"		},
-				{ "serial",			string_factory,	3,	"Serial Number"	},
-				{ "atag",			string_factory,	4,	"Asset Tag"		},
-				{ "sku",			string_factory,	5,	"SKU Number"	},
-				{}
-			}
-
+			Chassis
 		},
 		{
 			4,
 			false,
-			"processor",
 			"Processor",
-
-			(const Value::Record []) {
-				{ "socket",			string_factory,	1,	"Socket Designation"	},
-				{ "manufacturer",	string_factory,	2,	"Manufacturer"	},
-			//	{ "",	string_factory,	3,	""	},
-			//	{ "",	string_factory,	4,	""	},
-			//	{ "",	string_factory,	5,	""	},
-			//	{ "",	string_factory,	6,	""	},
-				{}
-			}
-
+			"Processor",
+			Processor
 		},
 		{
 			5,
 			false,
-			"mcntrl",
+			"MemoryController",
 			"Memory Controller",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			6,
 			false,
-			"mmodule",
+			"MemoryModule",
 			"Memory Module",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			7,
 			true,
-			"cache",
 			"Cache",
-			(const Value::Record []) {
-				{ "socket",	string_factory,	1,	"Socket Designation"	},
-				{}
-			}
+			"Cache",
+			Cache
 		},
 		{
 			8,
 			true,
-			"ports",
+			"PortConnectors",
 			"Port Connector",
-
-			(const Value::Record []) {
-				{ "internal",	string_factory,	1,	"Internal Reference Designator"	},
-				{ "external",	string_factory,	2,	"External Reference Designator"	},
-				{}
-			}
+			PortConnectors
 		},
 		{
 			9,
 			true,
-			"slots",
+			"Slots",
 			"System Slots",
-			(const Value::Record []) {
-				{ "designation",	string_factory,	1,	"Designation"	},
-				{}
-			}
+			Slots
 		},
 		{
 			10,
 			false,
-			"boarddevices",
+			"OnBoardDevices",
 			"On Board Devices",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			11,
 			false,
-			"oemstrings",
+			"OEMstrings",
 			"OEM Strings",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			12,
 			false,
-			"sysconf",
+			"SysConfigOpts",
 			"System Configuration Options",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			13,
 			false,
-			"language",
+			"BIOSLanguage",
 			"BIOS Language",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			14,
 			true,
-			"group",
+			"GroupAssociations",
 			"Group Associations",
-			(const Value::Record []) {
-				{ "name",	string_factory,	1,	"Name"	},
-				{}
-			}
+			GroupAssociations
 		},
 		{
 			15,
 			false,
-			"syslog",
+			"EventLog",
 			"System Event Log",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			16,
 			false,
-			"pma",
+			"PhysicalMemoryArray",
 			"Physical Memory Array",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			17,
 			true,
-			"memory",
+			"MemoryDevice",
 			"Memory Device",
-			(const Value::Record []) {
-				{ "locator",		string_factory,	1,	"Locator"		},
-				{ "bank",			string_factory,	2,	"Bank Locator"	},
-				{ "manufacturer",	string_factory,	3,	"Manufacturer"	},
-				{ "serial",			string_factory,	4,	"Serial Number"	},
-				{ "atag",			string_factory,	5,	"Asset Tag"		},
-				{ "partnumber",		string_factory,	6,	"Part Number"	},
-				{}
-			}
+			MemoryDevice
 		},
 		{
 			18,
 			false,
-			"32bme",
+			"32BitMemoryError",
 			"32-bit Memory Error",
-			/*
-			(const Value::Record []) {
-				{ "",	false,	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			19,
 			true,
-			"mama",
+			"MemoryArrayAddressMap",
 			"Memory Array Mapped Address",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			20,
 			false,
-			"mdma",
+			"MemoryDeviceAddressMap",
 			"Memory Device Mapped Address",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			21,
 			false,
-			"pointingdevice",
+			"BuiltinPointingDevice",
 			"Built-in Pointing Device",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			22,
 			false,
-			"battery",
+			"PortableBattery",
 			"Portable Battery",
-			(const Value::Record []) {
-				{ "location",		string_factory,	1,	"Location"			},
-				{ "manufacturer",	string_factory,	2,	"Manufacturer"		},
-				{ "date",			string_factory,	3,	"Manufacture Date"	},
-				{ "serial",			string_factory,	4,	"Serial Number"		},
-				{ "name",			string_factory,	5,	"Name"				},
-				// { "",			string_factory,	6,	""	},
-				{}
-			}
-
+			PortableBattery
 		},
 		{
 			23,
 			false,
-			"sysreset",
+			"SystemReset",
 			"System Reset",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			24,
 			false,
-			"hwsecurity",
+			"HWsecurity",
 			"Hardware Security",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			25,
 			false,
-			"syspowercntrl",
+			"SysPowerCtrl",
 			"System Power Controls",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			26,
 			false,
-			"vprobe",
+			"VoltageProbe",
 			"Voltage Probe",
-			(const Value::Record []) {
-				{ "description",	string_factory,	1,	"Description"	},
-				{}
-			}
+			VoltageProbe
 		},
 		{
 			27,
 			false,
-			"cooling",
+			"CoolingDevice",
 			"Cooling Device",
-			(const Value::Record []) {
-				{ "description",	string_factory,	1,	"Description"	},
-				{}
-			}
+			CoolingDevice
 		},
 		{
 			28,
 			false,
-			"temperature",
+			"TemperatureProbe",
 			"Temperature Probe",
-			(const Value::Record []) {
-				{ "description",	string_factory,	1,	"Description"	},
-				{}
-			}
+			TemperatureProbe
 		},
 		{
 			29,
 			false,
-			"electricalcurrent",
+			"ElectricalCurrentProbe",
 			"Electrical Current Probe",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			30,
 			false,
-			"ora",
+			"RemoteAccess",
 			"Out-of-band Remote Access",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			31,
 			false,
-			"bis",
+			"BootIntegritySrv",
 			"Boot Integrity Services",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			32,
 			false,
-			"sysboot",
+			"SystemBoot",
 			"System Boot",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			33,
 			false,
-			"64bme",
+			"64BitMemoryError",
 			"64-bit Memory Error",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			34,
 			false,
-			"mdev",
+			"ManagementDevice",
 			"Management Device",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			35,
 			false,
-			"mdevc",
+			"ManagementDeviceComponent",
 			"Management Device Component",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			36,
 			false,
-			"mdevtd",
+			"ManagementDeviceThreshold",
 			"Management Device Threshold Data",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			37,
 			false,
-			"mchannel",
+			"MemoryChannel",
 			"Memory Channel",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			38,
 			false,
-			"ipmi",
+			"IPMIdevice",
 			"IPMI Device",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			39,
 			false,
-			"powersupply",
+			"PowerSupply",
 			"Power Supply",
-			(const Value::Record []) {
-				{ "location",		string_factory,	1,	"Location"			},
-				{ "name",			string_factory,	2,	"Name"				},
-				{ "manufacturer",	string_factory,	3,	"Manufacturer"		},
-				{ "serial",			string_factory,	4,	"Serial Number"		},
-				{ "atag",			string_factory,	5,	"Asset Tag"			},
-				{ "modelpn",		string_factory,	6,	"Model Part Number"	},
-				{ "revision",		string_factory,	7,	"Revision"			},
-				{}
-			}
+			PowerSupply
 		},
 		{
 			40,
 			false,
-			"additional",
+			"AdditionalInfo",
 			"Additional Information",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			41,
 			false,
-			"onboarddev",
+			"OnboardDevice",
 			"Onboard Device",
-			(const Value::Record []) {
-				{ "reference",	string_factory,	1,	"Reference Designation"	},
-				{}
-			}
+			OnboardDevice
 		},
 		{
 			42,
 			false,
-			"mchi",
+			"MgmntCtrltHostIntf",
 			"Management Controller Host Interface",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		},
 		{
 			43,
 			false,
-			"TPM",
+			"TPMDevice",
 			"TPM Device",
-			/*
-			(const Value::Record []) {
-				{ "",	string_factory,	1,	""	},
-				{}
-			}
-			*/
+			EmptyTable
 		}
 
 	};

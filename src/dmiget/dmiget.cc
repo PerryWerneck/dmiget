@@ -21,123 +21,192 @@
  #include <dmiget/value.h>
  #include <dmiget/table.h>
  #include <iostream>
- #include <getopt.h>
+ #include <functional>
+ #include <cstring>
 
  using namespace std;
  namespace DMI = DMIget;
 
+ static string input_file;
+ static string delimiter{"\t"};
+
+ static DMI::Table * TableFactory() {
+	if(input_file.empty())
+		return new DMI::Table();
+	return new DMI::Table(input_file.c_str());
+ }
+
  int main(int argc, char **argv) {
 
-	/// @brief Command line arguments.
-	static struct option options[] = {
-		{ "all",			no_argument,		0,	'a' },
-		{ "urls",			no_argument,		0,	'U' },
-		{ "values",			no_argument,		0,	'V' },
-		{ "input-file",		required_argument,	0,	'i' },
-		{ "delimiter",		required_argument,	0,	'd' },
+	static const struct Worker {
+		char short_arg;
+		const char *long_arg;
+		const bool required;
+		const char *help;
+		const std::function<void(const char *argument)> method;
+
+		Worker(char s, const char *l, const char *h, const bool r, const std::function<void(const char *argument)> m)
+			: short_arg{s}, long_arg{l}, required{r}, help{h}, method{m} {
+		}
+	} workers[] {
+
+		{
+			'a',"all","",false,[](const char *) {
+
+				auto table = TableFactory();
+
+				table->for_each([](shared_ptr<DMI::Value> value){
+					cout << value->url() << delimiter << value << endl;
+					return true;
+				});
+
+				delete table;
+
+			}
+		},
+		{
+			'u',"urls","",false,[](const char *) {
+
+				auto table = TableFactory();
+
+				table->for_each([](shared_ptr<DMI::Value> value){
+					cout << value->url() << endl;
+					return true;
+				});
+
+				delete table;
+
+			}
+		},
+		{
+			'V',"values","",true,[](const char *) {
+
+				auto table = TableFactory();
+
+				table->for_each([](shared_ptr<DMI::Value> value){
+					cout << value << endl;
+					return true;
+				});
+
+				delete table;
+
+			}
+		},
+		{
+			'N',"names","",true,[](const char *) {
+
+				auto table = TableFactory();
+
+				table->for_each([](shared_ptr<DMI::Value> value){
+					cout << value->name() << endl;
+					return true;
+				});
+
+				delete table;
+
+			}
+		},
+		{
+			'I',"input-file","",true,[](const char *filename) {
+				input_file = filename;
+			}
+		},
+		{
+			'D',"delimiter","",true,[](const char *d) {
+				delimiter = d;
+			}
+		},
 	};
 
-	try {
+	while(--argc) {
 
-		string delimiter{"\t"};
-		const char *filename = nullptr;
+		bool found = false;
+		const char *argument = *(++argv);
 
-		int long_index =0;
-		int opt;
-		while((opt = getopt_long(argc, argv, "UVad:i:", options, &long_index )) != -1) {
+		if(!strncmp(argument,"--",2)) {
 
-			switch(opt) {
-			case 'i':	// Load table from filename.
-				filename = optarg;
-				break;
-
-			case 'U':	// List URLs
-				{
-					const DMI::Table * table = nullptr;
-
-					if(filename) {
-						table = new DMI::Table(filename);
-					} else {
-						table = new DMI::Table();
-					}
-
-					table->for_each([](shared_ptr<DMI::Value> value){
-						cout << value->url() << endl;
-						return true;
-					});
-
-					delete table;
-				}
-				break;
-
-			case 'V':	// List values
-				{
-					const DMI::Table * table = nullptr;
-
-					if(filename) {
-						table = new DMI::Table(filename);
-					} else {
-						table = new DMI::Table();
-					}
-
-					table->for_each([](shared_ptr<DMI::Value> value){
-						cout << value << endl;
-						return true;
-					});
-
-					delete table;
-				}
-				break;
-
-			case 'd':	// Setup delimiter for 'all' output
-				delimiter = optarg;
-				break;
-
-			case 'a':	// List URLs and values.
-				{
-					const DMI::Table * table = nullptr;
-
-					if(filename) {
-						table = new DMI::Table(filename);
-					} else {
-						table = new DMI::Table();
-					}
-
-					table->for_each([delimiter](shared_ptr<DMI::Value> value){
-						cout << value->url() << delimiter << value << endl;
-						return true;
-					});
-
-					delete table;
-				}
-				break;
-
-			}
-
-		}
-
-		if(optind < argc) {
-
-			const DMI::Table * table = nullptr;
-
-			if(filename) {
-				table = new DMI::Table(filename);
+			argument += 2;
+			const char *value = strchr(argument,'=');
+			string name;
+			if(value) {
+				name.assign(argument,value-argument);
+				value++;
 			} else {
-				table = new DMI::Table();
+				name.assign(argument);
+				value = "";
 			}
 
-			for(; optind < argc; optind++) {
-				cout << table->find((const char *) argv[optind]) << endl;
+			for(const Worker &worker : workers) {
+
+				found = (strcmp(name.c_str(),worker.long_arg) == 0);
+				if(found) {
+					worker.method(value);
+					break;
+				}
+
 			}
 
+		} else if(argument[0] == '-') {
+
+			argument++;
+
+			if(argument[1]) {
+				cerr << "Unexpected argument" << endl;
+				return -1;
+			}
+
+			for(const Worker &worker : workers) {
+
+				found = (worker.short_arg == argument[0]);
+				if(found) {
+
+					const char *value = "";
+
+					if(worker.required) {
+
+						if(argc == 1) {
+							cerr << "An argument is required" << endl;
+							exit(-1);
+						}
+
+						value = *(++argv);
+						--argc;
+
+						if(value[0] == '-') {
+							cerr << "An argument is required" << endl;
+							exit(-1);
+						}
+
+					}
+
+					worker.method(value);
+					break;
+
+				}
+
+			}
+
+		} else {
+
+			// It's an URL
+			found = true;
+
+			auto table = TableFactory();
+			auto value = table->find(argument);
+			if(value) {
+				cout << table->find(argument) << endl;
+			} else {
+				cout << "" << endl;
+			}
 			delete table;
+
 		}
 
+		if(!found) {
+			cerr << "Invalid argument" << endl;
+			return -1;
+		}
 
-	} catch(const exception &e) {
-
-		cerr << endl << e.what() << endl;
-		return -1;
 	}
 
 	return 0;

@@ -17,14 +17,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
+ #ifdef _WIN32
+ 	#include <windows.h>
+ #endif // _WIN32
+
+ #include <internals.h>
+
  #include <sysinfoapi.h>
 
  #include <dmiget/table.h>
- #include <internals.h>
  #include <cstring>
  #include <cerrno>
  #include <cstring>
+ #include <string>
  #include <iostream>
 
  using namespace std;
@@ -58,33 +67,41 @@
 
 			if(smbiosdatasize) {
 
-				uint8_t buffer[smbiosdatasize+1];
+				uint8_t *buffer = new uint8_t[smbiosdatasize+1];
 
-				DWORD bytesread = GetSystemFirmwareTable('RSMB',0,buffer,smbiosdatasize);
+				try {
 
-				if(bytesread == smbiosdatasize) {
+					DWORD bytesread = GetSystemFirmwareTable('RSMB',0,buffer,smbiosdatasize);
 
-					#pragma pack(1)
-					struct RawSMBIOSData {
-						BYTE    Used20CallingMethod;
-						BYTE    SMBIOSMajorVersion;
-						BYTE    SMBIOSMinorVersion;
-						BYTE    DmiRevision;
-						DWORD    Length;
-						BYTE    SMBIOSTableData[];
-					};
-					#pragma pack()
+					if(bytesread == smbiosdatasize) {
 
-					RawSMBIOSData * data = (RawSMBIOSData *) buffer;
+						#pragma pack(1)
+						struct RawSMBIOSData {
+							BYTE    Used20CallingMethod;
+							BYTE    SMBIOSMajorVersion;
+							BYTE    SMBIOSMinorVersion;
+							BYTE    DmiRevision;
+							DWORD    Length;
+							BYTE    SMBIOSTableData[];
+						};
+						#pragma pack()
 
-//#ifdef DEBUG
-//					cout << "Version: " << ((int) data->SMBIOSMajorVersion) << "." << ((int) data->SMBIOSMinorVersion) << endl;
-//#endif // DEBUG
-					set(data->SMBIOSTableData,data->Length);
+						RawSMBIOSData * data = (RawSMBIOSData *) buffer;
 
-				} else {
-					cerr << "Invalid response on GetSystemFirmwareTable()" << endl;
+						set(data->SMBIOSTableData,data->Length);
+
+					} else {
+						cerr << "Invalid response on GetSystemFirmwareTable()" << endl;
+					}
+
+				} catch(...) {
+
+					delete[] buffer;
+					throw;
+
 				}
+			
+				delete[] buffer;
 			}
 		}
 

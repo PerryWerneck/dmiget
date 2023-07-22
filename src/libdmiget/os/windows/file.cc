@@ -22,65 +22,26 @@
  #endif // HAVE_CONFIG_H
 
  #include <internals.h>
- #include <dmiget/value.h>
- #include <string>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <cstring>
+ #include <iostream>
+ #include <stdexcept>
 
  using namespace std;
 
  namespace DMIget {
 
-	Value::Value(const Type *t, const Record *record, const uint8_t i) : typeindex(i), type(t) {
+	File::File(const char *filename, size_t maxlen) {
 
-		if(record) {
+		throw runtime_error("Not available on windows");
 
-			if(record->name) {
-				info.name = record->name;
-			} else {
-				info.name = to_string( (int) record->offset);
-			}
+	}
 
-			if(record->description) {
-				info.description = record->description;
-			}
-
+	File::~File() {
+		if(contents) {
+			delete[] contents;
 		}
-
-	}
-
-	Value::~Value() {
-	}
-
-	const char * Value::node() const {
-		return type->name;
-	}
-
-	std::string Value::as_string() const {
-		return "";
-	}
-
-	unsigned int Value::as_uint() const {
-		return 0;
-	}
-
-	std::string Value::url() const {
-
-		if(!type) {
-			return "";
-		}
-
-		std::string rc{"dmi:///"};
-
-		rc += node();
-		rc += "/";
-
-		if(type->multiple) {
-			rc += std::to_string((int) typeindex);
-			rc += "/";
-		}
-
-		rc += info.name;
-
-		return rc;
 	}
 
 
