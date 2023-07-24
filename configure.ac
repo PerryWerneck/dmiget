@@ -73,6 +73,7 @@ case "$host" in
 
  	*)
 		CFLAGS="$CFLAGS -pthread"
+		CXXFLAGS="$CXXFLAGS -pthread -ffat-lto-objects"
 		LDFLAGS="$LDFLAGS -pthread"
 		AC_SUBST(LIBEXT,.so)
 		AC_SUBST(EXEEXT)
