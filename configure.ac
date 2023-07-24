@@ -209,9 +209,9 @@ dnl ---------------------------------------------------------------------------
 dnl Check for Python
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [PYTHON], [python3], app_cv_pithon="yes", AC_MSG_NOTICE([Python devel is unavailable]))
+PKG_CHECK_MODULES( [PYTHON], [python3], app_cv_python="yes", AC_MSG_NOTICE([Python devel is unavailable]))
 
-if test "$app_cv_pithon" == "yes"; then
+if test "$app_cv_python" == "yes"; then
 
 	AC_DEFINE(HAVE_PYTHON3,1,[ Do we have python3? ])
 
