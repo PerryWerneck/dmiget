@@ -27,7 +27,7 @@ jobs:
       - name: Install Packages
         run: |
           sudo apt-get update
-          sudo apt-get install --yes gettext libpugixml-dev cmake git make autopoint python-dev
+          sudo apt-get install --yes gettext libpugixml-dev cmake git make autopoint python3-dev
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
