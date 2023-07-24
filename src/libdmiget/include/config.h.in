@@ -6,6 +6,9 @@
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 
+/* Do we have python3? */
+#undef HAVE_PYTHON3
+
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
 
@@ -44,6 +47,12 @@
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* The python sitelib */
+#undef PYTHON_SITELIB
+
+/* The python version */
+#undef PYTHON_VERSION
 
 /* Version number of package */
 #undef VERSION

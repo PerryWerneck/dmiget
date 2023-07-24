@@ -25,6 +25,9 @@ LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/decoders/*.cc) \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
 
+PYTHON_SOURCES= \
+	$(wildcard src/python/*.cc)
+
 APPLICATION_SOURCES= \
 	$(wildcard src/dmiget/*.cc)
 
@@ -58,6 +61,7 @@ datarootdir=@datarootdir@
 localedir=@localedir@
 docdir=@docdir@
 sysconfdir=/etc
+PYTHON_SITELIB=@PYTHON_SITELIB@
 
 BASEDIR=@BASEDIR@
 
@@ -73,6 +77,7 @@ BINRLS=$(BINDIR)/Release
 
 CFLAGS= \
 	@CXXFLAGS@ \
+	@PYTHON_CFLAGS@ \
 	-DHAVE_CONFIG_H=1 \
 	-fPIC \
 	-Isrc/libdmiget/include \
@@ -148,8 +153,8 @@ $(OBJRLS)/%.o: \
 
 all: \
 	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
-
+	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@ \
+	$(BINRLS)/libdmiget.static.a
 
 Release: \
 	$(BINRLS)/@SONAME@ \
@@ -166,6 +171,13 @@ $(BINRLS)/@SONAME@: \
 		$(LDFLAGS) \
 		$^ \
 		$(LIBS)
+
+$(BINRLS)/libdmiget.static.a: \
+	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(AR) rcs $@ $^
 
 $(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).o) \
@@ -234,7 +246,8 @@ install-windows-lib: \
 		$(BINRLS)/lib$(PACKAGE_NAME).def \
 		$(DESTDIR)$(datarootdir)/$(PACKAGE_NAME)/def
 
-install-devel:
+install-devel: \
+	$(BINRLS)/libdmiget.static.a
 
 	@$(MKDIR) \
 		$(DESTDIR)$(includedir)/dmiget
@@ -247,6 +260,14 @@ install-devel:
 	@$(INSTALL_DATA) \
 		dmiget.pc \
 		$(DESTDIR)$(libdir)/pkgconfig/dmiget.pc
+		
+	@$(INSTALL_DATA) \
+		dmiget.static.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/dmiget.static.pc
+
+	@$(INSTALL_DATA) \
+		$(BINRLS)/libdmiget.static.a \
+		$(DESTDIR)$(libdir)/libdmiget.static.a
 
 #---[ Uninstall Targets ]----------------------------------------------------------------
 
@@ -283,8 +304,9 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
-
+	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@ \
+	$(BINDBG)/py$(PACKAGE_NAME)@DLLEXT@
+	
 $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \
 	$(BINDBG)/@SONAME@
@@ -313,6 +335,21 @@ $(BINDBG)/@SONAME@: \
 		$(LDFLAGS) \
 		$^ \
 		$(LIBS)
+
+$(BINDBG)/py$(PACKAGE_NAME)@DLLEXT@: \
+	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).o) \
+	$(BINDBG)/@SONAME@
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		@DLL_LDFLAGS@ \
+		-Wl,-rpath,$(BINDBG) \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS) \
+		@PYTHON_LIBS@
 
 run: \
 	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
