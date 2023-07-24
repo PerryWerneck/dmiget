@@ -153,8 +153,8 @@ $(OBJRLS)/%.o: \
 
 all: \
 	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
-
+	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@ \
+	$(BINRLS)/libdmiget.static.a
 
 Release: \
 	$(BINRLS)/@SONAME@ \
@@ -171,6 +171,13 @@ $(BINRLS)/@SONAME@: \
 		$(LDFLAGS) \
 		$^ \
 		$(LIBS)
+
+$(BINRLS)/libdmiget.static.a: \
+	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(AR) rcs $@ $^
 
 $(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).o) \
@@ -239,7 +246,8 @@ install-windows-lib: \
 		$(BINRLS)/lib$(PACKAGE_NAME).def \
 		$(DESTDIR)$(datarootdir)/$(PACKAGE_NAME)/def
 
-install-devel:
+install-devel: \
+	$(BINRLS)/libdmiget.static.a
 
 	@$(MKDIR) \
 		$(DESTDIR)$(includedir)/dmiget
@@ -252,6 +260,14 @@ install-devel:
 	@$(INSTALL_DATA) \
 		dmiget.pc \
 		$(DESTDIR)$(libdir)/pkgconfig/dmiget.pc
+		
+	@$(INSTALL_DATA) \
+		dmiget.static.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/dmiget.static.pc
+
+	@$(INSTALL_DATA) \
+		$(BINRLS)/libdmiget.static.a \
+		$(DESTDIR)$(libdir)/libdmiget.static.a
 
 #---[ Uninstall Targets ]----------------------------------------------------------------
 

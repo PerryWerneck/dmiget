@@ -73,6 +73,7 @@ case "$host" in
 
  	*)
 		CFLAGS="$CFLAGS -pthread"
+		CXXFLAGS="$CXXFLAGS -pthread -ffat-lto-objects"
 		LDFLAGS="$LDFLAGS -pthread"
 		AC_SUBST(LIBEXT,.so)
 		AC_SUBST(EXEEXT)
@@ -208,18 +209,24 @@ dnl ---------------------------------------------------------------------------
 dnl Check for Python
 dnl ---------------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [PYTHON], [python3], AC_DEFINE(HAVE_PYTHON3,1,[ Do we have python3? ]), AC_MSG_ERROR([Python devel is unavailable]))
+PKG_CHECK_MODULES( [PYTHON], [python3], app_cv_python="yes", AC_MSG_NOTICE([Python devel is unavailable]))
 
-AC_SUBST(PYTHON_LIBS)
-AC_SUBST(PYTHON_CFLAGS)
+if test "$app_cv_python" == "yes"; then
 
-AC_ARG_WITH([python-sitelib], [AS_HELP_STRING([--with-python-sitelib], [Set python-sitelib])], [ app_cv_python_sitelib="$withval" ],[ app_cv_python_sitelib=`python3 -c 'import site; print(site.getsitepackages().pop(0))'` ])
-AC_DEFINE_UNQUOTED(PYTHON_SITELIB, $app_cv_python_sitelib,[ The python sitelib ])
-AC_SUBST(PYTHON_SITELIB,$app_cv_python_sitelib)
+	AC_DEFINE(HAVE_PYTHON3,1,[ Do we have python3? ])
 
-AC_ARG_WITH([python-version], [AS_HELP_STRING([--with-python-version], [Set Python Version])], [ app_cv_python_version="$withval" ],[ app_cv_python_version=`$PKG_CONFIG --modversion python3` ])
-AC_DEFINE_UNQUOTED(PYTHON_VERSION, $app_cv_python_version,[ The python version])
-AC_SUBST(PYTHON_VERSION,$app_cv_python_version)
+	AC_SUBST(PYTHON_LIBS)
+	AC_SUBST(PYTHON_CFLAGS)
+
+	AC_ARG_WITH([python-sitelib], [AS_HELP_STRING([--with-python-sitelib], [Set python-sitelib])], [ app_cv_python_sitelib="$withval" ],[ app_cv_python_sitelib=`python3 -c 'import site; print(site.getsitepackages().pop(0))'` ])
+	AC_DEFINE_UNQUOTED(PYTHON_SITELIB, $app_cv_python_sitelib,[ The python sitelib ])
+	AC_SUBST(PYTHON_SITELIB,$app_cv_python_sitelib)
+
+	AC_ARG_WITH([python-version], [AS_HELP_STRING([--with-python-version], [Set Python Version])], [ app_cv_python_version="$withval" ],[ app_cv_python_version=`$PKG_CONFIG --modversion python3` ])
+	AC_DEFINE_UNQUOTED(PYTHON_VERSION, $app_cv_python_version,[ The python version])
+	AC_SUBST(PYTHON_VERSION,$app_cv_python_version)
+
+fi
 
 dnl ---------------------------------------------------------------------------
 dnl Output config
@@ -234,6 +241,7 @@ dnl ---------------------------------------------------------------------------
 dnl AC_CONFIG_FILES(doxygen/doxyfile)
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(dmiget.pc)
+AC_CONFIG_FILES(dmiget.static.pc)
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.
