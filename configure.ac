@@ -65,6 +65,7 @@ case "$host" in
 		CFLAGS="$CFLAGS -pthread "
 		LDFLAGS="$LDFLAGS -pthread"
 		DLL_LDFLAGS="$DLL_LDFLAGS -Wl,--output-def,\$(@D)/libdmiget.def"
+		BUILD_TARGETS="${BUILD_TARGETS} dmiget.exe"
 		AC_SUBST(LIBEXT,.dll)
 		AC_SUBST(EXEEXT,.exe)
 		AC_SUBST(SONAME,libdmiget.dll)
@@ -75,6 +76,7 @@ case "$host" in
 		CFLAGS="$CFLAGS -pthread"
 		CXXFLAGS="$CXXFLAGS -pthread -ffat-lto-objects"
 		LDFLAGS="$LDFLAGS -pthread"
+		BUILD_TARGETS="${BUILD_TARGETS} dmiget"
 		AC_SUBST(LIBEXT,.so)
 		AC_SUBST(EXEEXT)
 		AC_SUBST(SONAME,libdmiget.so.$app_vrs_major.$app_vrs_minor)
@@ -213,6 +215,16 @@ PKG_CHECK_MODULES( [PYTHON], [python3], app_cv_python="yes", AC_MSG_NOTICE([Pyth
 
 if test "$app_cv_python" == "yes"; then
 
+	case "$host" in
+		*-mingw32)
+			BUILD_TARGETS="${BUILD_TARGETS} pydmiget.dll"
+			;;
+
+	 	*)
+			BUILD_TARGETS="${BUILD_TARGETS} pydmiget.so"
+
+	esac
+
 	AC_DEFINE(HAVE_PYTHON3,1,[ Do we have python3? ])
 
 	AC_SUBST(PYTHON_LIBS)
@@ -229,12 +241,6 @@ if test "$app_cv_python" == "yes"; then
 fi
 
 dnl ---------------------------------------------------------------------------
-dnl Output config
-dnl ---------------------------------------------------------------------------
-
-AC_SUBST(BASEDIR,$ac_pwd)
-
-dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
 dnl ---------------------------------------------------------------------------
 
@@ -242,6 +248,7 @@ dnl AC_CONFIG_FILES(doxygen/doxyfile)
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(dmiget.pc)
 AC_CONFIG_FILES(dmiget.static.pc)
+AC_SUBST(BUILD_TARGETS)
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.

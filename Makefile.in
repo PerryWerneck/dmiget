@@ -31,6 +31,7 @@ PYTHON_SOURCES= \
 APPLICATION_SOURCES= \
 	$(wildcard src/dmiget/*.cc)
 
+BUILD_TARGETS=@BUILD_TARGETS@
 TARGETS=@OSNAME@-lib devel application
 
 #---[ Tools ]----------------------------------------------------------------------------
@@ -65,11 +66,11 @@ PYTHON_SITELIB=@PYTHON_SITELIB@
 
 BASEDIR=@BASEDIR@
 
-OBJDIR=$(BASEDIR)/.obj
+OBJDIR=.obj
 OBJDBG=$(OBJDIR)/Debug
 OBJRLS=$(OBJDIR)/Release
 
-BINDIR=$(BASEDIR)/.bin
+BINDIR=.bin
 BINDBG=$(BINDIR)/Debug
 BINRLS=$(BINDIR)/Release
 
@@ -152,13 +153,11 @@ $(OBJRLS)/%.o: \
 #---[ Release Targets ]------------------------------------------------------------------
 
 all: \
-	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@ \
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET)) \
 	$(BINRLS)/libdmiget.static.a
 
 Release: \
-	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET))
 
 $(BINRLS)/@SONAME@: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
@@ -304,8 +303,7 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@ \
-	$(BINDBG)/py$(PACKAGE_NAME)@DLLEXT@
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
 	
 $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \
@@ -336,7 +334,7 @@ $(BINDBG)/@SONAME@: \
 		$^ \
 		$(LIBS)
 
-$(BINDBG)/py$(PACKAGE_NAME)@DLLEXT@: \
+$(BINDBG)/pydmiget@LIBEXT@: \
 	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).o) \
 	$(BINDBG)/@SONAME@
 
