@@ -26,6 +26,7 @@ LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
 
 PYTHON_SOURCES= \
+	$(wildcard src/python/*.c) \
 	$(wildcard src/python/*.cc)
 
 APPLICATION_SOURCES= \
@@ -37,6 +38,7 @@ TARGETS=@OSNAME@-lib devel application
 #---[ Tools ]----------------------------------------------------------------------------
 
 CXX=@CXX@
+CC=@CC@
 LD=@CXX@
 LN_S=@LN_S@
 MKDIR=@MKDIR_P@
@@ -116,6 +118,24 @@ $(OBJDBG)/%.o: \
 		-c $<
 
 $(OBJDBG)/%.o: \
+	%.c
+
+	@echo $< ...
+	@$(MKDIR) $(dir $@)
+
+	@$(CC) \
+		$(CFLAGS) \
+		-DDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CC) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJDBG)/%.o: \
 	%.rc
 
 	@echo $< ...
@@ -139,6 +159,24 @@ $(OBJRLS)/%.o: \
 	@$(CXX) \
 		$(CFLAGS) \
 		$(CPPFLAGS) \
+		-DNDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJRLS)/%.o: \
+	%.c
+
+	@echo $< ...
+	@$(MKDIR) $(dir $@)
+
+	@$(CC) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CC) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
 		-DNDEBUG=1 \
 		-o $@ \
 		-c $<

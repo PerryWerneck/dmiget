@@ -60,7 +60,10 @@
 		<Unit filename="src/libdmiget/string.cc" />
 		<Unit filename="src/libdmiget/table.cc" />
 		<Unit filename="src/libdmiget/value.cc" />
-		<Unit filename="src/python/init.cc" />
+		<Unit filename="src/python/init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/python/moduleinfo.cc" />
 		<Unit filename="src/python/private.h" />
 		<Extensions />
 	</Project>

@@ -22,11 +22,13 @@
  #include <dmiget/defs.h>
  #include <stdint.h>
  #include <stddef.h>
+
+ #ifdef __cplusplus
+
  #include <functional>
  #include <string>
  #include <memory>
 
- #ifdef __cplusplus
  extern "C" {
  #endif
 

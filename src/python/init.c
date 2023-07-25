@@ -40,6 +40,8 @@ static PyMethodDef methods[] = {
 
 	},
 
+	// TODO: Add method to get list os SMBIOS nodes.
+
 	{
 		NULL,
 		NULL,
@@ -51,23 +53,23 @@ static PyMethodDef methods[] = {
 
 static struct PyModuleDef definition = {
 	PyModuleDef_HEAD_INIT,
-	.m_name = "dmi",					// name of module
-	.m_doc = "Read from DMI table",		// module documentation, may be NUL
-	.m_size = -1,						// size of per-interpreter state of the module or -1 if the module keeps state in global variables.
-	.m_methods = methods,				// Module methods
+	.m_name = "smbios",							// name of module
+	.m_doc = "Get values from SMBIOS table",	// module documentation, may be NUL
+	.m_size = -1,								// size of per-interpreter state of the module or -1 if the module keeps state in global variables.
+	.m_methods = methods,						// Module methods
 	.m_free = (freefunc) cleanup
 };
 
-PyMODINIT_FUNC PyInit_dmi(void)
+PyMODINIT_FUNC PyInit_smbios(void)
 {
 
 	// Initialize custom attributes & methods.
-	pydmi_node_type_init();
-	if (PyType_Ready(&pydmi_node_type) < 0)
+	dmiget_node_type_init();
+	if (PyType_Ready(&dmiget_node_type) < 0)
 		return NULL;
 
-	pydmi_value_type_init();
-	if (PyType_Ready(&pydmi_value_type) < 0)
+	dmiget_value_type_init();
+	if (PyType_Ready(&dmiget_value_type) < 0)
 		return NULL;
 
     //
@@ -83,17 +85,17 @@ PyMODINIT_FUNC PyInit_dmi(void)
 	//
 	// Create custom types
 	//
-	Py_INCREF(&pydmi_node_type);
-    if (PyModule_AddObject(module, "node", (PyObject *) &pydmi_node_type) < 0) {
-		Py_DECREF(&pydmi_node_type);
+	Py_INCREF(&dmiget_node_type);
+    if (PyModule_AddObject(module, "node", (PyObject *) &dmiget_node_type) < 0) {
+		Py_DECREF(&dmiget_node_type);
 		Py_DECREF(module);
 		return NULL;
     }
 
-	Py_INCREF(&pydmi_value_type);
-    if (PyModule_AddObject(module, "value", (PyObject *) &pydmi_value_type) < 0) {
-		Py_DECREF(&pydmi_node_type);
-		Py_DECREF(&pydmi_value_type);
+	Py_INCREF(&dmiget_value_type);
+    if (PyModule_AddObject(module, "value", (PyObject *) &dmiget_value_type) < 0) {
+		Py_DECREF(&dmiget_node_type);
+		Py_DECREF(&dmiget_value_type);
 		Py_DECREF(module);
 		return NULL;
     }

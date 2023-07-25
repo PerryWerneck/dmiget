@@ -29,11 +29,12 @@
  #define PY_SSIZE_T_CLEAN
  #include <Python.h>
 
+ #ifdef __cplusplus
  using namespace std;
  namespace DMI = DMIget;
+ #include <functional>
 
- #ifdef __cplusplus
-	extern "C" {
+ extern "C" {
  #endif // __cplusplus
 
  DMIGET_PRIVATE PyTypeObject dmiget_node_type;
@@ -42,9 +43,11 @@
  DMIGET_PRIVATE void dmiget_node_type_init();
  DMIGET_PRIVATE void dmiget_value_type_init();
 
- DMIGET_PRIVATE PyObject * dmiget_call(PyObject *self, const std::function<std::string (const DMI::Table &dmi)> &worker) noexcept;
-
+ DMIGET_PRIVATE PyObject * pydmi_get_module_version(PyObject *, PyObject *);
+ DMIGET_PRIVATE PyObject * pydmi_get_module_revision(PyObject *, PyObject *);
 
  #ifdef __cplusplus
+ DMIGET_PRIVATE PyObject * dmiget_call(PyObject *self, const std::function<std::string (const DMI::Table &dmi)> &worker) noexcept;
+
 	}
  #endif // __cplusplus
