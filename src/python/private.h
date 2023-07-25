@@ -37,8 +37,19 @@
  extern "C" {
  #endif // __cplusplus
 
- DMIGET_PRIVATE PyTypeObject dmiget_node_type;
- DMIGET_PRIVATE PyTypeObject dmiget_value_type;
+ struct pyNodePrivate;
+
+ typedef struct {
+        PyObject_HEAD
+        struct pyNodePrivate *pvt;
+ } pyNode;
+
+ struct pyValuePrivate;
+
+ typedef struct {
+        PyObject_HEAD
+        struct pyValuePrivate *pvt;
+ } pyValue;
 
  DMIGET_PRIVATE void dmiget_node_type_init();
  DMIGET_PRIVATE void dmiget_value_type_init();
@@ -46,8 +57,18 @@
  DMIGET_PRIVATE PyObject * pydmi_get_module_version(PyObject *, PyObject *);
  DMIGET_PRIVATE PyObject * pydmi_get_module_revision(PyObject *, PyObject *);
 
+ DMIGET_PRIVATE int dmiget_node_init(PyObject *self, PyObject *args, PyObject *);
+ DMIGET_PRIVATE void dmiget_node_finalize(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_node_alloc(PyTypeObject *type, PyObject *, PyObject *);
+ DMIGET_PRIVATE void dmiget_node_dealloc(PyObject * self);
+
+ DMIGET_PRIVATE int dmiget_value_init(PyObject *self, PyObject *args, PyObject *);
+ DMIGET_PRIVATE void dmiget_value_finalize(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *);
+ DMIGET_PRIVATE void dmiget_value_dealloc(PyObject * self);
+
  #ifdef __cplusplus
- DMIGET_PRIVATE PyObject * dmiget_call(PyObject *self, const std::function<std::string (const DMI::Table &dmi)> &worker) noexcept;
+ // DMIGET_PRIVATE PyObject * dmiget_call(PyObject *self, const std::function<std::string (const DMI::Table &dmi)> &worker) noexcept;
 
 	}
  #endif // __cplusplus

@@ -64,7 +64,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/python/moduleinfo.cc" />
+		<Unit filename="src/python/node.cc" />
 		<Unit filename="src/python/private.h" />
+		<Unit filename="src/python/value.cc" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

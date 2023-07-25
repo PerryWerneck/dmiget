@@ -21,9 +21,51 @@
 
  static void cleanup(PyObject *module);
 
-/*---[ Globals ]------------------------------------------------------------------------------------*/
+ DMIGET_PRIVATE PyTypeObject dmiget_node_type = {
 
-static PyMethodDef methods[] = {
+	PyVarObject_HEAD_INIT(NULL, 0)
+
+	.tp_name = "smbios.Node",
+	.tp_doc = "SMBios node",
+	.tp_basicsize = sizeof(pyNode),
+	.tp_itemsize = 0,
+	.tp_flags = Py_TPFLAGS_HAVE_FINALIZE|Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+
+	.tp_new = dmiget_node_alloc,
+	.tp_dealloc = dmiget_node_dealloc,
+
+	.tp_init = dmiget_node_init,
+	.tp_finalize = dmiget_node_finalize,
+
+	// .tp_str = dmiget_node_str,
+
+	//.tp_methods = dmiget_node_methods,
+
+ };
+
+ DMIGET_PRIVATE PyTypeObject dmiget_value_type  = {
+
+	PyVarObject_HEAD_INIT(NULL, 0)
+
+	.tp_name = "smbios.Value",
+	.tp_doc = "SMBios Value",
+	.tp_basicsize = sizeof(pyValue),
+	.tp_itemsize = 0,
+	.tp_flags = Py_TPFLAGS_HAVE_FINALIZE|Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+
+	.tp_new = dmiget_value_alloc,
+	.tp_dealloc = dmiget_value_dealloc,
+
+	.tp_init = dmiget_value_init,
+	.tp_finalize = dmiget_value_finalize,
+
+	// .tp_str = dmiget_value_str,
+
+	//.tp_methods = dmiget_value_methods,
+
+ };
+
+ static PyMethodDef methods[] = {
 
 	{
 		"version",
