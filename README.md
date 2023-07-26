@@ -15,8 +15,16 @@ You can download installation package for supported linux distributions in [Open
 
 ## Examples:
 
-Command-line:
+### Command line
 
 ```shell
 dmiget dmi://bios/vendor
+```
+
+### Python
+
+```python
+import smbios
+value = smbios.value('chassis','serial')
+print(value)
 ```
