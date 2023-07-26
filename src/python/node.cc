@@ -26,6 +26,8 @@
  #endif // HAVE_CONFIG_H
 
  #include <dmiget/table.h>
+ #include <stdexcept>
+
  #include "private.h"
 
  struct pyNodePrivate {
