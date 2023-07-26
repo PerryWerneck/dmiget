@@ -217,11 +217,11 @@ if test "$app_cv_python" == "yes"; then
 
 	case "$host" in
 		*-mingw32)
-			BUILD_TARGETS="${BUILD_TARGETS} pydmiget.dll"
+			BUILD_TARGETS="${BUILD_TARGETS} smbios.dll"
 			;;
 
 	 	*)
-			BUILD_TARGETS="${BUILD_TARGETS} pydmiget.so"
+			BUILD_TARGETS="${BUILD_TARGETS} smbios.so"
 
 	esac
 

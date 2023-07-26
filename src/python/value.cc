@@ -27,7 +27,8 @@
  #include "private.h"
 
  struct pyNodePrivate {
- 	std::shared_ptr<DMIget::Value> value;
+	std::string node;
+	std::string name;
  };
 
  void dmiget_value_type_init() {
@@ -67,7 +68,8 @@
 			throw runtime_error("Value name is empty or invalid");
 		}
 
-		pvt->value = DMIget::Table{}.find(node, name);
+		pvt->node = node;
+		pvt->name = name;
 
 		return 0;
 
@@ -86,10 +88,6 @@
  }
 
  void dmiget_value_finalize(PyObject *self) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(pvt) {
-		pvt->value.reset();
-	}
  }
 
  PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *) {
@@ -97,81 +95,103 @@
  }
 
  void dmiget_value_dealloc(PyObject * self) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(pvt) {
-		delete pvt;
-		((pyNode *) self)->pvt = nullptr;
-	}
 	Py_TYPE(self)->tp_free(self);
  }
 
- PyObject * dmiget_value_str(PyObject *self) {
+ static PyObject * call(PyObject *self, const std::function<std::string (const DMI::Value &value)> &worker) {
+
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(!pvt) {
 		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
+		return NULL;
 	}
-	return PyUnicode_FromString(pvt->value->as_string().c_str());
+
+	try {
+		DMIget::Table table;
+
+		auto value = table.find(pvt->node.c_str(),pvt->name.c_str());
+		if(!value) {
+			throw runtime_error("Error finding SMBIOS value");
+		}
+
+		return PyUnicode_FromString(worker(*value).c_str());
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in dmi module");
+
+	}
+
+	return NULL;
+
+ }
+
+
+ PyObject * dmiget_value_str(PyObject *self) {
+
+	return call(self,[](const DMI::Value &value){
+		return value.as_string();
+	});
+
  }
 
  PyObject * dmiget_value_url(PyObject *self) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-	}
-	return PyUnicode_FromString(pvt->value->url().c_str());
+	return call(self,[](const DMI::Value &value){
+		return value.url();
+	});
  }
 
  PyObject * dmiget_value_node_name(PyObject *self) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-	}
-	return PyUnicode_FromString(pvt->value->node());
+	return call(self,[](const DMI::Value &value){
+		return value.node();
+	});
  }
 
  PyObject * dmiget_value_name(PyObject *self) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-	}
-	return PyUnicode_FromString(pvt->value->name());
+	return call(self,[](const DMI::Value &value){
+		return value.name();
+	});
  }
 
  PyObject * dmiget_value_description(PyObject *self) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-	}
-	return PyUnicode_FromString(pvt->value->description());
+	return call(self,[](const DMI::Value &value){
+		return value.description();
+	});
  }
 
  DMIGET_PRIVATE PyObject * dmiget_value_getattr(PyObject *self, char *name) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-	}
 
-	if(!strcasecmp(name,"url")) {
-		return PyUnicode_FromString(pvt->value->url().c_str());
-	}
+	return call(self,[name](const DMI::Value &value){
 
-	if(!strcasecmp(name,"node")) {
-		return PyUnicode_FromString(pvt->value->node());
-	}
+		if(!strcasecmp(name,"url")) {
+			return value.url();
+		}
 
-	if(!strcasecmp(name,"name")) {
-		return PyUnicode_FromString(pvt->value->name());
-	}
+		if(!strcasecmp(name,"node")) {
+			return string{value.node()};
+		}
 
-	if(!strcasecmp(name,"description")) {
-		return PyUnicode_FromString(pvt->value->description());
-	}
+		if(!strcasecmp(name,"name")) {
+			return string{value.name()};
+		}
 
-	if(!strcasecmp(name,"value")) {
-		return PyUnicode_FromString(pvt->value->as_string().c_str());
-	}
+		if(!strcasecmp(name,"description")) {
+			return string{value.description()};
+		}
 
-	PyErr_SetString(PyExc_RuntimeError, "Invalid attribute");
+		if(!strcasecmp(name,"value")) {
+			return value.as_string();
+		}
+
+		throw runtime_error("Invalid attribute");
+
+	});
+
+
  }
 
  DMIGET_PRIVATE int dmiget_value_setattr(PyObject *self, char *name, PyObject *value) {
@@ -181,4 +201,3 @@
 	}
 
  }
-

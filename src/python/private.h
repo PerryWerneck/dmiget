@@ -75,7 +75,5 @@
  DMIGET_PRIVATE int dmiget_value_setattr(PyObject *, char *, PyObject *);
 
  #ifdef __cplusplus
- // DMIGET_PRIVATE PyObject * dmiget_call(PyObject *self, const std::function<std::string (const DMI::Table &dmi)> &worker) noexcept;
-
 	}
  #endif // __cplusplus

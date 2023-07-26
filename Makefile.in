@@ -19,6 +19,7 @@
 
 PACKAGE_NAME=@PACKAGE_NAME@
 PRODUCT_NAME=@PRODUCT_NAME@
+PYTHON_MODULE=smbios
 
 LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/*.cc) \
@@ -372,7 +373,7 @@ $(BINDBG)/@SONAME@: \
 		$^ \
 		$(LIBS)
 
-$(BINDBG)/pydmiget@LIBEXT@: \
+$(BINDBG)/$(PYTHON_MODULE)@LIBEXT@: \
 	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).o) \
 	$(BINDBG)/@SONAME@
 
