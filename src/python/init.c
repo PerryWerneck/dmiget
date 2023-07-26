@@ -37,6 +37,9 @@
 	.tp_init = dmiget_node_init,
 	.tp_finalize = dmiget_node_finalize,
 
+	// .tp_iter =
+	// .tp_iternext =
+
 	// .tp_str = dmiget_node_str,
 
 	//.tp_methods = dmiget_node_methods,
@@ -59,7 +62,11 @@
 	.tp_init = dmiget_value_init,
 	.tp_finalize = dmiget_value_finalize,
 
-	// .tp_str = dmiget_value_str,
+	.tp_str = dmiget_value_str,
+
+	.tp_getattr = dmiget_value_getattr,
+	.tp_setattr = dmiget_value_setattr,
+	//.tp_dict =
 
 	//.tp_methods = dmiget_value_methods,
 

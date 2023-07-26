@@ -4,36 +4,41 @@
 from setuptools import setup, Extension
 import platform
 import os
+import glob
 
-include_dirs = ['src/include']
+include_dirs = ['src/libdmiget/include']
 library_dirs = []
 extra_link_args = []
+library_names = [ ]
+src_files = [ ]
 
-src_files = [
-	'src/libdmiget/decoders/tools.cc',
-	'src/libdmiget/decoders/decode.cc',
-	'src/libdmiget/os/linux/node.cc',
-	'src/libdmiget/string.cc',
-	'src/libdmiget/constants.cc',
-	'src/libdmiget/factory.cc',
-	'src/libdmiget/table.cc',
-	'src/libdmiget/value.cc'
-]
+for filename in glob.glob("src/libdmiget/*.cc"):
+	src_files.append(filename)
+	
+for filename in glob.glob("src/libdmiget/*.cc"):
+	src_files.append(filename)
 
-library_names = [
-]
+for filename in glob.glob("src/libdmiget/decoders/*.cc"):
+	src_files.append(filename)
+
+for filename in glob.glob("src/python/*.cc"):
+	src_files.append(filename)
+
+for filename in glob.glob("src/python/*.c"):
+	src_files.append(filename)
 
 if platform.system() == 'Windows':
-	src_files.append('src/libdmiget/os/windows/file.cc')
-	src_files.append('src/libdmiget/os/windows/table.cc')
-else:
-	src_files.append('src/libdmiget/os/linux/reader.cc')
-	src_files.append('src/libdmiget/os/linux/table.cc')
-	src_files.append('src/libdmiget/os/linux/value.cc')
-	src_files.append('src/libdmiget/os/linux/file.cc')
+	
+	for filename in glob.glob("src/libdmiget/os/windows/*.cc"):
+		src_files.append(filename)
 
-pydmiget = Extension(
-		'pydmiget',
+else:
+
+	for filename in glob.glob("src/libdmiget/os/linux/*.cc"):
+		src_files.append(filename)
+
+pysmbios = Extension(
+		'pysmbios',
 		include_dirs = include_dirs,
 		libraries = library_names,
 		library_dirs=library_dirs,
@@ -41,7 +46,7 @@ pydmiget = Extension(
 		sources=src_files
 )
 
-package_version='1.0'
+package_version='0.1'
 with open(r'configure.ac', 'r') as fp:
     lines = fp.readlines()
     for line in lines:
@@ -49,14 +54,14 @@ with open(r'configure.ac', 'r') as fp:
             package_version = line.split('[')[2].split(']')[0].strip()
             break;
             
-setup ( name = 'pydmiget',
+setup ( name = 'pysmbios',
 	version = package_version,
-	description = 'DMI library for python.',
+	description = 'Python library to read data from SMBIOS/DMI.',
 	author = 'Perry Werneck',
 	author_email = 'perry.werneck@gmail.com',
 	url = 'https://github.com/PerryWerneck/dmiget',
 	long_description = '''
-This is an extension allowing python application to read data from dmitable using dmi://section/name
+This is an extension allowing smibios/dmi read for python applications.
 ''',
-	ext_modules = [ dmi ])
+	ext_modules = [ pysmbios ])
 

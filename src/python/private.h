@@ -66,6 +66,13 @@
  DMIGET_PRIVATE void dmiget_value_finalize(PyObject *self);
  DMIGET_PRIVATE PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *);
  DMIGET_PRIVATE void dmiget_value_dealloc(PyObject * self);
+ DMIGET_PRIVATE PyObject * dmiget_value_str(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_value_url(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_value_node_name(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_value_name(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_value_description(PyObject *self);
+ DMIGET_PRIVATE PyObject * dmiget_value_getattr(PyObject *, char *);
+ DMIGET_PRIVATE int dmiget_value_setattr(PyObject *, char *, PyObject *);
 
  #ifdef __cplusplus
  // DMIGET_PRIVATE PyObject * dmiget_call(PyObject *self, const std::function<std::string (const DMI::Table &dmi)> &worker) noexcept;
