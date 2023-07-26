@@ -15,9 +15,6 @@ src_files = [ ]
 for filename in glob.glob("src/libdmiget/*.cc"):
 	src_files.append(filename)
 	
-for filename in glob.glob("src/libdmiget/*.cc"):
-	src_files.append(filename)
-
 for filename in glob.glob("src/libdmiget/decoders/*.cc"):
 	src_files.append(filename)
 
