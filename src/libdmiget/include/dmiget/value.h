@@ -24,6 +24,7 @@
  #include <stdint.h>
  #include <functional>
  #include <memory>
+ #include <iostream>
 
  namespace DMIget {
 

@@ -19,6 +19,7 @@
 
 PACKAGE_NAME=@PACKAGE_NAME@
 PRODUCT_NAME=@PRODUCT_NAME@
+PYTHON_MODULE=smbios
 
 LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/*.cc) \
@@ -26,16 +27,19 @@ LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
 
 PYTHON_SOURCES= \
+	$(wildcard src/python/*.c) \
 	$(wildcard src/python/*.cc)
 
 APPLICATION_SOURCES= \
 	$(wildcard src/dmiget/*.cc)
 
+BUILD_TARGETS=@BUILD_TARGETS@
 TARGETS=@OSNAME@-lib devel application
 
 #---[ Tools ]----------------------------------------------------------------------------
 
 CXX=@CXX@
+CC=@CC@
 LD=@CXX@
 LN_S=@LN_S@
 MKDIR=@MKDIR_P@
@@ -65,11 +69,11 @@ PYTHON_SITELIB=@PYTHON_SITELIB@
 
 BASEDIR=@BASEDIR@
 
-OBJDIR=$(BASEDIR)/.obj
+OBJDIR=.obj
 OBJDBG=$(OBJDIR)/Debug
 OBJRLS=$(OBJDIR)/Release
 
-BINDIR=$(BASEDIR)/.bin
+BINDIR=.bin
 BINDBG=$(BINDIR)/Debug
 BINRLS=$(BINDIR)/Release
 
@@ -115,6 +119,24 @@ $(OBJDBG)/%.o: \
 		-c $<
 
 $(OBJDBG)/%.o: \
+	%.c
+
+	@echo $< ...
+	@$(MKDIR) $(dir $@)
+
+	@$(CC) \
+		$(CFLAGS) \
+		-DDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CC) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJDBG)/%.o: \
 	%.rc
 
 	@echo $< ...
@@ -143,6 +165,24 @@ $(OBJRLS)/%.o: \
 		-c $<
 
 $(OBJRLS)/%.o: \
+	%.c
+
+	@echo $< ...
+	@$(MKDIR) $(dir $@)
+
+	@$(CC) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CC) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DNDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJRLS)/%.o: \
 	%.rc
 
 	@echo $< ...
@@ -152,13 +192,11 @@ $(OBJRLS)/%.o: \
 #---[ Release Targets ]------------------------------------------------------------------
 
 all: \
-	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@ \
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET)) \
 	$(BINRLS)/libdmiget.static.a
 
 Release: \
-	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET))
 
 $(BINRLS)/@SONAME@: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
@@ -304,8 +342,7 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@ \
-	$(BINDBG)/py$(PACKAGE_NAME)@DLLEXT@
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
 	
 $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \
@@ -336,7 +373,7 @@ $(BINDBG)/@SONAME@: \
 		$^ \
 		$(LIBS)
 
-$(BINDBG)/py$(PACKAGE_NAME)@DLLEXT@: \
+$(BINDBG)/$(PYTHON_MODULE)@LIBEXT@: \
 	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).o) \
 	$(BINDBG)/@SONAME@
 

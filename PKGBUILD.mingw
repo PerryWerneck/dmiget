@@ -16,7 +16,7 @@ url="https://github.com/PerryWerneck/dmiget"
 arch=(i686 x86_64)
 license=(GPL)
 depends=()
-makedepends=(autoconf automake make libtool gzip python)
+makedepends=(autoconf automake make libtool gzip)
 checkdepends=()
 
 provides=($pkgname) 
