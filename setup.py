@@ -34,8 +34,8 @@ else:
 	for filename in glob.glob("src/libdmiget/os/linux/*.cc"):
 		src_files.append(filename)
 
-pysmbios = Extension(
-		'pysmbios',
+smbios = Extension(
+		'smbios',
 		include_dirs = include_dirs,
 		libraries = library_names,
 		library_dirs=library_dirs,
@@ -51,7 +51,7 @@ with open(r'configure.ac', 'r') as fp:
             package_version = line.split('[')[2].split(']')[0].strip()
             break;
             
-setup ( name = 'pysmbios',
+setup ( name = 'smbios',
 	version = package_version,
 	description = 'Python library to read data from SMBIOS/DMI.',
 	author = 'Perry Werneck',
@@ -60,5 +60,5 @@ setup ( name = 'pysmbios',
 	long_description = '''
 This is an extension allowing smibios/dmi read for python applications.
 ''',
-	ext_modules = [ pysmbios ])
+	ext_modules = [ smbios ])
 
