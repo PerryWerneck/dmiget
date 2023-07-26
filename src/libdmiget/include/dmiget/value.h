@@ -77,11 +77,11 @@
 		return value.as_string();
 	}
 
-	inline std::ostream& operator<< (std::ostream& os, const ::DMIget::Value &value) {
+	inline ostream& operator<< (ostream& os, const ::DMIget::Value &value) {
 		return os << value.as_string();
 	}
 
-	inline std::ostream& operator<< (std::ostream& os, const ::DMIget::Value *value) {
+	inline ostream& operator<< (ostream& os, const ::DMIget::Value *value) {
 		return os << value->as_string();
 	}
 
