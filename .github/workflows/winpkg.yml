@@ -2,7 +2,7 @@ name: WinPackage
 on:
   push:
     branches:
-      - develop
+      - python
   pull_request:
     branches:
       - master
