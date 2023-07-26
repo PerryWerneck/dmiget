@@ -21,7 +21,10 @@
   * @brief Implements python 'node' object.
   */
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <dmiget/table.h>
  #include <dmiget/value.h>
  #include "private.h"

@@ -21,14 +21,25 @@
   * @brief Implement module based properties and methods.
   */
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include "private.h"
 
  PyObject * pydmi_get_module_version(PyObject *, PyObject *) {
+#ifdef PACKAGE_VERSION
     return PyUnicode_FromString(PACKAGE_VERSION);
+#else
+    return PyUnicode_FromString("");
+#endif // PACKAGE_VERSION
  }
 
  PyObject * pydmi_get_module_revision(PyObject *, PyObject *) {
+#ifdef PACKAGE_RELEASE
     return PyUnicode_FromString(PACKAGE_RELEASE);
+#else
+    return PyUnicode_FromString("");
+#endif // PACKAGE_RELEASE
  }
 
