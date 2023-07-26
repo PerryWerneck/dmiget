@@ -209,6 +209,17 @@
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(!pvt) {
 		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
+		return -1;
 	}
 
+	if(!strcasecmp(name,"node")) {
+		return 0;
+	}
+
+	if(!strcasecmp(name,"name")) {
+		return 0;
+	}
+
+	PyErr_SetString(PyExc_RuntimeError, "Invalid attribute");
+	return -1;
  }
