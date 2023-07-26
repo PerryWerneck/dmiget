@@ -27,6 +27,8 @@
 
  #include <dmiget/table.h>
  #include <dmiget/value.h>
+ #include <stdexcept>
+
  #include "private.h"
 
  struct pyNodePrivate {
