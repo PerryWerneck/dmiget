@@ -24,6 +24,7 @@
  #include <stdint.h>
  #include <functional>
  #include <memory>
+ #include <iostream>
 
  namespace DMIget {
 
@@ -76,11 +77,11 @@
 		return value.as_string();
 	}
 
-	inline ostream& operator<< (ostream& os, const ::DMIget::Value &value) {
+	inline std::ostream& operator<< (std::ostream& os, const ::DMIget::Value &value) {
 		return os << value.as_string();
 	}
 
-	inline ostream& operator<< (ostream& os, const ::DMIget::Value *value) {
+	inline std::ostream& operator<< (std::ostream& os, const ::DMIget::Value *value) {
 		return os << value->as_string();
 	}
 
