@@ -168,6 +168,12 @@
 	});
  }
 
+ #if (defined _MSC_VER)
+ inline int strcasecmp(const char *s1, const char *s2) {
+ 	return _stricmp(s1,s2);
+ }
+ #endif // _MSC_VER
+
  DMIGET_PRIVATE PyObject * dmiget_value_getattr(PyObject *self, char *name) {
 
 	return call(self,[name](const DMI::Value &value){
