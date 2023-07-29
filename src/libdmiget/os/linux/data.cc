@@ -32,6 +32,9 @@
  #include <sys/stat.h>
  #include <fcntl.h>
  #include <cstring>
+ #include <iostream>
+
+ using namespace std;
 
  #if defined(BIGENDIAN)
 
@@ -55,7 +58,7 @@
 		uint8_t *ptr;
 		size_t length;
 
-		File(const char *filename) {
+		File(const char *filename, size_t length = 0) {
 
 			int fd = open(filename,O_RDONLY);
 
@@ -63,24 +66,26 @@
 				throw std::system_error(errno,std::system_category(),filename);
 			}
 
-			struct stat statbuf;
-			if (fstat(fd, &statbuf) != 0) {
-				int err = errno;
-				::close(fd);
-				throw std::system_error(err,std::system_category(),filename);
-			}
+			if(!length) {
+				struct stat statbuf;
+				memset(&statbuf,0,sizeof(statbuf));
 
-			length = statbuf.st_size;
+				if (fstat(fd, &statbuf) != 0) {
+					int err = errno;
+					::close(fd);
+					throw std::system_error(err,std::system_category(),filename);
+				}
+
+				length = statbuf.st_size;
+			}
 
 			ptr = new uint8_t[length+1];
 			memset(ptr,0,length+1);
 
-			uint8_t *dst = ptr;
-
 			size_t pos = 0;
 			while(pos < length) {
 
-				ssize_t bytes = read(fd,dst,(pos - length));
+				ssize_t bytes = read(fd,ptr,(length-pos));
 
 				if(bytes < 0) {
 					if(errno != EINTR) {
@@ -93,11 +98,11 @@
 					break;
 
 				} else {
-					dst += bytes;
 					pos += bytes;
 				}
 
 			}
+			this->length = pos;
 
 			::close(fd);
 		}
@@ -124,14 +129,16 @@
 			uint32_t version = 0;
 		} dmi;
 
+		// Get entry point
 		File entry("/sys/firmware/dmi/tables/smbios_entry_point");
 
 		if(memcmp(entry.ptr,"_SM3_",5) == 0) {
 
 			dmi.type = TYPE3;
 
+			// Don't let checksum run beyond the buffer
 			if (entry.ptr[0x06] > 0x20) {
-				throw runtime_error("Entry point is too large");
+				throw runtime_error("Invalid SMBios length");
 			}
 
 			if(!checksum(entry.ptr, entry.ptr[0x06])) {
@@ -149,7 +156,7 @@
 
 			// Don't let checksum run beyond the buffer
 			if (entry.ptr[0x05] > 0x20) {
-				throw runtime_error("Entry point length too large");
+				throw runtime_error("Invalid SMBios length");
 			}
 
 			if (!checksum(entry.ptr, entry.ptr[0x05]) || memcmp(entry.ptr + 0x10, "_DMI_", 5) != 0 || !checksum(entry.ptr + 0x10, 0x0F)) {
@@ -175,11 +182,23 @@
 			dmi.version = (ver << 8);
 
 		} else {
-			throw runtime_error("Unexpected SMBios table format");
+
+			throw runtime_error("Unexpected SMBios identifier");
+
 		}
 
+		// Get SMBIOS.
+		File data("/sys/firmware/dmi/tables/DMI",dmi.len);
 
-		throw runtime_error("Incomplete");
+		if(data.length != dmi.len) {
+			throw runtime_error("/sys/firmware/dmi/tables/DMI: Unexpected EOF");
+		}
+
+		this->length = dmi.len;
+		this->ptr = new uint8_t[this->length+1];
+		this->ptr[this->length] = 0;
+		memcpy(this->ptr,data.ptr,this->length);
+
 	}
 
  }

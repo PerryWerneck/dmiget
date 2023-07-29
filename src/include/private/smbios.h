@@ -33,7 +33,7 @@
 
  namespace SMBios {
 
-	class SMBIOS_PRIVATE Data {
+	class SMBIOS_API Data {
 	public:
 
 		enum Type : uint8_t {
@@ -61,14 +61,13 @@
 
 		Data();
 		Data(uint8_t *ptr, size_t length);
-
 		~Data();
 
 		/// @brief Build data from BIOS.
-		std::shared_ptr<Data> factory();
+		static std::shared_ptr<Data> factory();
 
 		/// @brief Build data from filename.
-		std::shared_ptr<Data> factory(const char *filename);
+		static std::shared_ptr<Data> factory(const char *filename);
 
 		inline size_t size() const noexcept {
 			return length;

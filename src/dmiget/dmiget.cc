@@ -18,12 +18,35 @@
  */
 
  #include <iostream>
- #include <dmiget/value.h>
- #include <dmiget/table.h>
- #include <iostream>
  #include <functional>
  #include <cstring>
+ #include <exception>
 
+ #include <private/smbios.h> // TEMPORARY
+
+ using namespace std;
+
+ int main(int argc, char **argv) {
+
+	SMBios::Data data;
+
+	/*
+	try {
+
+		SMBios::Data data;
+
+	} catch(const exception &e) {
+
+		cerr << endl << e.what() << endl;
+		return -1;
+
+	}
+	*/
+
+	return 0;
+ }
+
+ /*
  using namespace std;
  namespace DMI = DMIget;
 
@@ -212,3 +235,4 @@
 	return 0;
 
  }
+ */

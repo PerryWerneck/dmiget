@@ -342,7 +342,7 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/@SONAME@
+	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
 
 #	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
 	
