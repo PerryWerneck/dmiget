@@ -17,6 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /*
  #include <internals.h>
  #include <dmiget/table.h>
  #include <cstring>
@@ -203,19 +204,6 @@
 			string{separator+1}.c_str()
 		);
 
-		/*
-		cout << "-------------->" << url << "<----------------" << endl;
-		for_each([&found,url](shared_ptr<Value> value){
-			if(!strcasecmp(value->url().c_str()+6,url)) {
-				found = value;
-				return false;
-			}
-
-			return true;
-		});
-
-		return found;
-		*/
 	}
 
 	std::string Table::operator[](const char *url) const {
@@ -254,4 +242,4 @@
 	}
 
  }
-
+ */

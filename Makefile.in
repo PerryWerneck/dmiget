@@ -84,7 +84,7 @@ CFLAGS= \
 	@PYTHON_CFLAGS@ \
 	-DHAVE_CONFIG_H=1 \
 	-fPIC \
-	-Isrc/libdmiget/include \
+	-Isrc/include \
 	-DBUILD_DATE=`date +%Y%m%d`
 
 CPPFLAGS= \
@@ -342,7 +342,9 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
+	$(BINDBG)/@SONAME@
+
+#	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
 	
 $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \

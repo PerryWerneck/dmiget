@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,26 +17,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- /*
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
- #include <internals.h>
- #include <string>
- #include <iostream>
+ #if defined(_WIN32)
 
- namespace DMIget {
+	#define SMBIOS_API		__declspec (dllexport)
+	#define SMBIOS_PRIVATE
 
-	bool checksum(const uint8_t *buf, size_t len) {
-		uint8_t sum = 0;
+ #else
 
-		for(size_t a = 0; a < len; a++)
-			sum += buf[a];
+	#define SMBIOS_API		__attribute__((visibility("default")))
+	#define SMBIOS_PRIVATE	__attribute__((visibility("hidden")))
 
-		return (sum == 0);
+ #endif
+
+ #ifdef _MSC_VER
+
+	#define strncasecmp  _strnicmp
+	#define ftruncate    _chsize
+	#define strtoull     _strtoui64
+	#define strtoll      _strtoi64
+
+	__inline int strcasecmp (const char *s1, const char *s2) {
+		size_t size1 = strlen(s1);
+		size_t size2 = strlen(s2);
+		return _strnicmp(s1, s2, size2 > size1 ? size2 : size1);
 	}
 
- }
- */
+ #endif // _MSC_VER
 
+ #ifdef __cplusplus
+ namespace SMBios {
+
+	class Data;
+
+ }
+
+
+ #endif // __cplusplus
