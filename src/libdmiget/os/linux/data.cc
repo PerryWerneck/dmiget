@@ -191,7 +191,7 @@
 		File data("/sys/firmware/dmi/tables/DMI",dmi.len);
 
 		if(data.length != dmi.len) {
-			throw runtime_error("/sys/firmware/dmi/tables/DMI: Unexpected EOF");
+			throw runtime_error("/sys/firmware/dmi/tables/DMI: Unexpected length");
 		}
 
 		this->length = dmi.len;

@@ -17,42 +17,37 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /**
+  * @brief Declare constants.
+  */
+
  #pragma once
 
- #if defined(_WIN32)
+ #include <smbios/defs.h>
+ #include <private/smbios.h>
+ #include <smbios/value.h>
+ #include <smbios/node.h>
 
-	#define SMBIOS_API		__declspec (dllexport)
-	#define SMBIOS_PRIVATE
-
- #else
-
-	#define SMBIOS_API		__attribute__((visibility("default")))
-	#define SMBIOS_PRIVATE	__attribute__((visibility("hidden")))
-
- #endif
-
- #ifdef _MSC_VER
-
-	#define strncasecmp  _strnicmp
-	#define ftruncate    _chsize
-	#define strtoull     _strtoui64
-	#define strtoll      _strtoi64
-
-	__inline int strcasecmp (const char *s1, const char *s2) {
-		size_t size1 = strlen(s1);
-		size_t size2 = strlen(s2);
-		return _strnicmp(s1, s2, size2 > size1 ? size2 : size1);
-	}
-
- #endif // _MSC_VER
-
- #ifdef __cplusplus
  namespace SMBios {
 
-	class Data;
-	class Node;
+	struct Node::Info {
+		uint8_t id = 0;
+		bool multiple = false;
+		const char *name = nullptr;
+		const char *description = nullptr;
+		const Value::Info * values = nullptr;
+
+		static const Info & find(uint8_t id);
+	};
+
+	struct Value::Info {
+
+		const char *name = nullptr;
+		Value * (*factory)(const Value::Info &info, const uint8_t *ptr);
+		uint8_t offset = 0xFF;
+		const char *description = nullptr;
+
+	};
 
  }
 
-
- #endif // __cplusplus

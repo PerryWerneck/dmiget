@@ -38,14 +38,19 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
+		<Unit filename="src/include/private/constants.h" />
 		<Unit filename="src/include/private/intl.h" />
 		<Unit filename="src/include/private/smbios.h" />
 		<Unit filename="src/include/smbios/defs.h" />
+		<Unit filename="src/include/smbios/node.h" />
+		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/constants.cc" />
 		<Unit filename="src/libdmiget/data.cc" />
 		<Unit filename="src/libdmiget/decoders/decode.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/factory.cc" />
+		<Unit filename="src/libdmiget/node/iterator.cc" />
+		<Unit filename="src/libdmiget/node/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/data.cc" />
 		<Unit filename="src/libdmiget/os/linux/file.cc" />
 		<Unit filename="src/libdmiget/os/linux/node.cc" />
