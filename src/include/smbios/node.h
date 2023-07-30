@@ -95,6 +95,8 @@
 		Value::Iterator begin() const;
 		Value::Iterator end() const;
 
+		Node & next(const char *name = "");
+
 	private:
 
 		/// @brief Construct an empty node.
@@ -102,7 +104,8 @@
 
 		std::shared_ptr<Data> data;
 		int offset = -1;
-		const Info &info;
+		size_t index = 0;
+		const Info *info;
 
 		uint8_t type = 0;
 		uint8_t length = 0;

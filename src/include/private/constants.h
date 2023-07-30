@@ -37,7 +37,7 @@
 		const char *description = nullptr;
 		const Value::Info * values = nullptr;
 
-		static const Info & find(uint8_t id);
+		static const Info * find(uint8_t id);
 	};
 
 	struct Value::Info {

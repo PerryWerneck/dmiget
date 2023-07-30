@@ -494,12 +494,12 @@
 
 	};
 
-	const Node::Info & Node::Info::find(uint8_t id) {
+	const Node::Info * Node::Info::find(uint8_t id) {
 
 		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
 
 			if(types[ix].id == id) {
-				return types[ix];
+				return types+ix;
 			}
 
 		}
@@ -513,7 +513,7 @@
 				"OEM-specific"
 			};
 
-			return oemtype;
+			return &oemtype;
 		}
 
 		static const Node::Info deftype = {
@@ -523,7 +523,7 @@
 			"unknown"
 		};
 
-		return deftype;
+		return &deftype;
 	}
 
 

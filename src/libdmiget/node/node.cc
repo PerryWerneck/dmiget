@@ -27,6 +27,7 @@
  #include <private/smbios.h>
  #include <private/constants.h>
  #include <stdexcept>
+ #include <cstring>
 
  using namespace std;
 
@@ -37,12 +38,11 @@
 
 	Node::Node(const char *name, int index) : Node{SMBios::Data::factory(),0} {
 
-		if(!(name && *name)) {
-			return;
+		if(name && *name) {
+			do {
+				next(name);
+			} while(index-- > 0);
 		}
-
-		// Find first nod for name.
-		throw runtime_error("Incomplete");
 
 	}
 
@@ -61,11 +61,57 @@
 	}
 
 	const char * Node::name() const noexcept {
-		return info.name;
+		return info->name;
 	}
 
 	const char * Node::description() const noexcept {
-		return info.description;
+		return info->description;
+	}
+
+	Node & Node::next(const char *name) {
+
+		if(offset < 0) {
+			return *this;
+		}
+
+		// Get next node.
+		do {
+			index++;
+			if((data->count() && index >= data->count())) {
+				offset = -1;
+				return *this;
+			}
+
+			// Look for the next handle
+			const uint8_t *buf = data->get(0);
+			const uint8_t *next = buf+offset+length;
+
+			while ((unsigned long)(next - buf + 1) < data->size() && (next[0] != 0 || next[1] != 0))
+				next++;
+			next += 2;
+
+			offset = (next - buf);
+
+			if( (offset+4) > ((int) data->size()) ) {
+				offset = -1;
+				return *this;
+			}
+
+			type = next[0];
+			length = next[1];
+			handle = WORD(next+2);
+
+			if(length < 4 || type == 127) {
+				offset = -1;
+				return *this;
+			}
+
+			info = Node::Info::find(*data->get(offset));
+
+		} while(name && *name && strcasecmp(name,info->name));
+
+		return *this;
+
 	}
 
  }

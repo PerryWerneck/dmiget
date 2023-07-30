@@ -70,6 +70,9 @@
 		/// @brief Length of the SMBIOS Data block.
 		size_t length = 0;
 
+		/// @brief Itens on the SMBIOS Data block.
+		size_t num = 0;
+
 	public:
 
 		Data();
@@ -84,6 +87,10 @@
 
 		inline size_t size() const noexcept {
 			return length;
+		}
+
+		inline size_t count() const noexcept {
+			return num;
 		}
 
 		const uint8_t * get(int addr) const noexcept {

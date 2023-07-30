@@ -28,7 +28,9 @@
 
  int main(int argc, char **argv) {
 
-	cout << SMBios::Node{""}.name() << endl;
+	for(SMBios::Node node{""};node;node.next("")) {
+		cout << node.name() << endl;
+	}
 
 	return 0;
  }
