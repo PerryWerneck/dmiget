@@ -22,26 +22,13 @@
  #include <cstring>
  #include <exception>
 
- #include <private/smbios.h> // TEMPORARY
+ #include <smbios/node.h>
 
  using namespace std;
 
  int main(int argc, char **argv) {
 
-	SMBios::Data data;
-
-	/*
-	try {
-
-		SMBios::Data data;
-
-	} catch(const exception &e) {
-
-		cerr << endl << e.what() << endl;
-		return -1;
-
-	}
-	*/
+	cout << SMBios::Node{""}.name() << endl;
 
 	return 0;
  }

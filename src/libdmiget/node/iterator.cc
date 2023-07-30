@@ -22,11 +22,55 @@
   */
 
  #include <config.h>
+ #include <private/smbios.h>
  #include <smbios/defs.h>
  #include <smbios/node.h>
+ #include <stdexcept>
+
+ using namespace std;
+// #include <private/node.h>
 
  namespace SMBios {
 
+	struct Header {
+
+		uint8_t type;
+		uint8_t length;
+		uint16_t handle;
+
+		constexpr Header(const uint8_t *d) : type(d[0]), length(d[1]), handle(WORD(d+2)) {
+		}
+
+	};
+
+	Node::Iterator::Iterator(std::shared_ptr<Data> data, int o) : offset{o} {
+		// Create node.
+		node = new Node{data,offset};
+	}
+
+	Node::Iterator::~Iterator() {
+		delete node;
+	}
+
+	Node::Iterator begin() {
+		return Node::Iterator{Data::factory(),0};
+	}
+
+	Node::Iterator end() {
+		return Node::Iterator{};
+	}
+
+	Node::Iterator::operator bool() const {
+		return offset >= 0 && node->length >= 4 && node->type != 127;
+	}
+
+	Node::Iterator Node::Iterator::operator++(int) {
+		throw runtime_error("Incomplete");
+	}
+
+	Node::Iterator & Node::Iterator::operator++() {
+		throw runtime_error("Incomplete");
+	}
 
  }
 

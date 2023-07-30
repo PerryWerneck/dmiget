@@ -24,3 +24,48 @@
  #include <config.h>
  #include <smbios/defs.h>
  #include <smbios/node.h>
+ #include <private/smbios.h>
+ #include <private/constants.h>
+ #include <stdexcept>
+
+ using namespace std;
+
+ namespace SMBios {
+
+	Node::Node() : info{Node::Info::find(0)} {
+	}
+
+	Node::Node(const char *name, int index) : Node{SMBios::Data::factory(),0} {
+
+		if(!(name && *name)) {
+			return;
+		}
+
+		// Find first nod for name.
+		throw runtime_error("Incomplete");
+
+	}
+
+	Node::Node(std::shared_ptr<Data> d, const int o) : data{d}, offset{o}, info{Node::Info::find(*d->get(o))} {
+
+		const uint8_t *ptr = data->get(o);
+
+		type = ptr[0];
+		length = ptr[1];
+		handle = WORD(ptr+2);
+
+	}
+
+	Node::operator bool() const {
+		return offset >= 0 && length >= 4 && type != 127;
+	}
+
+	const char * Node::name() const noexcept {
+		return info.name;
+	}
+
+	const char * Node::description() const noexcept {
+		return info.description;
+	}
+
+ }

@@ -93,7 +93,7 @@
 
 	}
 
-	Data::Data(uint8_t *p, size_t l) : ptr{p}, length{l} {
+	Data::Data(uint8_t *p, int l) : ptr{p}, length{l} {
 	}
 
 	Data::~Data() {

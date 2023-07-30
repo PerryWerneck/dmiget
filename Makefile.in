@@ -23,7 +23,8 @@ PYTHON_MODULE=smbios
 
 LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/*.cc) \
-	$(wildcard src/libdmiget/decoders/*.cc) \
+	$(wildcard src/libdmiget/node/*.cc) \
+	$(wildcard src/libdmiget/value/*.cc) \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
 
 PYTHON_SOURCES= \

@@ -36,21 +36,6 @@
 
  using namespace std;
 
- #if defined(BIGENDIAN)
-
-	#define WORD(x)		(uint16_t)	((x)[0] + ((x)[1] << 8))
-	#define DWORD(x)	(uint32_t) ((x)[0] + ((x)[1] << 8) + ((x)[2] << 16) + ((x)[3] << 24))
-
- #else
-
-	#define WORD(x)		(uint16_t)(*(const uint16_t *)(x))
-	#define DWORD(x)	(uint32_t)(*(const uint32_t *)(x))
-	#define QWORD(x)	(*(const uint64_t *)(x))
-
- #endif // BIGENDIAN
-
- using namespace std;
-
  namespace SMBios {
 
 	struct File {

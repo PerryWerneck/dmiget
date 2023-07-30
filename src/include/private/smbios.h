@@ -31,6 +31,19 @@
  #include <memory>
  #include <cstdint>
 
+ #if defined(BIGENDIAN)
+
+	#define WORD(x)		(uint16_t)	((x)[0] + ((x)[1] << 8))
+	#define DWORD(x)	(uint32_t) ((x)[0] + ((x)[1] << 8) + ((x)[2] << 16) + ((x)[3] << 24))
+
+ #else
+
+	#define WORD(x)		(uint16_t)(*(const uint16_t *)(x))
+	#define DWORD(x)	(uint32_t)(*(const uint32_t *)(x))
+	#define QWORD(x)	(*(const uint64_t *)(x))
+
+ #endif // BIGENDIAN
+
  namespace SMBios {
 
 	class SMBIOS_API Data {
@@ -60,7 +73,7 @@
 	public:
 
 		Data();
-		Data(uint8_t *ptr, size_t length);
+		Data(uint8_t *ptr, int length);
 		~Data();
 
 		/// @brief Build data from BIOS.
@@ -73,9 +86,14 @@
 			return length;
 		}
 
+		const uint8_t * get(int addr) const noexcept {
+			return (ptr+addr);
+		}
+
 		const uint8_t * operator[](int addr) const noexcept {
 			return (ptr+addr);
 		}
 
 	};
+
  }

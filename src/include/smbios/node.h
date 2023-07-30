@@ -39,6 +39,9 @@
 		class Iterator {
 		private:
 			Node *node = nullptr;
+			int offset = -1;
+
+			void set(int offset);
 
 		public:
 			using iterator_category = std::forward_iterator_tag;
@@ -53,6 +56,7 @@
 			constexpr Iterator(Node *n) : node{n} {
 			}
 
+			Iterator(std::shared_ptr<Data> data, int offset);
 			~Iterator();
 
 			reference operator*() const {
@@ -67,16 +71,20 @@
 
 			Iterator operator++(int);
 
-			bool operator==(const Iterator& rhs) const;
+			bool operator==(const Iterator& rhs) const {
+				return rhs.offset == offset;
+			}
 
-			bool operator!=(const Iterator& rhs) const;
+			bool operator!=(const Iterator& rhs) const {
+				return rhs.offset != offset;
+			}
 
 			Iterator & operator++();
 
 		};
 
-		Node(const char *name);
-		~Node();
+		Node(const char *name, int index = 0);
+		operator bool() const;
 
 		const char *name() const noexcept;
 		const char *description() const noexcept;
@@ -88,10 +96,24 @@
 		Value::Iterator end() const;
 
 	private:
+
+		/// @brief Construct an empty node.
+		Node();
+
 		std::shared_ptr<Data> data;
+		int offset = -1;
 		const Info &info;
 
+		uint8_t type = 0;
+		uint8_t length = 0;
+		uint16_t handle = 0;
+
+		Node(std::shared_ptr<Data> d, const int offset);
+
 	};
+
+	SMBIOS_API Node::Iterator begin();
+	SMBIOS_API Node::Iterator end();
 
  }
 
