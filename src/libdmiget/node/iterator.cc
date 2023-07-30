@@ -61,7 +61,7 @@
 	}
 
 	Node::Iterator::operator bool() const {
-		return offset >= 0 && node->length >= 4 && node->type != 127;
+		return offset >= 0 && node->header.length >= 4 && node->header.type != 127;
 	}
 
 	Node::Iterator Node::Iterator::operator++(int) {

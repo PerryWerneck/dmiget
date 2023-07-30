@@ -97,6 +97,18 @@
 
 		Node & next(const char *name = "");
 
+		short type() const noexcept {
+			return (short) header.type;
+		}
+
+		size_t size() const noexcept {
+			return (size_t) header.length;
+		}
+
+		uint16_t handle() const noexcept {
+			return header.handle;
+		}
+
 	private:
 
 		/// @brief Construct an empty node.
@@ -107,9 +119,11 @@
 		size_t index = 0;
 		const Info *info;
 
-		uint8_t type = 0;
-		uint8_t length = 0;
-		uint16_t handle = 0;
+		struct {
+			uint8_t type = 0;
+			uint8_t length = 0;
+			uint16_t handle = 0;
+		} header;
 
 		Node(std::shared_ptr<Data> d, const int offset);
 

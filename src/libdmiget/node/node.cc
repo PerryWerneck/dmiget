@@ -50,14 +50,14 @@
 
 		const uint8_t *ptr = data->get(o);
 
-		type = ptr[0];
-		length = ptr[1];
-		handle = WORD(ptr+2);
+		header.type = ptr[0];
+		header.length = ptr[1];
+		header.handle = WORD(ptr+2);
 
 	}
 
 	Node::operator bool() const {
-		return offset >= 0 && length >= 4 && type != 127;
+		return offset >= 0 && header.length >= 4 && header.type != 127;
 	}
 
 	const char * Node::name() const noexcept {
@@ -84,7 +84,7 @@
 
 			// Look for the next handle
 			const uint8_t *buf = data->get(0);
-			const uint8_t *next = buf+offset+length;
+			const uint8_t *next = buf+offset+header.length;
 
 			while ((unsigned long)(next - buf + 1) < data->size() && (next[0] != 0 || next[1] != 0))
 				next++;
@@ -97,11 +97,11 @@
 				return *this;
 			}
 
-			type = next[0];
-			length = next[1];
-			handle = WORD(next+2);
+			header.type = next[0];
+			header.length = next[1];
+			header.handle = WORD(next+2);
 
-			if(length < 4 || type == 127) {
+			if(header.length < 4 || header.type == 127) {
 				offset = -1;
 				return *this;
 			}

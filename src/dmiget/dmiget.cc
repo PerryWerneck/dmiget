@@ -21,6 +21,7 @@
  #include <functional>
  #include <cstring>
  #include <exception>
+ #include <iomanip>
 
  #include <smbios/node.h>
 
@@ -29,7 +30,11 @@
  int main(int argc, char **argv) {
 
 	for(SMBios::Node node{""};node;node.next("")) {
-		cout << node.name() << endl;
+		cout	<< "Handle 0x" << setfill('0') << setw(4) << hex << node.handle() << dec
+				<< ", DMI Type " << node.type() << ", " << node.size() << " bytes" << endl
+				<< node.description() << endl;
+
+		cout 	<< endl;
 	}
 
 	return 0;
