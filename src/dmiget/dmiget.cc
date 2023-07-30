@@ -27,14 +27,31 @@
 
  using namespace std;
 
- int main(int argc, char **argv) {
+ static const char *node_name = "";
 
-	for(SMBios::Node node{""};node;node.next("")) {
+ static void output_text() {
+
+	for(SMBios::Node node{node_name};node;node.next(node_name)) {
 		cout	<< "Handle 0x" << setfill('0') << setw(4) << hex << node.handle() << dec
 				<< ", DMI Type " << node.type() << ", " << node.size() << " bytes" << endl
 				<< node.description() << endl;
 
 		cout 	<< endl;
+	}
+
+ }
+
+ int main(int argc, char **argv) {
+
+	try {
+
+		output_text();
+
+	} catch(const std::exception &e) {
+
+		cerr << e.what() << endl;
+		exit(-1);
+
 	}
 
 	return 0;
