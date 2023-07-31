@@ -40,7 +40,7 @@
 			cout << "\t" << value.description() << ": " << value.to_string() << endl;
 		}
 
-		cout 	<< endl;
+		cout << endl;
 	}
 
  }

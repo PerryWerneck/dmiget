@@ -78,7 +78,7 @@
 			throw logic_error("The selected node has no values");
 		}
 
-		int maxlen = info->size();
+		size_t maxlen = info->size();
 		if(index > maxlen) {
 			index = maxlen;
 		}

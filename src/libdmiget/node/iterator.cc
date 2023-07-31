@@ -43,6 +43,9 @@
 
 	};
 
+	Node::Iterator::Iterator(const Node::Iterator &it) : node{new Node{*it.node}}, offset{it.offset} {
+	}
+
 	Node::Iterator::Iterator(std::shared_ptr<Data> data, int o) : offset{o} {
 		// Create node.
 		node = new Node{data,offset};
@@ -65,11 +68,14 @@
 	}
 
 	Node::Iterator Node::Iterator::operator++(int) {
-		throw runtime_error("Incomplete");
+		Iterator tmp{*this};
+		operator++();
+		return tmp;
 	}
 
 	Node::Iterator & Node::Iterator::operator++() {
-		throw runtime_error("Incomplete");
+		node->next();
+		return *this;
 	}
 
  }

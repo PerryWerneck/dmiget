@@ -62,6 +62,11 @@
 			constexpr Iterator(Node *n) : node{n} {
 			}
 
+			Iterator(const Iterator &it);
+
+			Iterator(const Iterator *it) : Iterator{*it} {
+			}
+
 			Iterator(std::shared_ptr<Data> data, int offset);
 			~Iterator();
 
