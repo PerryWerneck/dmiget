@@ -65,6 +65,7 @@
 		<Unit filename="src/libdmiget/string.cc" />
 		<Unit filename="src/libdmiget/table.cc" />
 		<Unit filename="src/libdmiget/value.cc" />
+		<Unit filename="src/libdmiget/value/iterator.cc" />
 		<Unit filename="src/libdmiget/value/value.cc" />
 		<Unit filename="src/python/init.c">
 			<Option compilerVar="CC" />

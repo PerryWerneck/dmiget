@@ -33,6 +33,14 @@
 
  namespace SMBios {
 
+	Value::Value(const Value &src)
+		: data{src.data}, offset{src.offset}, info{src.info}, item{src.item} {
+	}
+
+	Value::Value(const Value *src)
+		: data{src->data}, offset{src->offset}, info{src->info}, item{src->item} {
+	}
+
 	Value::Value(std::shared_ptr<Data> d, size_t o, const Node &n, size_t i)
 		: data{d}, offset{o}, info{n.values()}, item{i} {
 	}
@@ -42,31 +50,31 @@
 	}
 
 	Value & Value::next() {
-		if(info[item].name) {
+		if(info && info[item].name) {
 			item++;
 		}
 		return *this;
 	}
 
 	const char * Value::name() const noexcept {
-		if(info[item].name) {
+		if(info && info[item].name) {
 			return info[item].name;
 		}
 		return "";
 	}
 
 	const char * Value::description() const noexcept {
-		if(info[item].name) {
+		if(info && info[item].description) {
 			return info[item].description;
 		}
 		return "";
 	}
 
 	std::string Value::to_string() const {
-		if(!(info && info[item].name && *info[item].name)) {
-			return "";
+		if(info && info[item].name && *info[item].name) {
+			return info[item].decoder.to_string((*data)[offset],(size_t) info[item].offset);
 		}
-		return info[item].decoder.to_string((*data)[offset],(size_t) info[item].offset);
+		return "";
 	}
 
  }

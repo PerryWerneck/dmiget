@@ -40,6 +40,10 @@
 			Integer
 		};
 
+		Value(const Value &src);
+
+		Value(const Value *src);
+
 		Value(std::shared_ptr<Data> data, size_t offset, const Node &node, size_t item = 0);
 
 		class Iterator {
@@ -53,7 +57,10 @@
 			using pointer           = Value *;
 			using reference         = Value &;
 
-			constexpr Iterator() {
+			Iterator(const Iterator &i) : Iterator{new Value{i.value}} {
+			}
+
+			Iterator(const Iterator *i) : Iterator{new Value{i->value}} {
 			}
 
 			constexpr Iterator(Value *v) : value{v} {
@@ -99,7 +106,7 @@
 
 	};
 
- }
+ };
 
  namespace std {
 

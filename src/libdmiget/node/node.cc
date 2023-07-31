@@ -24,6 +24,7 @@
  #include <config.h>
  #include <smbios/defs.h>
  #include <smbios/node.h>
+ #include <smbios/value.h>
  #include <private/smbios.h>
  #include <private/constants.h>
  #include <stdexcept>
@@ -140,6 +141,19 @@
 
 		return *this;
 
+	}
+
+	Value::Iterator Node::begin() {
+		if(offset < 0) {
+			return end();
+		}
+
+		return Value::Iterator{new Value{data,(size_t) offset,*this,0}};
+
+	}
+
+	Value::Iterator Node::end() {
+		return Value::Iterator{(Value *) nullptr};
 	}
 
  }

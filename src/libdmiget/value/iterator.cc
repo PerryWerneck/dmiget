@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implements value iterator.
   */
 
  #ifdef HAVE_CONFIG_H
@@ -27,57 +27,54 @@
 
  #include <private/smbios.h>
  #include <smbios/defs.h>
- #include <smbios/node.h>
+ #include <smbios/value.h>
  #include <stdexcept>
 
  using namespace std;
-// #include <private/node.h>
 
  namespace SMBios {
 
-	struct Header {
+	Value::Iterator::operator bool() const {
+		return value && *value;
+	}
 
-		uint8_t type;
-		uint8_t length;
-		uint16_t handle;
+	Value::Iterator::~Iterator() {
+		if(value) {
+			delete value;
+		}
+	}
 
-		constexpr Header(const uint8_t *d) : type(d[0]), length(d[1]), handle(WORD(d+2)) {
+	bool Value::Iterator::operator==(const Iterator& rhs) const {
+
+		if(value && rhs.value) {
+			return value->offset == rhs.value->offset && value->item == rhs.value->item && value->info == rhs.value->info;
 		}
 
-	};
+		return value == rhs.value;
 
-	Node::Iterator::Iterator(const Node::Iterator &it) : node{new Node{*it.node}}, offset{it.offset} {
+ 	}
+
+	bool Value::Iterator::operator!=(const Iterator& rhs) const {
+		if(value && rhs.value) {
+			return value->offset != rhs.value->offset || value->item != rhs.value->item || value->info != rhs.value->info;
+		}
+		return rhs.value != value;
 	}
 
-	Node::Iterator::Iterator(std::shared_ptr<Data> data, int o) : offset{o} {
-		// Create node.
-		node = new Node{data,offset};
-	}
-
-	Node::Iterator::~Iterator() {
-		delete node;
-	}
-
-	Node::Iterator begin() {
-		return Node::Iterator{Data::factory(),0};
-	}
-
-	Node::Iterator end() {
-		return Node::Iterator{};
-	}
-
-	Node::Iterator::operator bool() const {
-		return offset >= 0 && node->header.length >= 4 && node->header.type != 127;
-	}
-
-	Node::Iterator Node::Iterator::operator++(int) {
+	Value::Iterator Value::Iterator::operator++(int) {
 		Iterator tmp{*this};
 		operator++();
 		return tmp;
 	}
 
-	Node::Iterator & Node::Iterator::operator++() {
-		node->next();
+	Value::Iterator & Value::Iterator::operator++() {
+		if(value && *value) {
+			value->next();
+			if(!*value) {
+				delete value;
+				value = nullptr;
+			}
+		}
 		return *this;
 	}
 

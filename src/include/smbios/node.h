@@ -113,6 +113,9 @@
 
 		Node & next(const char *name = "");
 
+		Value::Iterator begin();
+		Value::Iterator end();
+
 		short type() const noexcept {
 			return (short) header.type;
 		}

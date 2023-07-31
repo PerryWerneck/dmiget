@@ -32,12 +32,19 @@
  static void output_text() {
 
 	for(SMBios::Node node{node_name};node;node.next(node_name)) {
+
+		auto it = node.begin();
+		if(!*it) {
+			continue;
+		}
+
 		cout	<< "Handle 0x" << setfill('0') << setw(4) << hex << node.handle() << dec
 				<< ", DMI Type " << node.type() << ", " << node.size() << " bytes" << endl
 				<< node.description() << endl;
 
-		for(SMBios::Value value = node[0];value;value.next()) {
-			cout << "\t" << value.description() << ": " << value.to_string() << endl;
+
+		for(auto &value : node) {
+			cout << "\t" << value.description() << ": " << value << endl;
 		}
 
 		cout << endl;
