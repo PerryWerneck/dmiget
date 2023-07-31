@@ -29,7 +29,7 @@
 
  namespace SMBios {
 
-	std::string Decoder::Abstract::to_string(const uint8_t *) const {
+	std::string Decoder::Abstract::to_string(const uint8_t *, size_t) const {
 		return "";
 	}
 

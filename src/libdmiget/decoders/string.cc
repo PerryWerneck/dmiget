@@ -26,11 +26,27 @@
  #endif // HAVE_CONFIG_H
 
  #include <private/constants.h>
+ #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
-	std::string Decoder::String::to_string(const uint8_t *) const {
-		return "";
+	string Decoder::String::to_string(const uint8_t *ptr, size_t index) const {
+
+		Node::Header *header{(Node::Header *) ptr};
+
+		ptr += header->length;
+		while (index > 1 && *ptr) {
+			ptr += strlen((const char *) ptr);
+			ptr++;
+			index--;
+		}
+
+		return string{(const char *) ptr};
 	}
 
  }

@@ -25,6 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <private/smbios.h>
  #include <smbios/value.h>
  #include <private/constants.h>
 
@@ -59,6 +60,13 @@
 			return info[item].description;
 		}
 		return "";
+	}
+
+	std::string Value::to_string() const {
+		if(!(info && info[item].name && *info[item].name)) {
+			return "";
+		}
+		return info[item].decoder.to_string((*data)[offset],(size_t) info[item].offset);
 	}
 
  }

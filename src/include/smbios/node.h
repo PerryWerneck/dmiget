@@ -36,6 +36,12 @@
 	public:
 		struct Info;
 
+		struct Header{
+			uint8_t type = 0;
+			uint8_t length = 0;
+			uint16_t handle = 0;
+		};
+
 		class Iterator {
 		private:
 			Node *node = nullptr;
@@ -124,11 +130,7 @@
 		size_t index = 0;
 		const Info *info;
 
-		struct {
-			uint8_t type = 0;
-			uint8_t length = 0;
-			uint16_t handle = 0;
-		} header;
+		Header header;
 
 		Node(std::shared_ptr<Data> d, const int offset);
 

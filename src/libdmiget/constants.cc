@@ -67,8 +67,8 @@
 	};
 
 	static const Value::Info Processor[] = {
-		{ "socket",			Decoder::String{},				1,	"Socket Designation"	},
-		{ "manufacturer",	Decoder::String{},				2,	"Manufacturer"	},
+		{ "socket",			Decoder::String{},				1,	"Socket Designation"		},
+		{ "manufacturer",	Decoder::String{},				2,	"Manufacturer"				},
 		{}
 	};
 

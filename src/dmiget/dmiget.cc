@@ -37,7 +37,7 @@
 				<< node.description() << endl;
 
 		for(SMBios::Value value = node[0];value;value.next()) {
-			cout << "\t" << value.description() << ":" << endl;
+			cout << "\t" << value.description() << ": " << value.to_string() << endl;
 		}
 
 		cout 	<< endl;

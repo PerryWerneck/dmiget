@@ -54,7 +54,7 @@
 			constexpr Abstract() : type{Value::Invalid} {
 			}
 
-			virtual std::string to_string(const uint8_t *ptr) const;
+			virtual std::string to_string(const uint8_t *ptr, const size_t offset) const;
 
 		};
 
@@ -64,7 +64,7 @@
 			constexpr String() : Abstract{Value::String} {
 			}
 
-			std::string to_string(const uint8_t *ptr) const override;
+			std::string to_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
 		/// @brief Decode firmware revision.
@@ -73,7 +73,7 @@
 			constexpr FirmwareRevision() : Abstract{Value::Integer} {
 			}
 
-			std::string to_string(const uint8_t *ptr) const override;
+			std::string to_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
 	}
