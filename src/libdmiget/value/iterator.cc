@@ -45,7 +45,7 @@
 	bool Value::Iterator::operator==(const Iterator& rhs) const {
 
 		if(value && rhs.value) {
-			return value->offset == rhs.value->offset && value->item == rhs.value->item && value->info == rhs.value->info;
+			return value->offset == rhs.value->offset && value->item == rhs.value->item;
 		}
 
 		return value == rhs.value;
@@ -54,7 +54,7 @@
 
 	bool Value::Iterator::operator!=(const Iterator& rhs) const {
 		if(value && rhs.value) {
-			return value->offset != rhs.value->offset || value->item != rhs.value->item || value->info != rhs.value->info;
+			return value->offset != rhs.value->offset || value->item != rhs.value->item;
 		}
 		return rhs.value != value;
 	}

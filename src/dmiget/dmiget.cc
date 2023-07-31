@@ -38,18 +38,17 @@
 				<< node.description() << endl;
 
 
+		/*
 		auto it = node.begin();
 		while(*it) {
 			cout << "\t" << it->description() << ": " << *it << endl;
 			++it;
 		}
+		*/
 
-		/*
 		for(auto &value : node) {
-			cout << "a" << endl;
 			cout << "\t" << value.description() << ": " << value << endl;
 		}
-		*/
 
 		cout << endl;
 	}
