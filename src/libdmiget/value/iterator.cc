@@ -39,9 +39,7 @@
 	}
 
 	Value::Iterator::~Iterator() {
-		if(value) {
-			delete value;
-		}
+		delete value;
 	}
 
 	bool Value::Iterator::operator==(const Iterator& rhs) const {
@@ -70,10 +68,6 @@
 	Value::Iterator & Value::Iterator::operator++() {
 		if(value && *value) {
 			value->next();
-			if(!*value) {
-				delete value;
-				value = nullptr;
-			}
 		}
 		return *this;
 	}

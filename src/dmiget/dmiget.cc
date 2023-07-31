@@ -33,19 +33,23 @@
 
 	for(SMBios::Node node{node_name};node;node.next(node_name)) {
 
-		auto it = node.begin();
-		if(!*it) {
-			continue;
-		}
-
 		cout	<< "Handle 0x" << setfill('0') << setw(4) << hex << node.handle() << dec
 				<< ", DMI Type " << node.type() << ", " << node.size() << " bytes" << endl
 				<< node.description() << endl;
 
 
+		auto it = node.begin();
+		while(*it) {
+			cout << "\t" << it->description() << ": " << *it << endl;
+			++it;
+		}
+
+		/*
 		for(auto &value : node) {
+			cout << "a" << endl;
 			cout << "\t" << value.description() << ": " << value << endl;
 		}
+		*/
 
 		cout << endl;
 	}

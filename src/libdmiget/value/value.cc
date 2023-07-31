@@ -41,8 +41,8 @@
 		: data{src->data}, offset{src->offset}, info{src->info}, item{src->item} {
 	}
 
-	Value::Value(std::shared_ptr<Data> d, size_t o, const Node &n, size_t i)
-		: data{d}, offset{o}, info{n.values()}, item{i} {
+	Value::Value(std::shared_ptr<Data> d, size_t o, const Value::Info *t, size_t i)
+		: data{d}, offset{o}, info{t}, item{i} {
 	}
 
  	Value::operator bool() const {

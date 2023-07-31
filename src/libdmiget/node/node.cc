@@ -84,7 +84,7 @@
 			index = maxlen;
 		}
 
-		return Value{data,(size_t) offset,*this,index};
+		return Value{data,(size_t) offset,info->values,index};
 	}
 
 	size_t Node::Info::size() const noexcept {
@@ -147,13 +147,12 @@
 		if(offset < 0) {
 			return end();
 		}
-
-		return Value::Iterator{new Value{data,(size_t) offset,*this,0}};
+		return Value::Iterator{new Value{data,(size_t) offset,info->values,0}};
 
 	}
 
 	Value::Iterator Node::end() {
-		return Value::Iterator{(Value *) nullptr};
+		return Value::Iterator{new Value{data,(size_t) offset,info->values,info->size()}};
 	}
 
  }
