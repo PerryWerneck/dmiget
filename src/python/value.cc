@@ -18,15 +18,15 @@
  */
 
  /**
-  * @brief Implements python 'node' object.
+  * @brief Implements python 'value' object.
   */
 
+ /*
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <dmiget/table.h>
- #include <dmiget/value.h>
+ #include <smbios/value.h>
  #include <stdexcept>
 
  #include "private.h"
@@ -103,7 +103,7 @@
 	Py_TYPE(self)->tp_free(self);
  }
 
- static PyObject * call(PyObject *self, const std::function<std::string (const DMI::Value &value)> &worker) {
+ static PyObject * call(PyObject *self, const std::function<std::string (const SMBios::Value &value)> &worker) {
 
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(!pvt) {
@@ -112,12 +112,8 @@
 	}
 
 	try {
-		DMIget::Table table;
 
-		auto value = table.find(pvt->node.c_str(),pvt->name.c_str());
-		if(!value) {
-			throw runtime_error("Error finding SMBIOS value");
-		}
+		auto value = SMBios::Value::find(pvt->node.c_str(),pvt->name.c_str());
 
 		return PyUnicode_FromString(worker(*value).c_str());
 
@@ -174,7 +170,7 @@
  }
  #endif // _MSC_VER
 
- DMIGET_PRIVATE PyObject * dmiget_value_getattr(PyObject *self, char *name) {
+ SMBIOS_PRIVATE PyObject * dmiget_value_getattr(PyObject *self, char *name) {
 
 	return call(self,[name](const DMI::Value &value){
 
@@ -205,7 +201,7 @@
 
  }
 
- DMIGET_PRIVATE int dmiget_value_setattr(PyObject *self, char *name, PyObject *value) {
+ SMBIOS_PRIVATE int dmiget_value_setattr(PyObject *self, char *name, PyObject *value) {
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(!pvt) {
 		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
@@ -223,3 +219,4 @@
 	PyErr_SetString(PyExc_RuntimeError, "Invalid attribute");
 	return -1;
  }
+ */

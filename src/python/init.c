@@ -17,11 +17,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
+ #include <private/python.h>
 
  static void cleanup(PyObject *module);
 
- DMIGET_PRIVATE PyTypeObject dmiget_node_type = {
+ static PyMethodDef dmiget_node_methods[] = {
+
+        {
+                "name",
+                dmiget_node_name,
+                METH_NOARGS,
+                "Get module name"
+        },
+
+        {
+                "description",
+                dmiget_node_description,
+                METH_NOARGS,
+                "Get module description"
+
+        },
+
+        {
+                NULL,
+                NULL,
+                0,
+                NULL
+        }
+
+ };
+
+
+ SMBIOS_PRIVATE PyTypeObject dmiget_node_type = {
 
 	PyVarObject_HEAD_INIT(NULL, 0)
 
@@ -40,13 +67,15 @@
 	// .tp_iter =
 	// .tp_iternext =
 
-	// .tp_str = dmiget_node_str,
+	.tp_str = dmiget_node_description,
+	.tp_getattr = dmiget_node_getattr,
 
-	//.tp_methods = dmiget_node_methods,
+	.tp_methods = dmiget_node_methods,
 
  };
 
- DMIGET_PRIVATE PyTypeObject dmiget_value_type  = {
+ /*
+ SMBIOS_PRIVATE PyTypeObject dmiget_value_type  = {
 
 	PyVarObject_HEAD_INIT(NULL, 0)
 
@@ -71,6 +100,7 @@
 	//.tp_methods = dmiget_value_methods,
 
  };
+ */
 
  static PyMethodDef methods[] = {
 
@@ -117,9 +147,11 @@ PyMODINIT_FUNC PyInit_smbios(void)
 	if (PyType_Ready(&dmiget_node_type) < 0)
 		return NULL;
 
+	/*
 	dmiget_value_type_init();
 	if (PyType_Ready(&dmiget_value_type) < 0)
 		return NULL;
+	*/
 
     //
     // Initialize module.
@@ -135,19 +167,21 @@ PyMODINIT_FUNC PyInit_smbios(void)
 	// Create custom types
 	//
 	Py_INCREF(&dmiget_node_type);
-    if (PyModule_AddObject(module, "node", (PyObject *) &dmiget_node_type) < 0) {
+    if (PyModule_AddObject(module, "Node", (PyObject *) &dmiget_node_type) < 0) {
 		Py_DECREF(&dmiget_node_type);
 		Py_DECREF(module);
 		return NULL;
     }
 
+    /*
 	Py_INCREF(&dmiget_value_type);
-    if (PyModule_AddObject(module, "value", (PyObject *) &dmiget_value_type) < 0) {
+    if (PyModule_AddObject(module, "Value", (PyObject *) &dmiget_value_type) < 0) {
 		Py_DECREF(&dmiget_node_type);
 		Py_DECREF(&dmiget_value_type);
 		Py_DECREF(module);
 		return NULL;
     }
+    */
 
     return module;
 }

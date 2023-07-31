@@ -344,9 +344,7 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
-
-#	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
 	
 $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \

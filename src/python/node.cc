@@ -25,14 +25,14 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <dmiget/table.h>
+ #include <private/python.h>
+ #include <smbios/node.h>
  #include <stdexcept>
 
- #include "private.h"
-
  struct pyNodePrivate {
-	std::shared_ptr<DMIget::Table> table;
-	std::string name;
+	SMBios::Node node;
+	pyNodePrivate(const char *name) : node{name} {
+	}
  };
 
  void dmiget_node_type_init() {
@@ -42,8 +42,8 @@
  int dmiget_node_init(PyObject *self, PyObject *args, PyObject *) {
 
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		((pyNode *) self)->pvt = pvt = new pyNodePrivate{};
+	if(pvt) {
+		delete pvt;	// Just in case
 	}
 
 	try {
@@ -52,11 +52,7 @@
 		if (!PyArg_ParseTuple(args, "s", &name))
 			throw runtime_error("Invalid argument");
 
-		if(!(name && *name)) {
-			throw runtime_error("Node name is empty or invalid");
-		}
-
-		pvt->name = name;
+		((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
 
 		return 0;
 
@@ -78,7 +74,8 @@
 
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(pvt) {
-		pvt->table.reset();
+		delete pvt;
+		((pyNode *) self)->pvt = nullptr;
 	}
  }
 
@@ -94,3 +91,84 @@
 	}
 	Py_TYPE(self)->tp_free(self);
  }
+
+ static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Node &node)> &worker) {
+
+	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+	if(!pvt) {
+		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
+		return NULL;
+	}
+
+	try {
+
+		return worker(pvt->node);
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in SMBios library");
+
+	}
+
+	return NULL;
+
+ }
+
+ PyObject * dmiget_node_name(PyObject *self) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyUnicode_FromString(node.name());
+	});
+
+ }
+
+ PyObject * dmiget_node_description(PyObject *self) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyUnicode_FromString(node.description());
+	});
+
+ }
+
+ PyObject * dmiget_node_getattr(PyObject *self, char *name) {
+
+	return call(self, [name](SMBios::Node &node) {
+
+		if(strcasecmp(name,"name") == 0) {
+
+			return PyUnicode_FromString(node.name());
+
+		} else if(strcasecmp(name,"description") == 0) {
+
+			return PyUnicode_FromString(node.description());
+
+		} else if(strcasecmp(name,"multiple") == 0) {
+
+			return 	PyBool_FromLong((unsigned long) node.multiple());
+
+		} else if(strcasecmp(name,"type") == 0) {
+
+			return PyLong_FromLong((unsigned long) node.type());
+
+		} else if(strcasecmp(name,"handle") == 0) {
+
+			return PyLong_FromLong((unsigned long) node.handle());
+
+		} else if(strcasecmp(name,"size") == 0) {
+
+			return PyLong_FromLong((unsigned long) node.size());
+
+		} else {
+
+			throw runtime_error("Invalid attribute name");
+
+		}
+
+	});
+
+ }
+

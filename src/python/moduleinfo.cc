@@ -25,7 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include "private.h"
+ #include "private/python.h"
 
  PyObject * pydmi_get_module_version(PyObject *, PyObject *) {
 #ifdef PACKAGE_VERSION

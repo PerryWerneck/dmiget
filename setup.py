@@ -6,13 +6,19 @@ import platform
 import os
 import glob
 
-include_dirs = ['src/libdmiget/include']
+include_dirs = ['src/include']
 library_dirs = []
 extra_link_args = []
 library_names = [ ]
 src_files = [ ]
 
 for filename in glob.glob("src/libdmiget/*.cc"):
+	src_files.append(filename)
+	
+for filename in glob.glob("src/libdmiget/node/*.cc"):
+	src_files.append(filename)
+	
+for filename in glob.glob("src/libdmiget/value/*.cc"):
 	src_files.append(filename)
 	
 for filename in glob.glob("src/libdmiget/decoders/*.cc"):
