@@ -37,6 +37,8 @@
 		const char *description = nullptr;
 		const Value::Info * values = nullptr;
 
+		size_t size() const noexcept;
+
 		static const Info * find(uint8_t id);
 	};
 

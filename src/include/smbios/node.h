@@ -86,6 +86,9 @@
 		Node(const char *name, int index = 0);
 		operator bool() const;
 
+		/// @brief Get value by index.
+		Value operator[](size_t index) const;
+
 		const char *name() const noexcept;
 		const char *description() const noexcept;
 

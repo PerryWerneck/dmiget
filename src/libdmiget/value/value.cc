@@ -37,7 +37,7 @@
 	}
 
  	Value::operator bool() const {
-		return info[item].name && *info[item].name;
+		return info && info[item].name && *info[item].name;
 	}
 
 	Value & Value::next() {

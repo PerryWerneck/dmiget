@@ -72,6 +72,30 @@
 		return info->values;
 	}
 
+	Value Node::operator[](size_t index) const {
+
+		if(offset < 0) {
+			throw logic_error("The selected node has no values");
+		}
+
+		int maxlen = info->size();
+		if(index > maxlen) {
+			index = maxlen;
+		}
+
+		return Value{data,(size_t) offset,*this,index};
+	}
+
+	size_t Node::Info::size() const noexcept {
+		size_t rc = 0;
+		if(values) {
+			while(values[rc].name && *values[rc].name) {
+				rc++;
+			}
+		}
+		return rc;
+	}
+
 	Node & Node::next(const char *name) {
 
 		if(offset < 0) {

@@ -36,6 +36,10 @@
 				<< ", DMI Type " << node.type() << ", " << node.size() << " bytes" << endl
 				<< node.description() << endl;
 
+		for(SMBios::Value value = node[0];value;value.next()) {
+			cout << "\t" << value.description() << ":" << endl;
+		}
+
 		cout 	<< endl;
 	}
 
