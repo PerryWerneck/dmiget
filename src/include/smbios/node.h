@@ -103,10 +103,14 @@
 		const char *name() const noexcept;
 		const char *description() const noexcept;
 
+		bool multiple() const noexcept;
+
 		static bool for_each(const std::function<bool(const Node &node)> &call);
 		bool for_each(const std::function<bool(const Value &v)> &call) const;
 
 		const Value::Info * values() const noexcept;
+
+		std::shared_ptr<Value> find(const char *name) const;
 
 		Value::Iterator begin() const;
 		Value::Iterator end() const;

@@ -97,6 +97,14 @@
 		return rc;
 	}
 
+	bool Node::multiple() const noexcept {
+		if(offset > 0 && info) {
+			return info->multiple;
+		}
+		return false;
+	}
+
+
 	Node & Node::next(const char *name) {
 
 		if(offset < 0) {
@@ -143,12 +151,29 @@
 
 	}
 
+	std::shared_ptr<Value> Node::find(const char *name) const {
+
+		if(offset < 0) {
+			throw runtime_error("Cant search on empty node");
+		}
+
+		Value value{data,(size_t) offset,info->values,0};
+
+		while(value) {
+			if(!strcasecmp(name,value.name())) {
+				return make_shared<Value>(value);
+			}
+			value.next();
+		}
+
+		throw system_error(ENOENT,system_category(),name);
+	}
+
 	Value::Iterator Node::begin() {
 		if(offset < 0) {
 			return end();
 		}
 		return Value::Iterator{new Value{data,(size_t) offset,info->values,0}};
-
 	}
 
 	Value::Iterator Node::end() {

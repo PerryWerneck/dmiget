@@ -97,6 +97,9 @@
 
 		Value & next();
 
+		/// @brief Find value using url formatter as DMI:///node/value
+		static std::shared_ptr<Value> find(const char *url);
+
 	protected:
 		std::shared_ptr<Data> data;
 		size_t offset;
