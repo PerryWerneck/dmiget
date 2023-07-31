@@ -73,16 +73,33 @@
 
 		};
 
-		Value(const Node &node, const char *name);
-		~Value();
-
 		const char *name() const noexcept;
 		const char *description() const noexcept;
+
+		std::string to_string() const;
 
 	protected:
 		std::shared_ptr<Data> data;
 		const Info &info;
 
+		Value(std::shared_ptr<Data> data, const Value::Info &info);
+
 	};
+
+ }
+
+ namespace std {
+
+	inline string to_string(const SMBios::Value &value) {
+			return value.to_string();
+	}
+
+	inline ostream& operator<< (ostream& os, const SMBios::Value &value) {
+			return os << value.to_string();
+	}
+
+	inline ostream& operator<< (ostream& os, const SMBios::Value *value) {
+			return os << value->to_string();
+	}
 
  }
