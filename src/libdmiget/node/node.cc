@@ -68,6 +68,10 @@
 		return info->description;
 	}
 
+	const Value::Info * Node::values() const noexcept {
+		return info->values;
+	}
+
 	Node & Node::next(const char *name) {
 
 		if(offset < 0) {

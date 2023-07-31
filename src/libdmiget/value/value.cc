@@ -32,13 +32,33 @@
 
  namespace SMBios {
 
+	Value::Value(std::shared_ptr<Data> d, size_t o, const Node &n, size_t i)
+		: data{d}, offset{o}, info{n.values()}, item{i} {
+	}
+
+ 	Value::operator bool() const {
+		return info[item].name && *info[item].name;
+	}
+
+	Value & Value::next() {
+		if(info[item].name) {
+			item++;
+		}
+		return *this;
+	}
 
 	const char * Value::name() const noexcept {
-		return info.name;
+		if(info[item].name) {
+			return info[item].name;
+		}
+		return "";
 	}
 
 	const char * Value::description() const noexcept {
-		return info.description;
+		if(info[item].name) {
+			return info[item].description;
+		}
+		return "";
 	}
 
  }

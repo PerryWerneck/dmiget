@@ -34,6 +34,14 @@
 	public:
 		struct Info;
 
+		enum Type {
+			Invalid,
+			String,
+			Integer
+		};
+
+		Value(std::shared_ptr<Data> data, size_t offset, const Node &node, size_t item = 0);
+
 		class Iterator {
 		private:
 			Value *value = nullptr;
@@ -76,13 +84,18 @@
 		const char *name() const noexcept;
 		const char *description() const noexcept;
 
+		operator bool() const;
+
 		std::string to_string() const;
+
+		Value & next();
 
 	protected:
 		std::shared_ptr<Data> data;
-		const Info &info;
+		size_t offset;
 
-		Value(std::shared_ptr<Data> data, const Value::Info &info);
+		const Value::Info *info;
+		size_t item;
 
 	};
 

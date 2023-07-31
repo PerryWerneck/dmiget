@@ -40,10 +40,46 @@
 		static const Info * find(uint8_t id);
 	};
 
+	namespace Decoder {
+
+		/// @brief Abstract decoder.
+		struct Abstract {
+			const Value::Type type;
+
+			constexpr Abstract(const Value::Type t) : type{t} {
+			}
+
+			constexpr Abstract() : type{Value::Invalid} {
+			}
+
+			virtual std::string to_string(const uint8_t *ptr) const;
+
+		};
+
+		/// @brief Decode to string.
+		struct String : public Abstract {
+
+			constexpr String() : Abstract{Value::String} {
+			}
+
+			std::string to_string(const uint8_t *ptr) const override;
+		};
+
+		/// @brief Decode firmware revision.
+		struct FirmwareRevision : public Abstract {
+
+			constexpr FirmwareRevision() : Abstract{Value::Integer} {
+			}
+
+			std::string to_string(const uint8_t *ptr) const override;
+		};
+
+	}
+
 	struct Value::Info {
 
 		const char *name = nullptr;
-		Value * (*factory)(const Value::Info &info, const uint8_t *ptr);
+		const Decoder::Abstract &decoder = Decoder::Abstract{};
 		uint8_t offset = 0xFF;
 		const char *description = nullptr;
 

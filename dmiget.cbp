@@ -39,6 +39,7 @@
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
 		<Unit filename="src/include/private/constants.h" />
+		<Unit filename="src/include/private/decoders.h" />
 		<Unit filename="src/include/private/intl.h" />
 		<Unit filename="src/include/private/smbios.h" />
 		<Unit filename="src/include/smbios/defs.h" />
@@ -46,7 +47,10 @@
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/constants.cc" />
 		<Unit filename="src/libdmiget/data.cc" />
+		<Unit filename="src/libdmiget/decoders/abstract.cc" />
 		<Unit filename="src/libdmiget/decoders/decode.cc" />
+		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
+		<Unit filename="src/libdmiget/decoders/string.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/factory.cc" />
 		<Unit filename="src/libdmiget/node/iterator.cc" />

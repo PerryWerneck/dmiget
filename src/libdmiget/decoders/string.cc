@@ -17,43 +17,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #pragma once
+ /**
+  * @brief Implements string decoder.
+  */
 
- #if defined(_WIN32)
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
-	#define SMBIOS_API		__declspec (dllexport)
-	#define SMBIOS_PRIVATE
+ #include <private/constants.h>
 
- #else
-
-	#define SMBIOS_API		__attribute__((visibility("default")))
-	#define SMBIOS_PRIVATE	__attribute__((visibility("hidden")))
-
- #endif
-
- #ifdef _MSC_VER
-
-	#define strncasecmp  _strnicmp
-	#define ftruncate    _chsize
-	#define strtoull     _strtoui64
-	#define strtoll      _strtoi64
-
-	__inline int strcasecmp (const char *s1, const char *s2) {
-		size_t size1 = strlen(s1);
-		size_t size2 = strlen(s2);
-		return _strnicmp(s1, s2, size2 > size1 ? size2 : size1);
-	}
-
- #endif // _MSC_VER
-
- #ifdef __cplusplus
  namespace SMBios {
 
-	class Data;
-	class Node;
-	class Value;
+	std::string Decoder::String::to_string(const uint8_t *) const {
+		return "";
+	}
 
  }
-
-
- #endif // __cplusplus

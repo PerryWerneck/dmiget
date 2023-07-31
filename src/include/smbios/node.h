@@ -92,6 +92,8 @@
 		static bool for_each(const std::function<bool(const Node &node)> &call);
 		bool for_each(const std::function<bool(const Value &v)> &call) const;
 
+		const Value::Info * values() const noexcept;
+
 		Value::Iterator begin() const;
 		Value::Iterator end() const;
 
