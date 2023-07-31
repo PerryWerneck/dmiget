@@ -489,18 +489,4 @@
 		return &deftype;
 	}
 
-
  }
-
-
- /*
- #include <internals.h>
-
- using namespace std;
-
- namespace DMIget {
-
-
-
- }
- */

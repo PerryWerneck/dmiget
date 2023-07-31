@@ -26,11 +26,25 @@
  #endif // HAVE_CONFIG_H
 
  #include <private/constants.h>
+ #include <string>
+
+ using namespace std;
 
  namespace SMBios {
 
-	std::string Decoder::FirmwareRevision::to_string(const uint8_t *, size_t) const {
-		return "";
+	std::string Decoder::FirmwareRevision::to_string(const uint8_t *ptr, size_t offset) const {
+
+		ptr += offset;
+
+		if(ptr[0] == 0xFF || ptr[1] == 0xFF) {
+			return "";
+		}
+
+		string rc{std::to_string((unsigned int) ptr[0])};
+		rc += ".";
+		rc += std::to_string((unsigned int) ptr[1]);
+
+		return rc;
 	}
 
  }
