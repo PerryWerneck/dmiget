@@ -78,6 +78,7 @@
  SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_node_value(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * dmiget_node_values(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_node_name(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_node_description(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_node_multiple(PyObject *self, void *);

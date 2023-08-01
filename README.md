@@ -41,15 +41,12 @@ print(value)
 
 ```python
 import smbios
-node = smbios.node("")
-while not node.empty():
-	print(node)
-	node.next()
-```
-
-```python
-import smbios
 for node in smbios.nodes():
 	print(node)
+	for value in node.values():
+		print('	{}: {}'.format(value.description,value))
 ```
+
+	
+
 

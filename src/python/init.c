@@ -51,6 +51,13 @@
 			.ml_doc = "Get node value"
 		},
 
+		{
+			.ml_name = "values",
+			.ml_meth = dmiget_node_values,
+			.ml_flags = METH_NOARGS,
+			.ml_doc = "Get array of node values"
+		},
+
         {
 			NULL
 		}

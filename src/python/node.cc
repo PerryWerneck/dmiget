@@ -275,6 +275,24 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 	((pyNode *) self)->pvt = new pyNodePrivate{node};
  }
 
+ PyObject * dmiget_node_values(PyObject *self, PyObject *) {
+
+ 	return call(self, [](SMBios::Node &node) {
+
+		PyObject *pynodes = PyList_New(0);
+
+		for(auto &value : node) {
+			PyObject *pyobject = PyObjectByName("value");
+			dmiget_set_value(pyobject,value);
+			PyList_Append(pynodes,pyobject);
+		}
+
+		return pynodes;
+
+ 	});
+
+ }
+
  PyObject * pydmi_get_nodes(PyObject *, PyObject *args) {
 
 	try {
