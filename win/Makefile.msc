@@ -20,7 +20,7 @@
 	@$(CPP) \
 		/c \
 		/nologo /Ox /W3 /GL /MD \
-		/I".\src\libdmiget\include" \
+		/I".\src\include" \
 		/EHsc \
 		/Fo"$@" \
 		$<

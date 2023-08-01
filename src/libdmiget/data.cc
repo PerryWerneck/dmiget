@@ -21,12 +21,17 @@
   * @brief Common methods to smbios data class
   */
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <private/smbios.h>
  #include <stdexcept>
  #include <system_error>
 
- #include <unistd.h>
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
 
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -93,7 +98,7 @@
 
 	}
 
-	Data::Data(uint8_t *p, int l) : ptr{p}, length{l} {
+	Data::Data(uint8_t *p, int l) : ptr{p}, length{(size_t) l} {
 	}
 
 	Data::~Data() {
