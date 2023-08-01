@@ -44,6 +44,7 @@
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(pvt) {
 		delete pvt;	// Just in case
+		((pyNode *) self)->pvt = NULL;
 	}
 
 	try {
@@ -132,7 +133,6 @@
 
  PyObject * dmiget_node_name(PyObject *self) {
 
-	printf("------------------\n\n------------------\n");
 	return call(self, [](SMBios::Node &node) {
 		return PyUnicode_FromString(node.name());
 	});
@@ -202,53 +202,6 @@
 	});
 
  }
-
-
-
- /*
- PyObject * dmiget_node_getattr(PyObject *self, char *name) {
-
-	return call(self, [self,name](SMBios::Node &node) {
-
-		if(strcasecmp(name,"name") == 0) {
-
-			return PyUnicode_FromString(node.name());
-
-		} else if(strcasecmp(name,"description") == 0) {
-
-			return PyUnicode_FromString(node.description());
-
-		} else if(strcasecmp(name,"multiple") == 0) {
-
-			return 	PyBool_FromLong((unsigned long) node.multiple());
-
-		} else if(strcasecmp(name,"type") == 0) {
-
-			return PyLong_FromLong((unsigned long) node.type());
-
-		} else if(strcasecmp(name,"handle") == 0) {
-
-			return PyLong_FromLong((unsigned long) node.handle());
-
-		} else if(strcasecmp(name,"size") == 0) {
-
-			return PyLong_FromLong((unsigned long) node.size());
-
-		} else if(strcasecmp(name,"next") == 0) {
-
-			node.next();
-			return self;
-
-		} else {
-
-			throw runtime_error(string{"Invalid attribute: '"}+name+"'");
-
-		}
-
-	});
-
- }
- */
 
  PyObject * dmiget_node_next(PyObject *self, PyObject *args) {
 
