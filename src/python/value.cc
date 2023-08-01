@@ -37,8 +37,6 @@
  };
 
  void dmiget_value_type_init() {
-
-
  }
 
  int dmiget_value_init(PyObject *self, PyObject *args, PyObject *) {

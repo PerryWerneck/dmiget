@@ -28,10 +28,18 @@
  #include <private/python.h>
  #include <smbios/node.h>
  #include <stdexcept>
+ #include <vector>
+
+ using namespace std;
 
  struct pyNodePrivate {
+
 	SMBios::Node node;
+
 	pyNodePrivate(const char *name) : node{name} {
+	}
+
+	pyNodePrivate(SMBios::Node &n) : node{n} {
 	}
  };
 
@@ -232,28 +240,6 @@
 
  }
 
- static PyObject * get_value_object() {
-
-	PyObject * dict = PyModule_GetDict(smbios_module);
-	if(!dict) {
-		throw runtime_error("Unable to get module dictionary");
-	}
-
-	PyObject * python_class = PyDict_GetItemString(dict, "value");
-
-	if(!python_class) {
-		throw runtime_error("Unable to get value class");
-	}
-
-	if(!PyCallable_Check(python_class)) {
-		throw runtime_error("Value class is not callable");
-	}
-
-	PyObject * object = PyObject_CallObject(python_class, nullptr);
-
-	return object;
- }
-
  PyObject * dmiget_node_value(PyObject *self, PyObject *args) {
 
  	return call(self, [args](SMBios::Node &node) {
@@ -273,7 +259,7 @@
 			throw runtime_error("Invalid arguments");
 		}
 
-		PyObject *object = get_value_object();
+		PyObject *object = PyObjectByName("value");
 		dmiget_set_value(object,*node.find(name));
 
 		return object;
@@ -281,3 +267,60 @@
 
  }
 
+void dmiget_set_node(PyObject *self, SMBios::Node &node) {
+	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+	if(pvt) {
+		delete pvt;
+	}
+	((pyNode *) self)->pvt = new pyNodePrivate{node};
+ }
+
+ PyObject * pydmi_get_nodes(PyObject *, PyObject *args) {
+
+	try {
+
+		std::string name;
+
+		switch(PyTuple_Size(args)) {
+		case 0:
+			break;
+
+		case 1:
+			{
+				const char *ptr = "";
+
+				if (!PyArg_ParseTuple(args, "s", &ptr))
+					throw runtime_error("Invalid argument");
+
+				name = ptr;
+			}
+			break;
+
+		default:
+			throw runtime_error("Invalid arguments");
+		}
+
+		SMBios::Node node{name.c_str()};
+
+		PyObject *pynodes = PyList_New(0);
+		do {
+			PyObject *pyobject = PyObjectByName("node");
+			dmiget_set_node(pyobject,node);
+			PyList_Append(pynodes,pyobject);
+		} while(node.next(name.c_str()));
+
+		return pynodes;
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in SMBios library");
+
+	}
+
+	return NULL;
+
+ }

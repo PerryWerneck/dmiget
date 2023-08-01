@@ -41,7 +41,7 @@ print(value)
 
 ```python
 import smbios
-node = smbios.node()
+node = smbios.node("")
 while not node.empty():
 	print(node)
 	node.next()
@@ -49,13 +49,7 @@ while not node.empty():
 
 ```python
 import smbios
-node = smbios.node("")
-while not node.empty():
+for node in smbios.nodes():
 	print(node)
-	value = node.value()
-	while not value.empty():
-		print('   {}: {}'.format(value.description,value))
-		value.next()
-	node.next()
 ```
 

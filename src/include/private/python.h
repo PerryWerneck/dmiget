@@ -86,6 +86,14 @@
  SMBIOS_PRIVATE PyObject * dmiget_node_size(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_node_empty(PyObject *self, PyObject *args);
 
+ /// @brief Build node array.
+ SMBIOS_PRIVATE PyObject * pydmi_get_nodes(PyObject *self, PyObject *args);
+
+ /// @brief Build Python objet by typename.
+ /// @param name The nome of python object to build;
+ SMBIOS_PRIVATE PyObject * PyObjectByName(const char *name);
+
+
  #ifdef __cplusplus
  SMBIOS_PRIVATE void dmiget_set_value(PyObject *self, SMBios::Value &value);
 

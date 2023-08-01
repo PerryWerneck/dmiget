@@ -71,6 +71,7 @@
 		</Unit>
 		<Unit filename="src/python/moduleinfo.cc" />
 		<Unit filename="src/python/node.cc" />
+		<Unit filename="src/python/tools.cc" />
 		<Unit filename="src/python/value.cc" />
 		<Extensions />
 	</Project>

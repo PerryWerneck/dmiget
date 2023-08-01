@@ -207,7 +207,13 @@
 
 	},
 
-	// TODO: Add method to get list SMBIOS nodes.
+	{
+		"nodes",
+		pydmi_get_nodes,
+		METH_VARARGS,
+		"Get array of nodes"
+
+	},
 
 	{
 		NULL,
