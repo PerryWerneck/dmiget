@@ -21,7 +21,10 @@
   * @brief Implements node object.
   */
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <smbios/defs.h>
  #include <smbios/node.h>
  #include <smbios/value.h>

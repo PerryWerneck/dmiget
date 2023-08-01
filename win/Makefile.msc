@@ -41,12 +41,12 @@ bin\dmiget.exe: \
 		src\dmiget\dmiget.obj lib\dmiget.static.lib
 
 lib\dmiget.static.lib: \
-	src/libdmiget/*.cc) \
-	src/libdmiget/node/*.cc) \
-	src/libdmiget/decoders/*.cc) \
-	src/libdmiget/value/*.cc) \
-	src/libdmiget/decoders/*.cc \
-	src/libdmiget/os/windows/*.cc
+	src\libdmiget\*.cc \
+	src\libdmiget\node\*.cc \
+	src\libdmiget\decoders\*.cc \
+	src\libdmiget\value\*.cc \
+	src\libdmiget\decoders\*.cc \
+	src\libdmiget\os\windows\*.cc
 	@$(MAKE) \
 		/f win\Makefile.msc \
 		$(**:.cc=.obj)
@@ -58,12 +58,12 @@ lib\dmiget.static.lib: \
 		$(**:.cc=.obj) \
 
 bin\dmiget.dll: \
-	src/libdmiget/*.cc) \
-	src/libdmiget/node/*.cc) \
-	src/libdmiget/decoders/*.cc) \
-	src/libdmiget/value/*.cc) \
-	src/libdmiget/decoders/*.cc \
-	src/libdmiget/os/windows/*.cc
+	src\libdmiget\*.cc \
+	src\libdmiget\node\*.cc \
+	src\libdmiget\decoders\*.cc \
+	src\libdmiget\value\*.cc \
+	src\libdmiget\decoders\*.cc \
+	src\libdmiget\os\windows\*.cc
 	@$(MAKE) \
 		/f win\Makefile.msc \
 		$(**:.cc=.obj)
@@ -78,12 +78,12 @@ bin\dmiget.dll: \
 		$(**:.cc=.obj)
 
 clean: \
-	src/libdmiget/*.cc) \
-	src/libdmiget/node/*.cc) \
-	src/libdmiget/decoders/*.cc) \
-	src/libdmiget/value/*.cc) \
-	src/libdmiget/decoders/*.cc \
-	src/libdmiget/os/windows/*.cc
+	src\libdmiget\*.cc \
+	src\libdmiget\node\*.cc \
+	src\libdmiget\decoders\*.cc \
+	src\libdmiget\value\*.cc \
+	src\libdmiget\decoders\*.cc \
+	src\libdmiget\os\windows\*.cc
 	del /Q \
 		*.lib \
 		*.dll \
