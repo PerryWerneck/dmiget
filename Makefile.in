@@ -18,7 +18,6 @@
 #---[ Library configuration ]------------------------------------------------------------
 
 PACKAGE_NAME=@PACKAGE_NAME@
-PRODUCT_NAME=@PRODUCT_NAME@
 PYTHON_MODULE=smbios
 
 LIBRARY_SOURCES= \
@@ -304,11 +303,11 @@ install-devel: \
 	$(BINRLS)/libdmiget.static.a
 
 	@$(MKDIR) \
-		$(DESTDIR)$(includedir)/dmiget
+		$(DESTDIR)$(includedir)/$(PACKAGE_NAME)/smbios
 
 	@$(INSTALL_DATA) \
-		src/libdmiget/include/dmiget/*.h \
-		$(DESTDIR)$(includedir)/dmiget
+		src/include/smbios/*.h \
+		$(DESTDIR)$(includedir)/$(PACKAGE_NAME)/smbios
 
 	@mkdir -p $(DESTDIR)$(libdir)/pkgconfig
 	@$(INSTALL_DATA) \

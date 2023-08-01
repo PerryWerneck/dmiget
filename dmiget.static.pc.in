@@ -11,5 +11,5 @@ Description: @PACKAGE_NAME@ static library
 Version: @PACKAGE_VERSION@
 Libs: -ldmiget.static
 Libs.private: @LIBS@
-Cflags:
+Cflags: -I@includedir@/@PACKAGE_NAME@
 

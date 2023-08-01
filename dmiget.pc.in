@@ -11,5 +11,5 @@ Description: @PACKAGE_NAME@ development
 Version: @PACKAGE_VERSION@
 Libs: -ldmiget
 Libs.private: @LIBS@
-Cflags:
+Cflags: -I@includedir@/@PACKAGE_NAME@
 
