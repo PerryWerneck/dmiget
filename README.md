@@ -49,7 +49,7 @@ while not node.empty():
 
 ```python
 import smbios
-node = smbios.node()
+node = smbios.node("")
 while not node.empty():
 	print(node)
 	value = node.value()

@@ -50,8 +50,7 @@
 	try {
 
 		switch(PyTuple_Size(args)) {
-		case 0:
-			((pyNode *) self)->pvt = pvt = new pyNodePrivate{""};
+		case 0:	// Create an empty node.
 			return 0;
 
 		case 1:
@@ -109,8 +108,7 @@
 
 	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
 	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-		return NULL;
+		((pyNode *) self)->pvt = pvt = new pyNodePrivate{""};
 	}
 
 	try {
