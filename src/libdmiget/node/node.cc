@@ -159,6 +159,10 @@
 
 		Value value{data,(size_t) offset,info->values,0};
 
+		if(!(name && *name)) {
+			return make_shared<Value>(value);
+		}
+
 		while(value) {
 			if(!strcasecmp(name,value.name())) {
 				return make_shared<Value>(value);

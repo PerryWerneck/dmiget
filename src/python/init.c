@@ -24,6 +24,8 @@
  #include <smbios/defs.h>
  #include <private/python.h>
 
+ PyObject * smbios_module = NULL;
+
  static void cleanup(PyObject *module);
 
  static PyMethodDef dmiget_node_methods[] = {
@@ -40,6 +42,13 @@
 			.ml_meth = dmiget_node_empty,
 			.ml_flags = METH_NOARGS,
 			.ml_doc = "True if the node is empty"
+		},
+
+		{
+			.ml_name = "value",
+			.ml_meth = dmiget_node_value,
+			.ml_flags = METH_VARARGS,
+			.ml_doc = "Get node value"
 		},
 
         {
@@ -236,30 +245,30 @@ PyMODINIT_FUNC PyInit_smbios(void)
     //
     Py_Initialize();
 
-    PyObject *module = PyModule_Create(&definition);
+    smbios_module = PyModule_Create(&definition);
 
-    if(!module)
+    if(!smbios_module)
 		return NULL;
 
 	//
 	// Create custom types
 	//
 	Py_INCREF(&dmiget_node_python_type);
-    if (PyModule_AddObject(module, "node", (PyObject *) &dmiget_node_python_type) < 0) {
+    if (PyModule_AddObject(smbios_module, "node", (PyObject *) &dmiget_node_python_type) < 0) {
 		Py_DECREF(&dmiget_node_python_type);
-		Py_DECREF(module);
-		return NULL;
+		Py_DECREF(smbios_module);
+		return smbios_module = NULL;
     }
 
 	Py_INCREF(&dmiget_value_python_type);
-    if (PyModule_AddObject(module, "value", (PyObject *) &dmiget_value_python_type) < 0) {
+    if (PyModule_AddObject(smbios_module, "value", (PyObject *) &dmiget_value_python_type) < 0) {
 		Py_DECREF(&dmiget_node_python_type);
 		Py_DECREF(&dmiget_value_python_type);
-		Py_DECREF(module);
-		return NULL;
+		Py_DECREF(smbios_module);
+		return smbios_module = NULL;
     }
 
-    return module;
+    return smbios_module;
 }
 
 static void cleanup(PyObject *module) {

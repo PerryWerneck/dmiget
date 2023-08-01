@@ -47,4 +47,15 @@ while not node.empty():
 	node.next()
 ```
 
+```python
+import smbios
+node = smbios.node()
+while not node.empty():
+	print(node)
+	value = node.value()
+	while not value.empty():
+		print('   {}: {}'.format(value.description,value))
+		value.next()
+	node.next()
+```
 

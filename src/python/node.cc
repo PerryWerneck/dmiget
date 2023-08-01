@@ -173,6 +173,10 @@
 
  PyObject * dmiget_node_empty(PyObject *self, PyObject *) {
 
+	if(!((pyNode *) self)->pvt) {
+		return PyBool_FromLong(1);
+	}
+
 	return call(self, [](SMBios::Node &node) {
 		return PyBool_FromLong(node ? 0 : 1);
 	});
@@ -227,6 +231,55 @@
 			throw runtime_error("Invalid arguments");
 		}
 	});
+
+ }
+
+ static PyObject * get_value_object() {
+
+	PyObject * dict = PyModule_GetDict(smbios_module);
+	if(!dict) {
+		throw runtime_error("Unable to get module dictionary");
+	}
+
+	PyObject * python_class = PyDict_GetItemString(dict, "value");
+
+	if(!python_class) {
+		throw runtime_error("Unable to get value class");
+	}
+
+	if(!PyCallable_Check(python_class)) {
+		throw runtime_error("Value class is not callable");
+	}
+
+	PyObject * object = PyObject_CallObject(python_class, nullptr);
+
+	return object;
+ }
+
+ PyObject * dmiget_node_value(PyObject *self, PyObject *args) {
+
+ 	return call(self, [args](SMBios::Node &node) {
+
+		const char *name = "";
+
+		switch(PyTuple_Size(args)) {
+		case 0:
+			break;
+
+		case 1:
+			if (!PyArg_ParseTuple(args, "s", &name))
+				throw runtime_error("Invalid argument");
+			break;
+
+		default:
+			throw runtime_error("Invalid arguments");
+		}
+
+		PyObject *object = get_value_object();
+		dmiget_set_value(object,*node.find(name));
+
+		return object;
+ 	});
 
  }
 

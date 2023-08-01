@@ -50,6 +50,8 @@
         struct pyValuePrivate *pvt;
  } pyValue;
 
+ extern SMBIOS_PRIVATE PyObject * smbios_module;
+
  SMBIOS_PRIVATE void dmiget_node_type_init();
  SMBIOS_PRIVATE void dmiget_value_type_init();
 
@@ -75,6 +77,7 @@
 
  SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * dmiget_node_value(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_node_name(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_node_description(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_node_multiple(PyObject *self, void *);
@@ -84,5 +87,7 @@
  SMBIOS_PRIVATE PyObject * dmiget_node_empty(PyObject *self, PyObject *args);
 
  #ifdef __cplusplus
-	}
+ SMBIOS_PRIVATE void dmiget_set_value(PyObject *self, SMBios::Value &value);
+
+ }
  #endif // __cplusplus

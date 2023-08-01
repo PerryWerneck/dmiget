@@ -51,6 +51,9 @@
 	try {
 
 		switch(PyTuple_Size(args)) {
+		case 0: // Empty value.
+			return 0;
+
 		case 1:	// URL
 			{
 				const char *url = "";
@@ -94,6 +97,14 @@
 
 	return -1;
 
+ }
+
+ void dmiget_set_value(PyObject *self, SMBios::Value &value) {
+	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
+	if(pvt) {
+		delete pvt;
+	}
+	((pyValue *) self)->pvt = new pyValuePrivate{value};
  }
 
  void dmiget_value_finalize(PyObject *self) {
@@ -165,6 +176,10 @@
  }
 
  PyObject * dmiget_value_empty(PyObject *self, PyObject *) {
+
+	if(!((pyValue *) self)->pvt) {
+		return PyBool_FromLong(1);
+	}
 
 	return call(self, [](SMBios::Value &value) {
 		return PyBool_FromLong(value ? 0 : 1);
