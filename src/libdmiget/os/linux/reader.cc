@@ -17,6 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /*
  #include "private.h"
  #include <cstring>
  #include <sys/stat.h>
@@ -26,3 +27,4 @@
  namespace DMIget {
 
  }
+ */

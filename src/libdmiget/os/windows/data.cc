@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,47 +17,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- /*
+ /**
+  * @brief SMBIos data methods for windows.
+  */
+
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #ifdef _WIN32
- 	#include <windows.h>
- #endif // _WIN32
+ #include <windows.h>
 
- #include <internals.h>
+ #include <private/smbios.h>
+ #include <stdexcept>
+ #include <system_error>
 
- #include <sysinfoapi.h>
-
- #include <dmiget/table.h>
- #include <cstring>
- #include <cerrno>
- #include <cstring>
- #include <string>
  #include <iostream>
 
  using namespace std;
 
- namespace DMIget {
+ namespace SMBios {
 
-	Table::Table(const char *filename) {
-
-		File dmifile(filename);
-
-		if(dmifile) {
-
-			if(set(dmifile.content(),dmifile.size())) {
-#ifdef DEBUG
-				cout << "Got DMI table with " << dmifile.size() << " bytes from " << filename << endl;
-#endif // DEBUG
-			}
-
-		}
-
-	}
-
-	Table::Table() {
+	Data::Data() {
 
 		// References:
 		// https://chen-jiao.github.io/articles/2016/11/09/How-to-access-SMBIOS-in-Windows.html
@@ -82,14 +62,17 @@
 							BYTE    SMBIOSMajorVersion;
 							BYTE    SMBIOSMinorVersion;
 							BYTE    DmiRevision;
-							DWORD    Length;
+							DWORD   Length;
 							BYTE    SMBIOSTableData[];
 						};
 						#pragma pack()
 
 						RawSMBIOSData * data = (RawSMBIOSData *) buffer;
 
-						set(data->SMBIOSTableData,data->Length);
+						this->length = data->Length;
+						this->ptr = new uint8_t[this->length+1];
+						this->ptr[this->length] = 0;
+						memcpy(this->ptr,data->SMBIOSTableData,this->length);
 
 					} else {
 						cerr << "Invalid response on GetSystemFirmwareTable()" << endl;
@@ -108,11 +91,4 @@
 
 	}
 
-	Table::~Table() {
-		if(dmi.contents) {
-			delete[] dmi.contents;
-		}
-	}
-
  }
- */

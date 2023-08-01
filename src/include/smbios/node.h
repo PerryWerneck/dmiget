@@ -42,7 +42,7 @@
 			uint16_t handle = 0;
 		};
 
-		class Iterator {
+		class SMBIOS_API Iterator {
 		private:
 			Node *node = nullptr;
 			int offset = -1;
