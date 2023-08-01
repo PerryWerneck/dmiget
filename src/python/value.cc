@@ -114,7 +114,7 @@
 	Py_TYPE(self)->tp_free(self);
  }
 
- static PyObject * call(PyObject *self, const std::function<PyObject * (const SMBios::Value &value)> &worker) {
+ static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Value &value)> &worker) {
 
 	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
 	if(!pvt) {
@@ -142,51 +142,43 @@
 
  PyObject * dmiget_value_str(PyObject *self) {
 
-	return call(self, [](const SMBios::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyUnicode_FromString(value.to_string().c_str());
 	});
 
  }
 
- PyObject * dmiget_value_name(PyObject *self) {
+ PyObject * dmiget_value_name(PyObject *self, void *) {
 
-	return call(self, [](const SMBios::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyUnicode_FromString(value.name());
 	});
 
  }
 
- PyObject * dmiget_value_description(PyObject *self) {
+ PyObject * dmiget_value_description(PyObject *self, void *) {
 
-	return call(self, [](const SMBios::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyUnicode_FromString(value.description());
 	});
 
  }
 
- PyObject * dmiget_value_getattr(PyObject *self, char *name) {
+ PyObject * dmiget_value_empty(PyObject *self, PyObject *) {
 
-	return call(self, [name](const SMBios::Value &value) {
-
-		if(strcasecmp(name,"name") == 0) {
-
-			return PyUnicode_FromString(value.name());
-
-		} else if(strcasecmp(name,"description") == 0) {
-
-			return PyUnicode_FromString(value.description());
-
-		} else if(strcasecmp(name,"value") == 0) {
-
-			return PyUnicode_FromString(value.to_string().c_str());
-
-		} else {
-
-			throw runtime_error("Invalid attribute name");
-
-		}
-
+	return call(self, [](SMBios::Value &value) {
+		return PyBool_FromLong(value ? 0 : 1);
 	});
 
+ }
+
+ PyObject * dmiget_value_next(PyObject *self, PyObject *) {
+
+	return call(self, [](SMBios::Value &value) {
+
+			value.next();
+			return PyBool_FromLong(value ? 1 : 0);
+
+	});
 
  }

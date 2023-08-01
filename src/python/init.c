@@ -17,6 +17,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
+ #include <smbios/defs.h>
  #include <private/python.h>
 
  static void cleanup(PyObject *module);
@@ -79,11 +84,11 @@
 		}
  };
 
- SMBIOS_PRIVATE PyTypeObject dmiget_node_python_type = {
+ static PyTypeObject dmiget_node_python_type = {
 
 	PyVarObject_HEAD_INIT(NULL, 0)
 
-	.tp_name = "smbios.Node",
+	.tp_name = "smbios.node",
 	.tp_doc = "SMBios node",
 	.tp_basicsize = sizeof(pyNode),
 	.tp_itemsize = 0,
@@ -101,6 +106,7 @@
 	.tp_str = dmiget_node_str,
 	.tp_methods = dmiget_node_methods,
 	.tp_getset = dmiget_node_attributes,
+
 	//.tp_getattr = dmiget_node_getattr,
 
 	//.tp_dict =
@@ -108,11 +114,49 @@
 
  };
 
- SMBIOS_PRIVATE PyTypeObject dmiget_value_type  = {
+ static PyMethodDef dmiget_value_methods[] = {
+
+        {
+			.ml_name = "next",
+			.ml_meth = dmiget_value_next,
+			.ml_flags = METH_VARARGS,
+			.ml_doc = "Move to next value"
+        },
+
+		{
+			.ml_name = "empty",
+			.ml_meth = dmiget_value_empty,
+			.ml_flags = METH_NOARGS,
+			.ml_doc = "True if the value is empty"
+		},
+
+        {
+			NULL
+		}
+
+ };
+
+ static PyGetSetDef dmiget_value_attributes[] = {
+		{
+			.name = "name",
+			.get = dmiget_value_name,
+//			.doc =
+		},
+		{
+			.name = "description",
+			.get = dmiget_value_description,
+//			.doc =
+		},
+		{
+			NULL
+		}
+ };
+
+ static PyTypeObject dmiget_value_python_type  = {
 
 	PyVarObject_HEAD_INIT(NULL, 0)
 
-	.tp_name = "smbios.Value",
+	.tp_name = "smbios.value",
 	.tp_doc = "SMBios Value",
 	.tp_basicsize = sizeof(pyValue),
 	.tp_itemsize = 0,
@@ -128,7 +172,8 @@
 	// .tp_iternext =
 
 	.tp_str = dmiget_value_str,
-	.tp_getattr = dmiget_value_getattr,
+	.tp_methods = dmiget_value_methods,
+	.tp_getset = dmiget_value_attributes,
 
 	//.tp_dict =
 
@@ -153,7 +198,7 @@
 
 	},
 
-	// TODO: Add method to get list os SMBIOS nodes.
+	// TODO: Add method to get list SMBIOS nodes.
 
 	{
 		NULL,
@@ -176,13 +221,14 @@ static struct PyModuleDef definition = {
 PyMODINIT_FUNC PyInit_smbios(void)
 {
 
-	// Initialize custom attributes & methods.
+	// Initialize node attributes & methods.
 	dmiget_node_type_init();
 	if (PyType_Ready(&dmiget_node_python_type) < 0)
 		return NULL;
 
+	// Initialize value attributes & methods.
 	dmiget_value_type_init();
-	if (PyType_Ready(&dmiget_value_type) < 0)
+	if (PyType_Ready(&dmiget_value_python_type) < 0)
 		return NULL;
 
     //
@@ -205,10 +251,10 @@ PyMODINIT_FUNC PyInit_smbios(void)
 		return NULL;
     }
 
-	Py_INCREF(&dmiget_value_type);
-    if (PyModule_AddObject(module, "value", (PyObject *) &dmiget_value_type) < 0) {
+	Py_INCREF(&dmiget_value_python_type);
+    if (PyModule_AddObject(module, "value", (PyObject *) &dmiget_value_python_type) < 0) {
 		Py_DECREF(&dmiget_node_python_type);
-		Py_DECREF(&dmiget_value_type);
+		Py_DECREF(&dmiget_value_python_type);
 		Py_DECREF(module);
 		return NULL;
     }

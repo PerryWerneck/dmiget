@@ -68,8 +68,10 @@
 
  SMBIOS_PRIVATE PyObject * dmiget_value_getattr(PyObject *, char *);
  SMBIOS_PRIVATE PyObject * dmiget_value_str(PyObject *self);
- SMBIOS_PRIVATE PyObject * dmiget_value_name(PyObject *self, PyObject *args);
- SMBIOS_PRIVATE PyObject * dmiget_value_description(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * dmiget_value_name(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_value_description(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_value_next(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * dmiget_value_empty(PyObject *self, PyObject *args);
 
  SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
