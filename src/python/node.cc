@@ -48,13 +48,24 @@
 
 	try {
 
-		const char *name = "";
-		if (!PyArg_ParseTuple(args, "s", &name))
-			throw runtime_error("Invalid argument");
+		switch(PyTuple_Size(args)) {
+		case 0:
+			((pyNode *) self)->pvt = pvt = new pyNodePrivate{""};
+			return 0;
 
-		((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
+		case 1:
+			{
+				const char *name = "";
+				if (!PyArg_ParseTuple(args, "s", &name))
+					throw runtime_error("Invalid argument");
 
-		return 0;
+				((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
+			}
+			return 0;
+
+		default:
+			throw runtime_error("Invalid arguments");
+		}
 
 	} catch(const std::exception &e) {
 
@@ -121,13 +132,14 @@
 
  PyObject * dmiget_node_name(PyObject *self) {
 
+	printf("------------------\n\n------------------\n");
 	return call(self, [](SMBios::Node &node) {
 		return PyUnicode_FromString(node.name());
 	});
 
  }
 
- PyObject * dmiget_node_description(PyObject *self) {
+ PyObject * dmiget_node_str(PyObject *self) {
 
 	return call(self, [](SMBios::Node &node) {
 		return PyUnicode_FromString(node.description());
@@ -135,9 +147,68 @@
 
  }
 
+ PyObject * dmiget_node_name(PyObject *self, void *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyUnicode_FromString(node.name());
+	});
+
+ }
+
+ PyObject * dmiget_node_description(PyObject *self, void *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyUnicode_FromString(node.description());
+	});
+
+ }
+
+ PyObject * dmiget_node_multiple(PyObject *self, void *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyBool_FromLong(node.multiple());
+	});
+
+ }
+
+ PyObject * dmiget_node_empty(PyObject *self, PyObject *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyBool_FromLong(node ? 0 : 1);
+	});
+
+ }
+
+ PyObject * dmiget_node_type(PyObject *self, void *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyLong_FromLong((unsigned long) node.type());
+	});
+
+ }
+
+ PyObject * dmiget_node_handle(PyObject *self, void *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyLong_FromLong((unsigned long) node.handle());
+	});
+
+ }
+
+ PyObject * dmiget_node_size(PyObject *self, void *) {
+
+	return call(self, [](SMBios::Node &node) {
+		return PyLong_FromLong((unsigned long) node.size());
+	});
+
+ }
+
+
+
+ /*
  PyObject * dmiget_node_getattr(PyObject *self, char *name) {
 
-	return call(self, [name](SMBios::Node &node) {
+	return call(self, [self,name](SMBios::Node &node) {
 
 		if(strcasecmp(name,"name") == 0) {
 
@@ -163,12 +234,45 @@
 
 			return PyLong_FromLong((unsigned long) node.size());
 
+		} else if(strcasecmp(name,"next") == 0) {
+
+			node.next();
+			return self;
+
 		} else {
 
-			throw runtime_error("Invalid attribute name");
+			throw runtime_error(string{"Invalid attribute: '"}+name+"'");
 
 		}
 
+	});
+
+ }
+ */
+
+ PyObject * dmiget_node_next(PyObject *self, PyObject *args) {
+
+	return call(self, [args](SMBios::Node &node) {
+
+		switch(PyTuple_Size(args)) {
+		case 0:
+			node.next();
+			return PyBool_FromLong(node ? 1 : 0);
+
+		case 1:
+			{
+				const char *name = "";
+
+				if (!PyArg_ParseTuple(args, "s", &name))
+					throw runtime_error("Invalid argument");
+
+				node.next(name);
+			}
+			return PyBool_FromLong(node ? 1 : 0);
+
+		default:
+			throw runtime_error("Invalid arguments");
+		}
 	});
 
  }

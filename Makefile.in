@@ -427,7 +427,7 @@ clean: \
 	cleanRelease
 
 
--include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).d)
--include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES) $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES) $(PYTHON_SOURCES)), $(OBJRLS)/$(SRC).d)
 
 

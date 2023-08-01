@@ -66,15 +66,20 @@
  SMBIOS_PRIVATE PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *);
  SMBIOS_PRIVATE void dmiget_value_dealloc(PyObject * self);
 
- SMBIOS_PRIVATE PyObject * dmiget_value_str(PyObject *self);
- SMBIOS_PRIVATE PyObject * dmiget_value_name(PyObject *self);
- SMBIOS_PRIVATE PyObject * dmiget_value_description(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_value_getattr(PyObject *, char *);
- SMBIOS_PRIVATE int dmiget_value_setattr(PyObject *, char *, PyObject *);
+ SMBIOS_PRIVATE PyObject * dmiget_value_str(PyObject *self);
+ SMBIOS_PRIVATE PyObject * dmiget_value_name(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * dmiget_value_description(PyObject *self, PyObject *args);
 
- SMBIOS_PRIVATE PyObject * dmiget_node_name(PyObject *self);
- SMBIOS_PRIVATE PyObject * dmiget_node_description(PyObject *self);
- SMBIOS_PRIVATE PyObject * dmiget_node_getattr(PyObject *, char *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
+ SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * dmiget_node_name(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_description(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_multiple(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_type(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_handle(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_size(PyObject *self, void *);
+ SMBIOS_PRIVATE PyObject * dmiget_node_empty(PyObject *self, PyObject *args);
 
  #ifdef __cplusplus
 	}
