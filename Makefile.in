@@ -212,6 +212,20 @@ $(BINRLS)/@SONAME@: \
 		$^ \
 		$(LIBS)
 
+$(BINRLS)/$(PYTHON_MODULE)@LIBEXT@: \
+	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJRLS)/$(SRC).o) \
+	$(BINRLS)/@SONAME@
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		@DLL_LDFLAGS@ \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS) \
+		@PYTHON_LIBS@
+
 $(BINRLS)/libdmiget.static.a: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
 
