@@ -21,60 +21,64 @@
   * @brief Implements python 'value' object.
   */
 
- /*
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <private/python.h>
+ #include <smbios/node.h>
  #include <smbios/value.h>
  #include <stdexcept>
 
- #include "private.h"
-
- struct pyNodePrivate {
-	std::string node;
-	std::string name;
+ struct pyValuePrivate {
+	SMBios::Value value;
+	pyValuePrivate(SMBios::Value &v) : value{v} {
+	}
  };
 
  void dmiget_value_type_init() {
 
-	// Properties:
-	//		url
-	//		node
-	//		name
-	//		description
-	//		value
-
-	// struct PyGetSetDef attrs[] = {
-	// }
 
  }
 
  int dmiget_value_init(PyObject *self, PyObject *args, PyObject *) {
 
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		((pyNode *) self)->pvt = pvt = new pyNodePrivate{};
+	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
+	if(pvt) {
+		delete pvt;
 	}
 
 	try {
 
-		const char *node = "";
-		const char *name = "";
+		switch(PyTuple_Size(args)) {
+		case 1:	// URL
+			{
+				const char *url = "";
 
-		if (!PyArg_ParseTuple(args, "ss", &node, &name))
-			throw runtime_error("Invalid argument");
+				if (!PyArg_ParseTuple(args, "s", &url))
+					throw runtime_error("Invalid argument");
 
-		if(!(node && *node)) {
-			throw runtime_error("Node name is empty or invalid");
+				((pyValue *) self)->pvt = new pyValuePrivate{*SMBios::Value::find(url)};
+
+			}
+			break;
+
+		case 2:	// Node name, value name
+			{
+				const char *nodename = "";
+				const char *valuename = "";
+
+				if (!PyArg_ParseTuple(args, "ss", &nodename, &valuename))
+					throw runtime_error("Invalid argument");
+
+				((pyValue *) self)->pvt = new pyValuePrivate{*SMBios::Node{nodename}.find(valuename)};
+
+			}
+			break;
+
+		default:
+			throw std::system_error(EINVAL, std::system_category());
 		}
-
-		if(!(name && *name)) {
-			throw runtime_error("Value name is empty or invalid");
-		}
-
-		pvt->node = node;
-		pvt->name = name;
 
 		return 0;
 
@@ -84,7 +88,7 @@
 
 	} catch(...) {
 
-		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in core module");
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in SMBios library");
 
 	}
 
@@ -93,6 +97,13 @@
  }
 
  void dmiget_value_finalize(PyObject *self) {
+
+ 	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
+	if(pvt) {
+		delete pvt;
+		((pyValue *) self)->pvt = nullptr;
+	}
+
  }
 
  PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *) {
@@ -103,9 +114,9 @@
 	Py_TYPE(self)->tp_free(self);
  }
 
- static PyObject * call(PyObject *self, const std::function<std::string (const SMBios::Value &value)> &worker) {
+ static PyObject * call(PyObject *self, const std::function<PyObject * (const SMBios::Value &value)> &worker) {
 
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
 	if(!pvt) {
 		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
 		return NULL;
@@ -113,9 +124,7 @@
 
 	try {
 
-		auto value = SMBios::Value::find(pvt->node.c_str(),pvt->name.c_str());
-
-		return PyUnicode_FromString(worker(*value).c_str());
+		return worker(pvt->value);
 
 	} catch(const std::exception &e) {
 
@@ -131,92 +140,53 @@
 
  }
 
-
  PyObject * dmiget_value_str(PyObject *self) {
 
-	return call(self,[](const DMI::Value &value){
-		return value.as_string();
+	return call(self, [](const SMBios::Value &value) {
+		return PyUnicode_FromString(value.to_string().c_str());
 	});
 
- }
-
- PyObject * dmiget_value_url(PyObject *self) {
-	return call(self,[](const DMI::Value &value){
-		return value.url();
-	});
- }
-
- PyObject * dmiget_value_node_name(PyObject *self) {
-	return call(self,[](const DMI::Value &value){
-		return value.node();
-	});
  }
 
  PyObject * dmiget_value_name(PyObject *self) {
-	return call(self,[](const DMI::Value &value){
-		return value.name();
+
+	return call(self, [](const SMBios::Value &value) {
+		return PyUnicode_FromString(value.name());
 	});
+
  }
 
  PyObject * dmiget_value_description(PyObject *self) {
-	return call(self,[](const DMI::Value &value){
-		return value.description();
+
+	return call(self, [](const SMBios::Value &value) {
+		return PyUnicode_FromString(value.description());
 	});
+
  }
 
- #if (defined _MSC_VER)
- inline int strcasecmp(const char *s1, const char *s2) {
- 	return _stricmp(s1,s2);
- }
- #endif // _MSC_VER
+ PyObject * dmiget_value_getattr(PyObject *self, char *name) {
 
- SMBIOS_PRIVATE PyObject * dmiget_value_getattr(PyObject *self, char *name) {
+	return call(self, [name](const SMBios::Value &value) {
 
-	return call(self,[name](const DMI::Value &value){
+		if(strcasecmp(name,"name") == 0) {
 
-		if(!strcasecmp(name,"url")) {
-			return value.url();
+			return PyUnicode_FromString(value.name());
+
+		} else if(strcasecmp(name,"description") == 0) {
+
+			return PyUnicode_FromString(value.description());
+
+		} else if(strcasecmp(name,"value") == 0) {
+
+			return PyUnicode_FromString(value.to_string().c_str());
+
+		} else {
+
+			throw runtime_error("Invalid attribute name");
+
 		}
-
-		if(!strcasecmp(name,"node")) {
-			return string{value.node()};
-		}
-
-		if(!strcasecmp(name,"name")) {
-			return string{value.name()};
-		}
-
-		if(!strcasecmp(name,"description")) {
-			return string{value.description()};
-		}
-
-		if(!strcasecmp(name,"value")) {
-			return value.as_string();
-		}
-
-		throw runtime_error("Invalid attribute");
 
 	});
 
 
  }
-
- SMBIOS_PRIVATE int dmiget_value_setattr(PyObject *self, char *name, PyObject *value) {
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		PyErr_SetString(PyExc_RuntimeError, "Object in invalid state");
-		return -1;
-	}
-
-	if(!strcasecmp(name,"node")) {
-		return 0;
-	}
-
-	if(!strcasecmp(name,"name")) {
-		return 0;
-	}
-
-	PyErr_SetString(PyExc_RuntimeError, "Invalid attribute");
-	return -1;
- }
- */

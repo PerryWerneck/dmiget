@@ -77,6 +77,7 @@
 		delete pvt;
 		((pyNode *) self)->pvt = nullptr;
 	}
+
  }
 
  PyObject * dmiget_node_alloc(PyTypeObject *type, PyObject *, PyObject *) {

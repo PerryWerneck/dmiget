@@ -70,11 +70,12 @@
 	.tp_str = dmiget_node_description,
 	.tp_getattr = dmiget_node_getattr,
 
+	//.tp_dict =
+
 	.tp_methods = dmiget_node_methods,
 
  };
 
- /*
  SMBIOS_PRIVATE PyTypeObject dmiget_value_type  = {
 
 	PyVarObject_HEAD_INIT(NULL, 0)
@@ -91,16 +92,17 @@
 	.tp_init = dmiget_value_init,
 	.tp_finalize = dmiget_value_finalize,
 
-	.tp_str = dmiget_value_str,
+	// .tp_iter =
+	// .tp_iternext =
 
+	.tp_str = dmiget_value_str,
 	.tp_getattr = dmiget_value_getattr,
-	.tp_setattr = dmiget_value_setattr,
+
 	//.tp_dict =
 
 	//.tp_methods = dmiget_value_methods,
 
  };
- */
 
  static PyMethodDef methods[] = {
 
@@ -147,11 +149,9 @@ PyMODINIT_FUNC PyInit_smbios(void)
 	if (PyType_Ready(&dmiget_node_type) < 0)
 		return NULL;
 
-	/*
 	dmiget_value_type_init();
 	if (PyType_Ready(&dmiget_value_type) < 0)
 		return NULL;
-	*/
 
     //
     // Initialize module.
@@ -173,7 +173,6 @@ PyMODINIT_FUNC PyInit_smbios(void)
 		return NULL;
     }
 
-    /*
 	Py_INCREF(&dmiget_value_type);
     if (PyModule_AddObject(module, "Value", (PyObject *) &dmiget_value_type) < 0) {
 		Py_DECREF(&dmiget_node_type);
@@ -181,7 +180,6 @@ PyMODINIT_FUNC PyInit_smbios(void)
 		Py_DECREF(module);
 		return NULL;
     }
-    */
 
     return module;
 }
