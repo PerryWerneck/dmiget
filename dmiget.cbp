@@ -38,34 +38,39 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
+		<Unit filename="src/include/config.h" />
+		<Unit filename="src/include/private/constants.h" />
+		<Unit filename="src/include/private/intl.h" />
+		<Unit filename="src/include/private/python.h" />
+		<Unit filename="src/include/private/smbios.h" />
+		<Unit filename="src/include/smbios/defs.h" />
+		<Unit filename="src/include/smbios/node.h" />
+		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/constants.cc" />
+		<Unit filename="src/libdmiget/data.cc" />
+		<Unit filename="src/libdmiget/decoders/abstract.cc" />
 		<Unit filename="src/libdmiget/decoders/decode.cc" />
+		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
+		<Unit filename="src/libdmiget/decoders/string.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/factory.cc" />
-		<Unit filename="src/libdmiget/include/config.h" />
-		<Unit filename="src/libdmiget/include/dmiget/defs.h" />
-		<Unit filename="src/libdmiget/include/dmiget/table.h" />
-		<Unit filename="src/libdmiget/include/dmiget/value.h" />
-		<Unit filename="src/libdmiget/include/internals.h" />
-		<Unit filename="src/libdmiget/include/pydmiget.h" />
-		<Unit filename="src/libdmiget/os/linux/file.cc" />
-		<Unit filename="src/libdmiget/os/linux/node.cc" />
+		<Unit filename="src/libdmiget/node/iterator.cc" />
+		<Unit filename="src/libdmiget/node/node.cc" />
+		<Unit filename="src/libdmiget/os/linux/data.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />
-		<Unit filename="src/libdmiget/os/linux/reader.cc" />
-		<Unit filename="src/libdmiget/os/linux/table.cc" />
-		<Unit filename="src/libdmiget/os/linux/value.cc" />
-		<Unit filename="src/libdmiget/os/windows/file.cc" />
+		<Unit filename="src/libdmiget/os/windows/data.cc" />
 		<Unit filename="src/libdmiget/os/windows/native_win32.h" />
-		<Unit filename="src/libdmiget/os/windows/table.cc" />
 		<Unit filename="src/libdmiget/string.cc" />
 		<Unit filename="src/libdmiget/table.cc" />
 		<Unit filename="src/libdmiget/value.cc" />
+		<Unit filename="src/libdmiget/value/iterator.cc" />
+		<Unit filename="src/libdmiget/value/url.cc" />
+		<Unit filename="src/libdmiget/value/value.cc" />
 		<Unit filename="src/python/init.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/python/moduleinfo.cc" />
 		<Unit filename="src/python/node.cc" />
-		<Unit filename="src/python/private.h" />
 		<Unit filename="src/python/value.cc" />
 		<Extensions />
 	</Project>

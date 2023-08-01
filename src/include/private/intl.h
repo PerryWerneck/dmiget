@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,32 +17,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /**
+  * @brief Declare intl macros
+  */
+
+ #pragma once
+
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <internals.h>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <cstring>
- #include <iostream>
- #include <stdexcept>
+ #if defined(GETTEXT_PACKAGE)
 
- using namespace std;
+	#include <locale.h>
+	#include <libintl.h>
 
- namespace DMIget {
+	#define _( x )                  dgettext(GETTEXT_PACKAGE,x)
+	#define N_( x )                 x
 
-	File::File(const char *filename, size_t maxlen) {
+ #else
 
-		throw runtime_error("Not available on windows");
+	#define _( x )                  x
+	#define N_( x )                 x
 
-	}
-
-	File::~File() {
-		if(contents) {
-			delete[] contents;
-		}
-	}
+ #endif // HAVE_LIBINTL
 
 
- }
+

@@ -23,7 +23,9 @@ PYTHON_MODULE=smbios
 
 LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/*.cc) \
+	$(wildcard src/libdmiget/node/*.cc) \
 	$(wildcard src/libdmiget/decoders/*.cc) \
+	$(wildcard src/libdmiget/value/*.cc) \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
 
 PYTHON_SOURCES= \
@@ -84,7 +86,7 @@ CFLAGS= \
 	@PYTHON_CFLAGS@ \
 	-DHAVE_CONFIG_H=1 \
 	-fPIC \
-	-Isrc/libdmiget/include \
+	-Isrc/include \
 	-DBUILD_DATE=`date +%Y%m%d`
 
 CPPFLAGS= \
@@ -425,7 +427,7 @@ clean: \
 	cleanRelease
 
 
--include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).d)
--include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES) $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES) $(PYTHON_SOURCES)), $(OBJRLS)/$(SRC).d)
 
 

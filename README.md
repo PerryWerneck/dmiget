@@ -18,13 +18,44 @@ You can download installation package for supported linux distributions in [Open
 ### Command line
 
 ```shell
-dmiget dmi://bios/vendor
+dmiget
+```
+
+```shell
+dmiget dmi:///bios/vendor
 ```
 
 ### Python
 
 ```python
 import smbios
-value = smbios.value('chassis','serial')
+value = smbios.Value('chassis','serial')
 print(value)
 ```
+
+```python
+import smbios
+value = smbios.Value('dmi:///chassis/serial')
+print(value)
+```
+
+```python
+import smbios
+node = smbios.node()
+while not node.empty():
+	print(node)
+	node.next()
+```
+
+```python
+import smbios
+node = smbios.node()
+while not node.empty():
+	print(node)
+	value = node.value()
+	while not value.empty():
+		print('   {}: {}'.format(value.description,value))
+		value.next()
+	node.next()
+```
+

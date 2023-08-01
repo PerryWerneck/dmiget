@@ -17,29 +17,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- /**
-  * @brief Implement module based properties and methods.
-  */
+ #pragma once
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #if defined(_WIN32)
 
- #include "private/python.h"
+	#define SMBIOS_API		__declspec (dllexport)
+	#define SMBIOS_PRIVATE
 
- PyObject * pydmi_get_module_version(PyObject *, PyObject *) {
-#ifdef PACKAGE_VERSION
-    return PyUnicode_FromString(PACKAGE_VERSION);
-#else
-    return PyUnicode_FromString("");
-#endif // PACKAGE_VERSION
+ #else
+
+	#define SMBIOS_API		__attribute__((visibility("default")))
+	#define SMBIOS_PRIVATE	__attribute__((visibility("hidden")))
+
+ #endif
+
+ #ifdef _MSC_VER
+
+	#include <cstring>
+	#define strncasecmp  _strnicmp
+	#define ftruncate    _chsize
+	#define strtoull     _strtoui64
+	#define strtoll      _strtoi64
+
+	__inline int strcasecmp (const char *s1, const char *s2) {
+		size_t size1 = strlen(s1);
+		size_t size2 = strlen(s2);
+		return _strnicmp(s1, s2, size2 > size1 ? size2 : size1);
+	}
+
+ #endif // _MSC_VER
+
+ #ifdef __cplusplus
+ namespace SMBios {
+
+	class Data;
+	class Node;
+	class Value;
+
  }
 
- PyObject * pydmi_get_module_revision(PyObject *, PyObject *) {
-#ifdef PACKAGE_RELEASE
-    return PyUnicode_FromString(PACKAGE_RELEASE);
-#else
-    return PyUnicode_FromString("");
-#endif // PACKAGE_RELEASE
- }
 
+ #endif // __cplusplus

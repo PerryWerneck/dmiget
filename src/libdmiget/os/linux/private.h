@@ -23,8 +23,8 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <dmiget/defs.h>
- #include <dmiget/value.h>
+ #include <smbios/defs.h>
+ #include <smbios/value.h>
  #include <stdexcept>
  #include <string>
  #include <iostream>

@@ -17,198 +17,263 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <iostream>
- #include <dmiget/value.h>
- #include <dmiget/table.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <iostream>
  #include <functional>
  #include <cstring>
+ #include <exception>
+ #include <iomanip>
+
+ #include <smbios/node.h>
 
  using namespace std;
- namespace DMI = DMIget;
+ using namespace SMBios;
 
- static string input_file;
- static string delimiter{"\t"};
+ static bool verbose = true;
+ static bool output = true;
+ static bool show_node = true;
+ static bool show_value_label = true;
+ static const char *node_name = "";
+ static const char *value_name = "";
 
- static DMI::Table * TableFactory() {
-	if(input_file.empty())
-		return new DMI::Table();
-	return new DMI::Table(input_file.c_str());
+ namespace Writer {
+
+	class Abstract {
+	public:
+		virtual void write(const Node &node) = 0;
+		virtual void write(const Value &value, bool tab = true) = 0;
+
+		virtual void open() {
+		}
+
+		virtual void close() {
+		}
+	};
+
+	class Text : public Abstract {
+	public:
+		void write(const Node &node) override {
+			if(verbose) {
+				cout	<< "Handle 0x" << setfill('0') << setw(4) << hex << node.handle() << dec
+						<< ", DMI Type " << node.type() << ", " << node.size() << " bytes" << endl;
+			}
+			cout << node.description() << endl;
+		}
+
+		void write(const Value &value, bool tab) override {
+			if(tab) {
+				cout << "\t";
+			}
+			if(show_value_label) {
+				cout << value.description() << ": ";
+			}
+			cout << value << endl;
+		}
+
+		void close() {
+			cout << endl;
+		}
+
+	};
+
  }
+
+ static std::shared_ptr<Writer::Abstract> writer{make_shared<Writer::Text>()};
+
+ /// @brief Command-line arguments.
+ static const struct Worker {
+	char short_arg;
+	const char *long_arg;
+	const bool required;
+	const char *help;
+	const std::function<bool(const char *argument)> method;
+
+	Worker(char s, const char *l, const char *h, const bool r, const std::function<bool(const char *argument)> m)
+		: short_arg{s}, long_arg{l}, required{r}, help{h}, method{m} {
+	}
+ } workers[] {
+	{
+		'n',"node",
+		"",
+		false,
+		[](const char *name) {
+			node_name = name;
+			return false;
+		}
+	},
+	{
+		'v',"value",
+		"",
+		false,
+		[](const char *name) {
+			value_name = name;
+			return false;
+		}
+	},
+	{
+		'v',"verbose",
+		"Verbose output (default)",
+		false,
+		[](const char *) {
+			verbose = true;
+			return false;
+		}
+	},
+	{
+		'q',"quiet",
+		"Less verbose output",
+		false,
+		[](const char *) {
+			verbose = false;
+			return false;
+		}
+	},
+	{
+		'\0',"hide-nodes",
+		"Hide node information",
+		false,
+		[](const char *) {
+			show_node = false;
+			return false;
+		}
+	},
+	{
+		'\0',"hide-value-labels",
+		"Hide node information",
+		false,
+		[](const char *) {
+			show_value_label = false;
+			return false;
+		}
+	},
+	{
+		'T',"text",
+		"Text mode output (default)",
+		false,
+		[](const char *) {
+			writer = make_shared<Writer::Text>();
+			return false;
+		}
+	}
+ };
 
  int main(int argc, char **argv) {
 
-	static const struct Worker {
-		char short_arg;
-		const char *long_arg;
-		const bool required;
-		const char *help;
-		const std::function<void(const char *argument)> method;
+	try {
 
-		Worker(char s, const char *l, const char *h, const bool r, const std::function<void(const char *argument)> m)
-			: short_arg{s}, long_arg{l}, required{r}, help{h}, method{m} {
-		}
-	} workers[] {
+		// Check command-line arguments.
 
-		{
-			'a',"all","",false,[](const char *) {
+		while(--argc) {
 
-				auto table = TableFactory();
+			bool found = false;
+			const char *argument = *(++argv);
 
-				table->for_each([](shared_ptr<DMI::Value> value){
-					cout << value->url() << delimiter << value << endl;
-					return true;
-				});
+			if(!strncmp(argument,"--",2)) {
 
-				delete table;
-
-			}
-		},
-		{
-			'u',"urls","",false,[](const char *) {
-
-				auto table = TableFactory();
-
-				table->for_each([](shared_ptr<DMI::Value> value){
-					cout << value->url() << endl;
-					return true;
-				});
-
-				delete table;
-
-			}
-		},
-		{
-			'V',"values","",true,[](const char *) {
-
-				auto table = TableFactory();
-
-				table->for_each([](shared_ptr<DMI::Value> value){
-					cout << value << endl;
-					return true;
-				});
-
-				delete table;
-
-			}
-		},
-		{
-			'N',"names","",true,[](const char *) {
-
-				auto table = TableFactory();
-
-				table->for_each([](shared_ptr<DMI::Value> value){
-					cout << value->name() << endl;
-					return true;
-				});
-
-				delete table;
-
-			}
-		},
-		{
-			'I',"input-file","",true,[](const char *filename) {
-				input_file = filename;
-			}
-		},
-		{
-			'D',"delimiter","",true,[](const char *d) {
-				delimiter = d;
-			}
-		},
-	};
-
-	while(--argc) {
-
-		bool found = false;
-		const char *argument = *(++argv);
-
-		if(!strncmp(argument,"--",2)) {
-
-			argument += 2;
-			const char *value = strchr(argument,'=');
-			string name;
-			if(value) {
-				name.assign(argument,value-argument);
-				value++;
-			} else {
-				name.assign(argument);
-				value = "";
-			}
-
-			for(const Worker &worker : workers) {
-
-				found = (strcmp(name.c_str(),worker.long_arg) == 0);
-				if(found) {
-					worker.method(value);
-					break;
+				argument += 2;
+				const char *value = strchr(argument,'=');
+				string name;
+				if(value) {
+					name.assign(argument,value-argument);
+					value++;
+				} else {
+					name.assign(argument);
+					value = "";
 				}
 
-			}
+				for(const Worker &worker : workers) {
 
-		} else if(argument[0] == '-') {
+					found = (strcmp(name.c_str(),worker.long_arg) == 0);
+					if(found) {
+						if(worker.method(value)) {
+							return 0;
+						}
+						break;
+					}
 
-			argument++;
+				}
 
-			if(argument[1]) {
-				cerr << "Unexpected argument" << endl;
-				return -1;
-			}
+			} else if(argument[0] == '-') {
 
-			for(const Worker &worker : workers) {
+				argument++;
 
-				found = (worker.short_arg == argument[0]);
-				if(found) {
+				if(argument[1]) {
+					cerr << "Unexpected argument" << endl;
+					return -1;
+				}
 
-					const char *value = "";
+				for(const Worker &worker : workers) {
 
-					if(worker.required) {
+					found = (worker.short_arg == argument[0]);
+					if(found) {
 
-						if(argc == 1) {
-							cerr << "An argument is required" << endl;
-							exit(-1);
+						const char *value = "";
+
+						if(worker.required) {
+
+							if(argc == 1) {
+								cerr << "An argument is required" << endl;
+								exit(-1);
+							}
+
+							value = *(++argv);
+							--argc;
+
+							if(value[0] == '-') {
+								cerr << "An argument is required" << endl;
+								exit(-1);
+							}
+
 						}
 
-						value = *(++argv);
-						--argc;
-
-						if(value[0] == '-') {
-							cerr << "An argument is required" << endl;
-							exit(-1);
+						if(worker.method(value)) {
+							return 0;
 						}
+						break;
 
 					}
 
-					worker.method(value);
-					break;
-
 				}
 
+			} else if(strncasecmp(argument,"dmi:",4) == 0) {
+				cout << Value::find(argument) << endl;
+				output = false;
 			}
-
-		} else {
-
-			// It's an URL
-			found = true;
-
-			auto table = TableFactory();
-			auto value = table->find(argument);
-			if(value) {
-				cout << table->find(argument) << endl;
-			} else {
-				cout << "" << endl;
-			}
-			delete table;
 
 		}
 
-		if(!found) {
-			cerr << "Invalid argument" << endl;
-			return -1;
+		if(output) {
+			// Show standard output.
+			for(SMBios::Node node{node_name};node;node.next(node_name)) {
+				if(show_node) {
+					writer->write(node);
+					writer->open();
+					for(auto &value : node) {
+						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+							writer->write(value);
+						}
+					}
+					writer->close();
+				} else {
+					for(auto &value : node) {
+						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+							writer->write(value,false);
+						}
+					}
+				}
+			}
 		}
+
+	} catch(const std::exception &e) {
+
+		cerr << e.what() << endl;
+		exit(-1);
 
 	}
 
 	return 0;
-
  }
+

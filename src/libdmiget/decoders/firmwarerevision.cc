@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,12 +17,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
- #include <cstring>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <unistd.h>
+ /**
+  * @brief Implements firmware revision decoder.
+  */
 
- namespace DMIget {
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
+ #include <private/constants.h>
+ #include <string>
+
+ using namespace std;
+
+ namespace SMBios {
+
+	std::string Decoder::FirmwareRevision::to_string(const uint8_t *ptr, size_t offset) const {
+
+		ptr += offset;
+
+		if(ptr[0] == 0xFF || ptr[1] == 0xFF) {
+			return "";
+		}
+
+		string rc{std::to_string((unsigned int) ptr[0])};
+		rc += ".";
+		rc += std::to_string((unsigned int) ptr[1]);
+
+		return rc;
+	}
 
  }
