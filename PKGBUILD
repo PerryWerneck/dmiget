@@ -2,7 +2,7 @@
 
 pkgname=dmiget
 
-pkgver=1.0
+pkgver=1.1
 pkgrel=0
 pkgdesc="Get DMI information using URL format"
 url="https://github.com/PerryWerneck/dmiget"
