@@ -33,7 +33,7 @@
 
  #ifdef _MSC_VER
 
-	#include <cstring>
+	#include <string.h>
 	#define strncasecmp  _strnicmp
 	#define ftruncate    _chsize
 	#define strtoull     _strtoui64
