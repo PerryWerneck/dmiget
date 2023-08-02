@@ -26,6 +26,9 @@
  #endif // HAVE_CONFIG_H
 
  #include <private/python.h>
+ #include <stdexcept>
+
+ using namespace std;
 
  PyObject * PyObjectByName(const char *name) {
 
