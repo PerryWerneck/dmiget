@@ -29,9 +29,10 @@
  #include <smbios/defs.h>
  #include <smbios/node.h>
  #include <stdexcept>
+ #include <private/smbios.h>
+ #include <private/constants.h>
 
  using namespace std;
-// #include <private/node.h>
 
  namespace SMBios {
 
@@ -79,6 +80,34 @@
 	Node::Iterator & Node::Iterator::operator++() {
 		node->next();
 		return *this;
+	}
+
+	bool Node::for_each(const std::function<bool(const Node &node)> &call) {
+
+		for(Node node{""};node;node.next("")) {
+			if(call(node)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool Node::for_each(const std::function<bool(const Value &v)> &call) const {
+
+		if(offset < 0) {
+			return false;
+		}
+
+		Value value{data,(size_t) offset,info->values,0};
+
+		while(value) {
+			if(call(value)) {
+				return true;
+			}
+			value.next();
+		}
+
+		return false;
 	}
 
  }
