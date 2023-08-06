@@ -31,6 +31,7 @@
  #include <stdexcept>
  #include <private/smbios.h>
  #include <private/constants.h>
+ #include <cstring>
 
  using namespace std;
 
@@ -82,6 +83,33 @@
 		return *this;
 	}
 
+	bool Node::for_each(const std::function<bool(const Node &n, const size_t index, const Value &v)> &call) {
+
+		char indexes[0xff];
+		memset(indexes,0,sizeof(indexes));
+
+		for(Node node{""};node;node.next("")) {
+
+			Value value{node.data,(size_t) node.offset,node.info->values,0};
+
+			size_t index = 0;
+			if(node.multiple()) {
+				index = ++indexes[node.info->id];
+			}
+
+			while(value) {
+				if(call(node,index,value)) {
+					return true;
+				}
+				value.next();
+			}
+
+		}
+
+		return false;
+
+	}
+
 	bool Node::for_each(const std::function<bool(const Node &node)> &call) {
 
 		for(Node node{""};node;node.next("")) {
@@ -90,6 +118,7 @@
 			}
 		}
 		return false;
+
 	}
 
 	bool Node::for_each(const std::function<bool(const Value &v)> &call) const {
