@@ -33,11 +33,16 @@
  using namespace SMBios;
 
  static bool verbose = true;
- static bool output = true;
  static bool show_node = true;
  static bool show_value_label = true;
  static const char *node_name = "";
  static const char *value_name = "";
+
+ static enum OutputFormat : uint8_t {
+	None,
+	Complete,
+	Urls
+ } output_format = Complete;
 
  namespace Writer {
 
@@ -45,6 +50,7 @@
 	public:
 		virtual void write(const Node &node) = 0;
 		virtual void write(const Value &value, bool tab = true) = 0;
+		virtual void write(const char *url, const char *value) = 0;
 
 		virtual void open() {
 		}
@@ -71,6 +77,10 @@
 				cout << value.description() << ": ";
 			}
 			cout << value << endl;
+		}
+
+		void write(const char *url, const char *value) override {
+			cout << url << "\t" << value << endl;
 		}
 
 		void close() {
@@ -128,6 +138,15 @@
 		false,
 		[](const char *) {
 			verbose = false;
+			return false;
+		}
+	},
+	{
+		'u',"urls",
+		"Show URLs and values",
+		false,
+		[](const char *) {
+			output_format = Urls;
 			return false;
 		}
 	},
@@ -240,12 +259,16 @@
 
 			} else if(strncasecmp(argument,"dmi:",4) == 0) {
 				cout << Value::find(argument) << endl;
-				output = false;
+				output_format = None;
 			}
 
 		}
 
-		if(output) {
+		switch(output_format) {
+		case None:
+			break;
+
+		case Complete:
 			// Show standard output.
 			for(SMBios::Node node{node_name};node;node.next(node_name)) {
 				if(show_node) {
@@ -265,6 +288,23 @@
 					}
 				}
 			}
+			break;
+
+		case Urls:
+			SMBios::Node::for_each([](const SMBios::Node &node, const size_t index, const Value &value) {
+				string url{"dmi:///"};
+				url += node.name();
+				url += "/";
+				if(index) {
+					url += std::to_string(index);
+					url += "/'";
+				}
+				url += value.name();
+				writer->write(url.c_str(),value.to_string().c_str());
+				return false;
+			});
+			break;
+
 		}
 
 	} catch(const std::exception &e) {
