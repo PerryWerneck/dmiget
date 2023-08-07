@@ -29,6 +29,10 @@
 	#include <windows.h>
  #endif // _WIN32
 
+ #ifdef _MSC_VER
+	#include <io.h>
+ #endif // _MSC_VER
+
  #include <private/smbios.h>
  #include <stdexcept>
  #include <system_error>
