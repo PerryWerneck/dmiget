@@ -50,6 +50,17 @@
 
 	}
 
+	Node::Node(const char *filename, const char *name, int index) : Node{SMBios::Data::factory(filename),0} {
+
+		if(name && *name) {
+			do {
+				next(name);
+			} while(index-- > 0);
+		}
+
+	}
+
+
 	Node::Node(std::shared_ptr<Data> d, const int o) : data{d}, offset{o}, info{Node::Info::find(*d->get(o))} {
 
 		const uint8_t *ptr = data->get(o);

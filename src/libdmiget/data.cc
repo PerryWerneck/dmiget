@@ -37,6 +37,7 @@
  #include <sys/stat.h>
  #include <fcntl.h>
  #include <cstring>
+ #include <iostream>
 
  using namespace std;
 
@@ -46,11 +47,12 @@
 		return make_shared<Data>();
 	}
 
-	std::shared_ptr<Data> factory(const char *filename) {
+	std::shared_ptr<Data> Data::factory(const char *filename) {
 
-		throw std::system_error(ENOTSUP,std::system_category(),filename);
+		if(!(filename && *filename)) {
+			return factory();
+		}
 
-		/*
 		int fd = open(filename,O_RDONLY);
 
 		if(fd < 0) {
@@ -64,15 +66,22 @@
 			throw std::system_error(err,std::system_category(),filename);
 		}
 
-		uint8_t *buffer = new uint8_t[statbuf.st_size+1];
-		memset(buffer,0,statbuf.st_size+1);
+		size_t datalength = statbuf.st_size - 0x0020;
+
+		uint8_t *buffer = new uint8_t[datalength+1];
+		memset(buffer,0,datalength+1);
 
 		uint8_t *ptr = buffer;
 
-		size_t pos = 0;
-		while(pos < statbuf.st_size) {
+		if(lseek(fd,0x0020, SEEK_SET) != 0x0020) {
+			::close(fd);
+			throw std::runtime_error("Error positioning input file");
+		}
 
-			ssize_t bytes = read(fd,ptr,(pos - statbuf.st_size));
+		size_t pos = 0;
+		while(pos < datalength) {
+
+			ssize_t bytes = read(fd,ptr,(datalength - pos));
 
 			if(bytes < 0) {
 				if(errno != EINTR) {
@@ -93,8 +102,7 @@
 
 		::close(fd);
 
-		return make_shared<Data>(buffer,statbuf.st_size);
-		*/
+		return make_shared<Data>(buffer,datalength);
 
 	}
 

@@ -94,7 +94,18 @@
 
 		};
 
+		/// @brief Construct node.
+		/// @param name	Node name (empty for the first one)
+		/// @param index Node index.
 		Node(const char *name, int index = 0);
+
+		/// @brief Construct node reading SMBios from dump file.
+		/// @param SMBios dump file (empty for the system's table).
+		/// @param name	Node name (empty for the first one)
+		/// @param index Node index.
+		Node(const char *filename, const char *name, int index = 0);
+
+
 		operator bool() const;
 
 		/// @brief Get value by index.

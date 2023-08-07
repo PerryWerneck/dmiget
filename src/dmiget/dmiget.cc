@@ -35,6 +35,7 @@
  static bool verbose = true;
  static bool show_node = true;
  static bool show_value_label = true;
+ static const char *filename = "";
  static const char *node_name = "";
  static const char *value_name = "";
 
@@ -147,6 +148,15 @@
 		false,
 		[](const char *) {
 			output_format = Urls;
+			return false;
+		}
+	},
+	{
+		'f',"dump-file",
+		"Read from dump file",
+		true,
+		[](const char *arg) {
+			filename = arg;
 			return false;
 		}
 	},
@@ -270,7 +280,7 @@
 
 		case Complete:
 			// Show standard output.
-			for(SMBios::Node node{node_name};node;node.next(node_name)) {
+			for(SMBios::Node node{filename,node_name};node;node.next(node_name)) {
 				if(show_node) {
 					writer->write(node);
 					writer->open();
