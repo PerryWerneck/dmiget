@@ -28,6 +28,8 @@
  #include <private/smbios.h>
  #include <smbios/value.h>
  #include <private/constants.h>
+ #include <cstring>
+ #include <system_error>
 
  using namespace std;
 
@@ -43,6 +45,39 @@
 
 	Value::Value(std::shared_ptr<Data> d, size_t o, const Value::Info *t, size_t i)
 		: data{d}, offset{o}, info{t}, item{i} {
+	}
+
+	Value & Value::operator=(const Value & src) {
+		data = src.data;
+		offset = src.offset;
+		info = src.info;
+		item = src.item;
+		return *this;
+	}
+
+	Value & Value::operator=(const char *name) {
+
+		for(size_t itn = 0; info[itn].name; itn++) {
+			if(!strcasecmp(info[itn].name,name)) {
+				item = itn;
+				return *this;
+			}
+		}
+
+		throw std::system_error(ENOENT,std::system_category(),name);
+
+	}
+
+	Value & Value::operator=(const size_t index) {
+
+		for(size_t itn = 0; info[itn].name; itn++) {
+			if(itn == index) {
+				item = itn;
+				return *this;
+			}
+		}
+
+		throw std::system_error(EINVAL,std::system_category());
 	}
 
  	Value::operator bool() const {

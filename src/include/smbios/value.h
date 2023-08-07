@@ -46,6 +46,10 @@
 
 		Value(std::shared_ptr<Data> data, size_t offset, const Value::Info *info, size_t item = 0);
 
+		Value & operator=(const Value & src);
+		Value & operator=(const char *name);
+		Value & operator=(const size_t index);
+
 		class SMBIOS_API Iterator {
 		private:
 			Value *value = nullptr;

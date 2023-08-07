@@ -59,7 +59,7 @@
 
 		struct {
 
-			/// @brief SMBios type;
+			/// @brief SMBios type.
 			Type type = Invalid;
 
 		} options;
