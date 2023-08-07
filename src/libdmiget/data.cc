@@ -31,6 +31,7 @@
 
  #ifdef _MSC_VER
 	#include <io.h>
+	#pragma warning(suppress : 4996)
  #endif // _MSC_VER
 
  #include <private/smbios.h>
@@ -89,7 +90,7 @@
 		size_t pos = 0;
 		while(pos < datalength) {
 
-			ssize_t bytes = read(fd,ptr,(datalength - pos));
+			auto bytes = read(fd,ptr,(datalength - pos));
 
 			if(bytes < 0) {
 				if(errno != EINTR) {
