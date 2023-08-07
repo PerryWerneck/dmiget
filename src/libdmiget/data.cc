@@ -25,6 +25,10 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #ifdef _WIN32
+	#include <windows.h>
+ #endif // _WIN32
+
  #include <private/smbios.h>
  #include <stdexcept>
  #include <system_error>
