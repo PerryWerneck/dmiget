@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,12 +17,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
- #include <cstring>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <unistd.h>
+ /**
+  * @brief Declare intl macros
+  */
 
- namespace DMIget {
+ #pragma once
 
- }
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
+ #if defined(GETTEXT_PACKAGE)
+
+	#include <locale.h>
+	#include <libintl.h>
+
+	#define _( x )                  dgettext(GETTEXT_PACKAGE,x)
+	#define N_( x )                 x
+
+ #else
+
+	#define _( x )                  x
+	#define N_( x )                 x
+
+ #endif // HAVE_LIBINTL
+
+
+

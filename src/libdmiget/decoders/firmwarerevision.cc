@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,71 +17,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /**
+  * @brief Implements firmware revision decoder.
+  */
+
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <internals.h>
- #include <dmiget/value.h>
+ #include <private/constants.h>
  #include <string>
 
  using namespace std;
 
- namespace DMIget {
+ namespace SMBios {
 
-	Value::Value(const Type *t, const Record *record, const uint8_t i) : typeindex(i), type(t) {
+	std::string Decoder::FirmwareRevision::to_string(const uint8_t *ptr, size_t offset) const {
 
-		if(record) {
+		ptr += offset;
 
-			if(record->name) {
-				info.name = record->name;
-			} else {
-				info.name = to_string( (int) record->offset);
-			}
-
-			if(record->description) {
-				info.description = record->description;
-			}
-
-		}
-
-	}
-
-	Value::~Value() {
-	}
-
-	const char * Value::node() const {
-		return type->name;
-	}
-
-	std::string Value::as_string() const {
-		return "";
-	}
-
-	unsigned int Value::as_uint() const {
-		return 0;
-	}
-
-	std::string Value::url() const {
-
-		if(!type) {
+		if(ptr[0] == 0xFF || ptr[1] == 0xFF) {
 			return "";
 		}
 
-		std::string rc{"dmi:///"};
-
-		rc += node();
-		rc += "/";
-
-		if(type->multiple) {
-			rc += std::to_string((int) typeindex);
-			rc += "/";
-		}
-
-		rc += info.name;
+		string rc{std::to_string((unsigned int) ptr[0])};
+		rc += ".";
+		rc += std::to_string((unsigned int) ptr[1]);
 
 		return rc;
 	}
-
 
  }

@@ -9,9 +9,9 @@ source=()
 #  grep AC_INIT ${startdir}/configure.ac | cut -d[ -f3 | cut -d] -f1
 #}
 
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
-pkgdesc="Detect when running under virtual machine"
+pkgdesc="Get DMI information using URL format"
 url="https://github.com/PerryWerneck/dmiget"
 arch=(i686 x86_64)
 license=(GPL)

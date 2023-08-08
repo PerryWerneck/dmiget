@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,13 +17,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
+ /**
+  * @brief Implements string decoder.
+  */
+
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
+ #include <private/constants.h>
+ #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
  #include <cstring>
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <unistd.h>
 
- namespace DMIget {
+ using namespace std;
 
+ namespace SMBios {
+
+	string Decoder::String::to_string(const uint8_t *ptr, size_t index) const {
+
+		Node::Header *header{(Node::Header *) ptr};
+
+		ptr += header->length;
+		while (index > 1 && *ptr) {
+			ptr += strlen((const char *) ptr);
+			ptr++;
+			index--;
+		}
+
+		return string{(const char *) ptr};
+	}
 
  }

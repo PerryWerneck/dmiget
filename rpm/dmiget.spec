@@ -34,6 +34,10 @@ BuildRequires:	libtool
 BuildRequires:	binutils
 BuildRequires:	coreutils
 BuildRequires:	gcc-c++ >= 5
+BuildRequires:	pkgconfig(python3)
+BuildRequires:	%{python_module devel}
+BuildRequires:	%{python_module setuptools}
+
 
 %description
 Tool to get information from DMI table using an url-like format.
@@ -81,13 +85,15 @@ make all
 %defattr(-,root,root)
 %doc README.md
 %license LICENSE
-%{_libdir}/lib%{name}.so.*
+%{_libdir}/lib*.so.*
 
 %files devel
 %defattr(-,root,root)
-%{_libdir}/lib%{name}.so
+%{_libdir}/lib*.so
+%{_libdir}/lib*.a
 %dir %{_includedir}/%{name}
-%{_includedir}/%{name}/*.h
+%dir %{_includedir}/%{name}/smbios
+%{_includedir}/%{name}/smbios/*.h
 %{_libdir}/pkgconfig/*.pc
 
 %post -n lib%{name}%{_libvrs} -p /sbin/ldconfig

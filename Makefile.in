@@ -18,21 +18,29 @@
 #---[ Library configuration ]------------------------------------------------------------
 
 PACKAGE_NAME=@PACKAGE_NAME@
-PRODUCT_NAME=@PRODUCT_NAME@
+PYTHON_MODULE=smbios
 
 LIBRARY_SOURCES= \
 	$(wildcard src/libdmiget/*.cc) \
+	$(wildcard src/libdmiget/node/*.cc) \
 	$(wildcard src/libdmiget/decoders/*.cc) \
+	$(wildcard src/libdmiget/value/*.cc) \
 	$(wildcard src/libdmiget/os/@OSNAME@/*.cc)
+
+PYTHON_SOURCES= \
+	$(wildcard src/python/*.c) \
+	$(wildcard src/python/*.cc)
 
 APPLICATION_SOURCES= \
 	$(wildcard src/dmiget/*.cc)
 
+BUILD_TARGETS=@BUILD_TARGETS@
 TARGETS=@OSNAME@-lib devel application
 
 #---[ Tools ]----------------------------------------------------------------------------
 
 CXX=@CXX@
+CC=@CC@
 LD=@CXX@
 LN_S=@LN_S@
 MKDIR=@MKDIR_P@
@@ -58,14 +66,15 @@ datarootdir=@datarootdir@
 localedir=@localedir@
 docdir=@docdir@
 sysconfdir=/etc
+PYTHON_SITELIB=@PYTHON_SITELIB@
 
 BASEDIR=@BASEDIR@
 
-OBJDIR=$(BASEDIR)/.obj
+OBJDIR=.obj
 OBJDBG=$(OBJDIR)/Debug
 OBJRLS=$(OBJDIR)/Release
 
-BINDIR=$(BASEDIR)/.bin
+BINDIR=.bin
 BINDBG=$(BINDIR)/Debug
 BINRLS=$(BINDIR)/Release
 
@@ -73,9 +82,10 @@ BINRLS=$(BINDIR)/Release
 
 CFLAGS= \
 	@CXXFLAGS@ \
+	@PYTHON_CFLAGS@ \
 	-DHAVE_CONFIG_H=1 \
 	-fPIC \
-	-Isrc/libdmiget/include \
+	-Isrc/include \
 	-DBUILD_DATE=`date +%Y%m%d`
 
 CPPFLAGS= \
@@ -110,6 +120,24 @@ $(OBJDBG)/%.o: \
 		-c $<
 
 $(OBJDBG)/%.o: \
+	%.c
+
+	@echo $< ...
+	@$(MKDIR) $(dir $@)
+
+	@$(CC) \
+		$(CFLAGS) \
+		-DDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CC) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJDBG)/%.o: \
 	%.rc
 
 	@echo $< ...
@@ -138,6 +166,24 @@ $(OBJRLS)/%.o: \
 		-c $<
 
 $(OBJRLS)/%.o: \
+	%.c
+
+	@echo $< ...
+	@$(MKDIR) $(dir $@)
+
+	@$(CC) \
+		$(CFLAGS) \
+		-DNDEBUG=1 \
+		-MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+
+	@$(CC) \
+		$(CFLAGS) \
+		-Wall -Wextra -fstack-check \
+		-DNDEBUG=1 \
+		-o $@ \
+		-c $<
+
+$(OBJRLS)/%.o: \
 	%.rc
 
 	@echo $< ...
@@ -147,13 +193,11 @@ $(OBJRLS)/%.o: \
 #---[ Release Targets ]------------------------------------------------------------------
 
 all: \
-	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
-
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET)) \
+	$(BINRLS)/libdmiget.static.a
 
 Release: \
-	$(BINRLS)/@SONAME@ \
-	$(BINRLS)/$(PACKAGE_NAME)@EXEEXT@
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET))
 
 $(BINRLS)/@SONAME@: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
@@ -166,6 +210,27 @@ $(BINRLS)/@SONAME@: \
 		$(LDFLAGS) \
 		$^ \
 		$(LIBS)
+
+$(BINRLS)/$(PYTHON_MODULE)@LIBEXT@: \
+	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJRLS)/$(SRC).o) \
+	$(BINRLS)/@SONAME@
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		@DLL_LDFLAGS@ \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS) \
+		@PYTHON_LIBS@
+
+$(BINRLS)/libdmiget.static.a: \
+	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(AR) rcs $@ $^
 
 $(BINRLS)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).o) \
@@ -234,19 +299,28 @@ install-windows-lib: \
 		$(BINRLS)/lib$(PACKAGE_NAME).def \
 		$(DESTDIR)$(datarootdir)/$(PACKAGE_NAME)/def
 
-install-devel:
+install-devel: \
+	$(BINRLS)/libdmiget.static.a
 
 	@$(MKDIR) \
-		$(DESTDIR)$(includedir)/dmiget
+		$(DESTDIR)$(includedir)/$(PACKAGE_NAME)/smbios
 
 	@$(INSTALL_DATA) \
-		src/libdmiget/include/dmiget/*.h \
-		$(DESTDIR)$(includedir)/dmiget
+		src/include/smbios/*.h \
+		$(DESTDIR)$(includedir)/$(PACKAGE_NAME)/smbios
 
 	@mkdir -p $(DESTDIR)$(libdir)/pkgconfig
 	@$(INSTALL_DATA) \
 		dmiget.pc \
 		$(DESTDIR)$(libdir)/pkgconfig/dmiget.pc
+		
+	@$(INSTALL_DATA) \
+		dmiget.static.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/dmiget.static.pc
+
+	@$(INSTALL_DATA) \
+		$(BINRLS)/libdmiget.static.a \
+		$(DESTDIR)$(libdir)/libdmiget.static.a
 
 #---[ Uninstall Targets ]----------------------------------------------------------------
 
@@ -283,8 +357,8 @@ uninstall-devel:
 #---[ Debug Targets ]--------------------------------------------------------------------
 
 Debug: \
-	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
-
+	$(foreach TARGET, $(BUILD_TARGETS), $(BINDBG)/$(TARGET))
+	
 $(BINDBG)/$(PACKAGE_NAME)@EXEEXT@: \
 	$(foreach SRC, $(basename $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).o) \
 	$(BINDBG)/@SONAME@
@@ -313,6 +387,21 @@ $(BINDBG)/@SONAME@: \
 		$(LDFLAGS) \
 		$^ \
 		$(LIBS)
+
+$(BINDBG)/$(PYTHON_MODULE)@LIBEXT@: \
+	$(foreach SRC, $(basename $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).o) \
+	$(BINDBG)/@SONAME@
+
+	@$(MKDIR) $(@D)
+	@echo $< ...
+	@$(LD) \
+		@DLL_LDFLAGS@ \
+		-Wl,-rpath,$(BINDBG) \
+		-o $@ \
+		$(LDFLAGS) \
+		$^ \
+		$(LIBS) \
+		@PYTHON_LIBS@
 
 run: \
 	$(BINDBG)/$(PACKAGE_NAME)@EXEEXT@
@@ -351,7 +440,7 @@ clean: \
 	cleanRelease
 
 
--include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJDBG)/$(SRC).d)
--include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES)), $(OBJRLS)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES) $(PYTHON_SOURCES)), $(OBJDBG)/$(SRC).d)
+-include $(foreach SRC, $(basename $(LIBRARY_SOURCES) $(APPLICATION_SOURCES) $(PYTHON_SOURCES)), $(OBJRLS)/$(SRC).d)
 
 

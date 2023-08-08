@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 
 dnl Initialise automake with the package name, version and
 dnl bug-reporting address.
-AC_INIT([dmiget], [1.0], [perry.werneck@gmail.com], [libudjat], [https://github.com/PerryWerneck/dmiget.git])
+AC_INIT([dmiget], [1.1], [perry.werneck@gmail.com], [libudjat], [https://github.com/PerryWerneck/dmiget.git])
 
 dnl Place auxilliary scripts here.
 AC_CONFIG_AUX_DIR([scripts])
@@ -15,7 +15,7 @@ dnl Compute the canonical host-system type
 AC_CANONICAL_HOST
 
 dnl Put macro definitions here (though they aren't used).
-AC_CONFIG_HEADER([src/libdmiget/include/config.h])
+AC_CONFIG_HEADER([src/include/config.h])
 
 dnl Initialise automake stuff.
 AM_INIT_AUTOMAKE
@@ -65,6 +65,7 @@ case "$host" in
 		CFLAGS="$CFLAGS -pthread "
 		LDFLAGS="$LDFLAGS -pthread"
 		DLL_LDFLAGS="$DLL_LDFLAGS -Wl,--output-def,\$(@D)/libdmiget.def"
+		BUILD_TARGETS="${BUILD_TARGETS} dmiget.exe"
 		AC_SUBST(LIBEXT,.dll)
 		AC_SUBST(EXEEXT,.exe)
 		AC_SUBST(SONAME,libdmiget.dll)
@@ -73,7 +74,9 @@ case "$host" in
 
  	*)
 		CFLAGS="$CFLAGS -pthread"
+		CXXFLAGS="$CXXFLAGS -pthread -ffat-lto-objects"
 		LDFLAGS="$LDFLAGS -pthread"
+		BUILD_TARGETS="${BUILD_TARGETS} dmiget"
 		AC_SUBST(LIBEXT,.so)
 		AC_SUBST(EXEEXT)
 		AC_SUBST(SONAME,libdmiget.so.$app_vrs_major.$app_vrs_minor)
@@ -204,11 +207,40 @@ dnl Libraries
 dnl ---------------------------------------------------------------------------
 PKG_CHECK_EXISTS
 
+AC_CHECK_HEADERS([unistd.h])
+
 dnl ---------------------------------------------------------------------------
-dnl Output config
+dnl Check for Python
 dnl ---------------------------------------------------------------------------
 
-AC_SUBST(BASEDIR,$ac_pwd)
+PKG_CHECK_MODULES( [PYTHON], [python3], app_cv_python="yes", AC_MSG_NOTICE([Python devel is unavailable]))
+
+if test "$app_cv_python" == "yes"; then
+
+	case "$host" in
+		*-mingw32)
+			BUILD_TARGETS="${BUILD_TARGETS} smbios.dll"
+			;;
+
+	 	*)
+			BUILD_TARGETS="${BUILD_TARGETS} smbios.so"
+
+	esac
+
+	AC_DEFINE(HAVE_PYTHON3,1,[ Do we have python3? ])
+
+	AC_SUBST(PYTHON_LIBS)
+	AC_SUBST(PYTHON_CFLAGS)
+
+	AC_ARG_WITH([python-sitelib], [AS_HELP_STRING([--with-python-sitelib], [Set python-sitelib])], [ app_cv_python_sitelib="$withval" ],[ app_cv_python_sitelib=`python3 -c 'import site; print(site.getsitepackages().pop(0))'` ])
+	AC_DEFINE_UNQUOTED(PYTHON_SITELIB, $app_cv_python_sitelib,[ The python sitelib ])
+	AC_SUBST(PYTHON_SITELIB,$app_cv_python_sitelib)
+
+	AC_ARG_WITH([python-version], [AS_HELP_STRING([--with-python-version], [Set Python Version])], [ app_cv_python_version="$withval" ],[ app_cv_python_version=`$PKG_CONFIG --modversion python3` ])
+	AC_DEFINE_UNQUOTED(PYTHON_VERSION, $app_cv_python_version,[ The python version])
+	AC_SUBST(PYTHON_VERSION,$app_cv_python_version)
+
+fi
 
 dnl ---------------------------------------------------------------------------
 dnl Configure which files to generate.
@@ -217,6 +249,8 @@ dnl ---------------------------------------------------------------------------
 dnl AC_CONFIG_FILES(doxygen/doxyfile)
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(dmiget.pc)
+AC_CONFIG_FILES(dmiget.static.pc)
+AC_SUBST(BUILD_TARGETS)
 
 dnl ---------------------------------------------------------------------------
 dnl Output the generated config.status script.

@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,23 +17,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #pragma once
+ /**
+  * @brief Implement module based properties and methods.
+  */
 
- #if defined(_WIN32)
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
-	#define DMIGET_API	__declspec (dllexport)
-	#define DMIGET_PRIVATE
+ #include "private/python.h"
 
- #elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
+ PyObject * pydmi_get_module_version(PyObject *, PyObject *) {
+#ifdef PACKAGE_VERSION
+    return PyUnicode_FromString(PACKAGE_VERSION);
+#else
+    return PyUnicode_FromString("");
+#endif // PACKAGE_VERSION
+ }
 
-	#define DMIGET_API
-	#define DMIGET_PRIVATE
-
- #else
-
-	#define DMIGET_API	__attribute__((visibility("default")))
-	#define DMIGET_PRIVATE	__attribute__((visibility("hidden")))
-
- #endif
-
+ PyObject * pydmi_get_module_revision(PyObject *, PyObject *) {
+#ifdef PACKAGE_RELEASE
+    return PyUnicode_FromString(PACKAGE_RELEASE);
+#else
+    return PyUnicode_FromString("");
+#endif // PACKAGE_RELEASE
+ }
 

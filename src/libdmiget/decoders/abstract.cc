@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,11 +17,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include "private.h"
- #include <cstring>
- #include <cerrno>
+ /**
+  * @brief Declare abstract decoder.
+  */
 
- namespace DMIget {
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
+ #include <private/constants.h>
+
+ namespace SMBios {
+
+	std::string Decoder::Abstract::to_string(const uint8_t *, size_t) const {
+		return "";
+	}
 
  }

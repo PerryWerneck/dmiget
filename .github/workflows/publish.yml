@@ -55,12 +55,37 @@ jobs:
       - name: CI-Build
         run: |
           nmake -f win\Makefile.msc
-          xcopy /s /i /y src\libdmiget\include\dmiget\*.h include\dmiget
+          xcopy /s /i /y src\include\smbios\*.h include\smbios
           7z a msvc-dmiget-x86_64.zip .\lib .\bin .\include
       - uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.gettag.outputs.tag }}
           artifacts: "msvc-dmiget-x86_64.zip"
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          omitBody: true
+          omitPrereleaseDuringUpdate: true
+          replacesArtifacts: true
+  python:
+    runs-on: windows-latest
+    name: Publish Windows python
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oprypin/find-latest-tag@v1
+        id: gettag
+        with:
+          repository: PerryWerneck/dmiget
+          releases-only: true
+      - uses: ilammy/msvc-dev-cmd@v1.4.1
+      - name: Set up Python
+        uses: actions/setup-python@v4
+      - name: Build installer
+        run: python setup.py bdist_wininst
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.gettag.outputs.tag }}
+          artifacts: "dist/*.exe"
           allowUpdates: true
           draft: false
           makeLatest: true
