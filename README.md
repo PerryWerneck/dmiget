@@ -47,6 +47,24 @@ for node in smbios.nodes():
 		print('	{}: {}'.format(value.description,value))
 ```
 
+### C++
+
+```C
+#include <smbios/node.h>
+#include <iostream>
+
+using namespace std;
+
+int main(int argc, char **argv) {
+	Node node{"chassis"};
+	cout << node.name() << " - " << node << endl;
+	cout << node["manufacturer"] << endl;
+	return 0;
+}
+```
+
+
+
 	
 
 

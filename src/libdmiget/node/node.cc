@@ -75,6 +75,48 @@
 		return offset >= 0 && header.length >= 4 && header.type != 127;
 	}
 
+	Node & Node::operator=(const Node & src) {
+
+		if(src.data) {
+			data = src.data;
+		} else {
+			data = SMBios::Data::factory();
+		}
+
+		offset = src.offset;
+		index = src.index;
+		info = src.info;
+
+		const uint8_t *ptr = data->get(offset);
+		header.type = ptr[0];
+		header.length = ptr[1];
+		header.handle = WORD(ptr+2);
+
+		return *this;
+	}
+
+	Node & Node::operator=(const char *name) {
+
+		if(!data) {
+			data = SMBios::Data::factory();
+		}
+
+		offset = 0;
+		index = 0;
+		info = Node::Info::find(0);
+
+		const uint8_t *ptr = data->get(offset);
+		header.type = ptr[0];
+		header.length = ptr[1];
+		header.handle = WORD(ptr+2);
+
+		if(name && *name) {
+			next(name);
+		}
+
+		return *this;
+	}
+
 	const char * Node::name() const noexcept {
 		return info->name;
 	}
@@ -101,6 +143,29 @@
 		return Value{data,(size_t) offset,info->values,index};
 	}
 
+	Value Node::operator[](const char *name) const {
+
+		if(offset < 0) {
+			throw runtime_error("Cant search on empty node");
+		}
+
+		Value value{data,(size_t) offset,info->values,0};
+
+		if(!(name && *name)) {
+			return value;
+		}
+
+		while(value) {
+			if(!strcasecmp(name,value.name())) {
+				return value;
+			}
+			value.next();
+		}
+
+		throw system_error(ENOENT,system_category(),name);
+
+	}
+
 	size_t Node::Info::size() const noexcept {
 		size_t rc = 0;
 		if(values) {
@@ -123,6 +188,10 @@
 
 		if(offset < 0) {
 			return *this;
+		}
+
+		if(!data) {
+			data = SMBios::Data::factory();
 		}
 
 		// Get next node.

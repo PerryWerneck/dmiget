@@ -94,6 +94,9 @@
 
 		};
 
+		/// @brief Construct an empty node.
+		Node();
+
 		/// @brief Construct node.
 		/// @param name	Node name (empty for the first one)
 		/// @param index Node index.
@@ -105,11 +108,14 @@
 		/// @param index Node index.
 		Node(const char *filename, const char *name, int index = 0);
 
+		Node & operator=(const Node & src);
+		Node & operator=(const char *name);
 
 		operator bool() const;
 
 		/// @brief Get value by index.
 		Value operator[](size_t index) const;
+		Value operator[](const char *name) const;
 
 		const char *name() const noexcept;
 		const char *description() const noexcept;
@@ -145,9 +151,6 @@
 		}
 
 	private:
-
-		/// @brief Construct an empty node.
-		Node();
 
 		std::shared_ptr<Data> data;
 		int offset = -1;
