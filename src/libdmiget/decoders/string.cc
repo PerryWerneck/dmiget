@@ -69,23 +69,33 @@
 
 	}
 
-	uint16_t Decoder::UInt16::as_int16(const uint8_t *ptr, const size_t offset) const {
-		return *((uint16_t *)(ptr+offset));
-	}
+	string Decoder::MemoryDeviceFormFactor::as_string(const uint8_t *ptr, const size_t offset) const {
 
-	std::string Decoder::UInt16::as_string(const uint8_t *ptr, const size_t offset) const {
-		return std::to_string(as_int16(ptr,offset));
-	}
+		static const char *form_factor[] = {
+			"Other", /* 0x01 */
+			"Unknown",
+			"SIMM",
+			"SIP",
+			"Chip",
+			"DIP",
+			"ZIP",
+			"Proprietary Card",
+			"DIMM",
+			"TSOP",
+			"Row Of Chips",
+			"RIMM",
+			"SODIMM",
+			"SRIMM",
+			"FB-DIMM",
+			"Die" /* 0x10 */
+		};
 
-	std::string Decoder::MemoryDeviceWidth::as_string(const uint8_t *ptr, const size_t offset) const {
+		uint8_t code = ptr[offset];
 
-		uint16_t code = UInt16::as_int16(ptr,offset);
+		if (code >= 0x01 && code <= 0x10)
+			return form_factor[code - 0x01];
 
-		if(code == 0 || code == 0xFFFF) {
-			return "";
-		}
-
-		return (std::to_string(code) + " bits");
+		return "";
 
 	}
 

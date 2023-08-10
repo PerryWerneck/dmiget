@@ -106,6 +106,13 @@
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
+		struct MemoryDeviceFormFactor : public String {
+
+			constexpr MemoryDeviceFormFactor() = default;
+
+			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
+		};
+
 	}
 
 	struct Value::Info {

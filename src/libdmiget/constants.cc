@@ -95,14 +95,15 @@
 	};
 
 	static const Value::Info MemoryDevice[] = {
-		{ "twidth",			Decoder::MemoryDeviceWidth{},	0x08,	"Total Width"		},
-		{ "dwidth",			Decoder::MemoryDeviceWidth{},	0x0A,	"Data Width"		},
-		{ "locator",		Decoder::String{},				0x10,	"Locator"			},
-		{ "bank",			Decoder::String{},				0x11,	"Bank Locator"		},
-		{ "manufacturer",	Decoder::String{},				0x17,	"Manufacturer"		},
-		{ "serial",			Decoder::String{},				0x18,	"Serial Number"		},
-		{ "atag",			Decoder::String{},				0x19,	"Asset Tag"			},
-		{ "partnumber",		Decoder::String{},				0x1A,	"Part Number"		},
+		{ "twidth",			Decoder::MemoryDeviceWidth{},		0x08,	"Total Width"		},
+		{ "dwidth",			Decoder::MemoryDeviceWidth{},		0x0A,	"Data Width"		},
+		{ "formfactor",		Decoder::MemoryDeviceFormFactor{},	0x0E,	"Form Factor"		},
+		{ "locator",		Decoder::String{},					0x10,	"Locator"			},
+		{ "bank",			Decoder::String{},					0x11,	"Bank Locator"		},
+		{ "manufacturer",	Decoder::String{},					0x17,	"Manufacturer"		},
+		{ "serial",			Decoder::String{},					0x18,	"Serial Number"		},
+		{ "atag",			Decoder::String{},					0x19,	"Asset Tag"			},
+		{ "partnumber",		Decoder::String{},					0x1A,	"Part Number"		},
 
 		{}
 	};
