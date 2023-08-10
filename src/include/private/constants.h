@@ -62,13 +62,21 @@
 
 		};
 
-		/// @brief Decode to string.
+		/// @brief Decode to string by index.
+		struct StringIndex : public Abstract {
+
+			constexpr StringIndex() : Abstract{Value::String} {
+			}
+
+			std::string as_string(const uint8_t *ptr, const size_t index) const override;
+		};
+
 		struct String : public Abstract {
 
 			constexpr String() : Abstract{Value::String} {
 			}
 
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
+			std::string as_string(const uint8_t *ptr, const size_t index) const override;
 		};
 
 		/// @brief Decode firmware revision.

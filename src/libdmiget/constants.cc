@@ -29,118 +29,123 @@
 	};
 
 	static const Value::Info BiosInformation[] = {
-		{ "vendor",			Decoder::String{},				1,		"Vendor"				},
-		{ "version",		Decoder::String{},				2,		"Version"				},
-		{ "date",			Decoder::String{},				3,		"Release Date"			},
+		{ "vendor",			Decoder::StringIndex{},				1,		"Vendor"				},
+		{ "version",		Decoder::StringIndex{},				2,		"Version"				},
+		{ "date",			Decoder::StringIndex{},				3,		"Release Date"			},
 		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,	"BIOS Revision"			},
 		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,	"Firmware Revision" 	},
 		{}
 	};
 
 	static const Value::Info System[] = {
-		{ "manufacturer",	Decoder::String{},				1,		"Manufacturer"			},
-		{ "model",			Decoder::String{},				2,		"Product Name"			},
-		{ "version",		Decoder::String{},				3,		"Version"				},
-		{ "serial",			Decoder::String{},				4,		"Serial Number"			},
-		{ "sku",			Decoder::String{},				5,		"SKU Number"			},
-		{ "family",			Decoder::String{},				6,		"Family"				},
+		{ "manufacturer",	Decoder::StringIndex{},				1,		"Manufacturer"			},
+		{ "model",			Decoder::StringIndex{},				2,		"Product Name"			},
+		{ "version",		Decoder::StringIndex{},				3,		"Version"				},
+		{ "serial",			Decoder::StringIndex{},				4,		"Serial Number"			},
+		{ "sku",			Decoder::StringIndex{},				5,		"SKU Number"			},
+		{ "family",			Decoder::StringIndex{},				6,		"Family"				},
 		{}
 	};
 
 	static const Value::Info BaseBoard[] = {
-		{ "manufacturer",	Decoder::String{},				1,		"Manufacturer"			},
-		{ "model",			Decoder::String{},				2,		"Product Name"			},
-		{ "version",		Decoder::String{},				3,		"Version"				},
-		{ "serial",			Decoder::String{},				4,		"Serial Number"			},
-		{ "atag",			Decoder::String{},				5,		"Asset Tag"				},
-		{ "location",		Decoder::String{},				6,		"Location In Chassis"	},
+		{ "manufacturer",	Decoder::StringIndex{},				1,		"Manufacturer"			},
+		{ "model",			Decoder::StringIndex{},				2,		"Product Name"			},
+		{ "version",		Decoder::StringIndex{},				3,		"Version"				},
+		{ "serial",			Decoder::StringIndex{},				4,		"Serial Number"			},
+		{ "atag",			Decoder::StringIndex{},				5,		"Asset Tag"				},
+		{ "location",		Decoder::StringIndex{},				6,		"Location In Chassis"	},
 		{}
 	};
 
 	static const Value::Info Chassis[] = {
-		{ "manufacturer",	Decoder::String{},				1,	"Manufacturer"				},
-		{ "version",		Decoder::String{},				2,	"Version"					},
-		{ "serial",			Decoder::String{},				3,	"Serial Number"				},
-		{ "atag",			Decoder::String{},				4,	"Asset Tag"					},
-		{ "sku",			Decoder::String{},				5,	"SKU Number"				},
+		{ "manufacturer",	Decoder::StringIndex{},				1,	"Manufacturer"				},
+		{ "version",		Decoder::StringIndex{},				2,	"Version"					},
+		{ "serial",			Decoder::StringIndex{},				3,	"Serial Number"				},
+		{ "atag",			Decoder::StringIndex{},				4,	"Asset Tag"					},
+		{ "sku",			Decoder::StringIndex{},				5,	"SKU Number"				},
 		{}
 	};
 
 	static const Value::Info Processor[] = {
-		{ "socket",			Decoder::String{},				1,	"Socket Designation"		},
-		{ "manufacturer",	Decoder::String{},				2,	"Manufacturer"				},
+		{ "socket",			Decoder::StringIndex{},				1,	"Socket Designation"		},
+		{ "manufacturer",	Decoder::StringIndex{},				2,	"Manufacturer"				},
 		{}
 	};
 
 
 	static const Value::Info Cache[] = {
-		{ "socket",			Decoder::String{},	1,	"Socket Designation"	},
+		{ "socket",			Decoder::StringIndex{},	1,	"Socket Designation"	},
 		{}
 	};
 
 	static const Value::Info PortConnectors[] = {
-		{ "internal",	Decoder::String{},	1,	"Internal Reference Designator"	},
-		{ "external",	Decoder::String{},	2,	"External Reference Designator"	},
+		{ "internal",	Decoder::StringIndex{},	1,	"Internal Reference Designator"	},
+		{ "external",	Decoder::StringIndex{},	2,	"External Reference Designator"	},
 		{}
 	};
 
 	static const Value::Info Slots[] = {
-		{ "designation",	Decoder::String{},	1,	"Designation"	},
+		{ "designation",	Decoder::StringIndex{},	1,	"Designation"	},
 		{}
 	};
 
 	static const Value::Info GroupAssociations[] = {
-		{ "name",	Decoder::String{},	1,	"Name"	},
+		{ "name",	Decoder::StringIndex{},	1,	"Name"	},
 		{}
 	};
 
 	static const Value::Info MemoryDevice[] = {
-		{ "locator",		Decoder::String{},	1,	"Locator"		},
-		{ "bank",			Decoder::String{},	2,	"Bank Locator"	},
-		{ "manufacturer",	Decoder::String{},	3,	"Manufacturer"	},
-		{ "serial",			Decoder::String{},	4,	"Serial Number"	},
-		{ "atag",			Decoder::String{},	5,	"Asset Tag"		},
-		{ "partnumber",		Decoder::String{},	6,	"Part Number"	},
+		/*
+		{ "twidth",			Decoder::MemoryDeviceWidth{},	0x08,	"Total Width"		},
+		{ "dwidth",			Decoder::MemoryDeviceWidth{},	0x0A,	"Data Width"		},
+		*/
+		{ "locator",		Decoder::String{},				0x10,	"Locator"			},
+		{ "bank",			Decoder::String{},				0x11,	"Bank Locator"		},
+		{ "manufacturer",	Decoder::String{},				0x17,	"Manufacturer"		},
+		{ "serial",			Decoder::String{},				0x18,	"Serial Number"		},
+		{ "atag",			Decoder::String{},				0x19,	"Asset Tag"			},
+		{ "partnumber",		Decoder::String{},				0x1A,	"Part Number"		},
+
 		{}
 	};
 
 	static const Value::Info PortableBattery[] = {
-		{ "location",		Decoder::String{},	1,	"Location"			},
-		{ "manufacturer",	Decoder::String{},	2,	"Manufacturer"		},
-		{ "date",			Decoder::String{},	3,	"Manufacture Date"	},
-		{ "serial",			Decoder::String{},	4,	"Serial Number"		},
-		{ "name",			Decoder::String{},	5,	"Name"				},
+		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
+		{ "manufacturer",	Decoder::StringIndex{},	2,	"Manufacturer"		},
+		{ "date",			Decoder::StringIndex{},	3,	"Manufacture Date"	},
+		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
+		{ "name",			Decoder::StringIndex{},	5,	"Name"				},
 		{}
 	};
 
 	static const Value::Info TemperatureProbe[] = {
-		{ "description",	Decoder::String{},	1,	"Description"	},
+		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
 		{}
 	};
 
 	static const Value::Info OnboardDevice[] = {
-		{ "reference",	Decoder::String{},	1,	"Reference Designation"	},
+		{ "reference",	Decoder::StringIndex{},	1,	"Reference Designation"	},
 		{}
 	};
 
 	static const Value::Info PowerSupply[] = {
-		{ "location",		Decoder::String{},	1,	"Location"			},
-		{ "name",			Decoder::String{},	2,	"Name"				},
-		{ "manufacturer",	Decoder::String{},	3,	"Manufacturer"		},
-		{ "serial",			Decoder::String{},	4,	"Serial Number"		},
-		{ "atag",			Decoder::String{},	5,	"Asset Tag"			},
-		{ "modelpn",		Decoder::String{},	6,	"Model Part Number"	},
-		{ "revision",		Decoder::String{},	7,	"Revision"			},
+		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
+		{ "name",			Decoder::StringIndex{},	2,	"Name"				},
+		{ "manufacturer",	Decoder::StringIndex{},	3,	"Manufacturer"		},
+		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
+		{ "atag",			Decoder::StringIndex{},	5,	"Asset Tag"			},
+		{ "modelpn",		Decoder::StringIndex{},	6,	"Model Part Number"	},
+		{ "revision",		Decoder::StringIndex{},	7,	"Revision"			},
 		{}
 	};
 
 	static const Value::Info VoltageProbe[] = {
-		{ "description",	Decoder::String{},	1,	"Description"	},
+		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
 		{}
 	};
 
 	static const Value::Info CoolingDevice[] = {
-		{ "description",	Decoder::String{},	1,	"Description"	},
+		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
 		{}
 	};
 

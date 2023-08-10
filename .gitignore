@@ -63,6 +63,11 @@ po
 *.depend
 *.bak
 *.pc
+dist
+*.dump
+*.txt
+*.egg-info
+
 
 
 

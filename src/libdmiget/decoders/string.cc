@@ -35,7 +35,7 @@
 
  namespace SMBios {
 
-	string Decoder::String::as_string(const uint8_t *ptr, size_t index) const {
+	string Decoder::StringIndex::as_string(const uint8_t *ptr, size_t index) const {
 
 		Node::Header *header{(Node::Header *) ptr};
 
@@ -47,6 +47,26 @@
 		}
 
 		return string{(const char *) ptr};
+	}
+
+	string Decoder::String::as_string(const uint8_t *ptr, size_t offset) const {
+
+		Node::Header *header{(Node::Header *) ptr};
+
+		uint8_t index = ptr[offset];
+		if (index == 0)
+			return "";
+
+		ptr += header->length;
+
+		while (index > 1 && *ptr) {
+			ptr += strlen((const char *) ptr);
+			ptr++;
+			index--;
+		}
+
+		return string{(const char *) ptr};
+
 	}
 
  }
