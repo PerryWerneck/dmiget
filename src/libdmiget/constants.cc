@@ -95,10 +95,8 @@
 	};
 
 	static const Value::Info MemoryDevice[] = {
-		/*
 		{ "twidth",			Decoder::MemoryDeviceWidth{},	0x08,	"Total Width"		},
 		{ "dwidth",			Decoder::MemoryDeviceWidth{},	0x0A,	"Data Width"		},
-		*/
 		{ "locator",		Decoder::String{},				0x10,	"Locator"			},
 		{ "bank",			Decoder::String{},				0x11,	"Bank Locator"		},
 		{ "manufacturer",	Decoder::String{},				0x17,	"Manufacturer"		},
