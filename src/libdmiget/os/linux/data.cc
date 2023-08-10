@@ -21,7 +21,10 @@
   * @brief SMBIos data methods for linux.
   */
 
- #include <config.h>
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <private/smbios.h>
  #include <stdexcept>
  #include <system_error>
