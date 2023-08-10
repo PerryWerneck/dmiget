@@ -39,7 +39,7 @@
 
 	static const Value::Info System[] = {
 		{ "manufacturer",	Decoder::String{},				1,		"Manufacturer"			},
-		{ "name",			Decoder::String{},				2,		"Product Name"			},
+		{ "model",			Decoder::String{},				2,		"Product Name"			},
 		{ "version",		Decoder::String{},				3,		"Version"				},
 		{ "serial",			Decoder::String{},				4,		"Serial Number"			},
 		{ "sku",			Decoder::String{},				5,		"SKU Number"			},
@@ -49,7 +49,7 @@
 
 	static const Value::Info BaseBoard[] = {
 		{ "manufacturer",	Decoder::String{},				1,		"Manufacturer"			},
-		{ "name",			Decoder::String{},				2,		"Product Name"			},
+		{ "model",			Decoder::String{},				2,		"Product Name"			},
 		{ "version",		Decoder::String{},				3,		"Version"				},
 		{ "serial",			Decoder::String{},				4,		"Serial Number"			},
 		{ "atag",			Decoder::String{},				5,		"Asset Tag"				},
