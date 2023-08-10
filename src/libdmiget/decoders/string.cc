@@ -35,7 +35,7 @@
 
  namespace SMBios {
 
-	string Decoder::String::to_string(const uint8_t *ptr, size_t index) const {
+	string Decoder::String::as_string(const uint8_t *ptr, size_t index) const {
 
 		Node::Header *header{(Node::Header *) ptr};
 

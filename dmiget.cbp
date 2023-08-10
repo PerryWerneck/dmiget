@@ -38,7 +38,6 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
-		<Unit filename="src/include/config.h" />
 		<Unit filename="src/include/private/constants.h" />
 		<Unit filename="src/include/private/intl.h" />
 		<Unit filename="src/include/private/python.h" />

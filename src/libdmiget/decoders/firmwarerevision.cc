@@ -32,7 +32,7 @@
 
  namespace SMBios {
 
-	std::string Decoder::FirmwareRevision::to_string(const uint8_t *ptr, size_t offset) const {
+	std::string Decoder::FirmwareRevision::as_string(const uint8_t *ptr, size_t offset) const {
 
 		ptr += offset;
 
