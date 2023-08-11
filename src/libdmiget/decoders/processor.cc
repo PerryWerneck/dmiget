@@ -35,13 +35,13 @@
 
  namespace SMBios {
 
-	uint16_t Decoder::ProcessorType::as_uint16(const uint8_t *ptr, const size_t offset) const {
-		return (uint16_t) ptr[offset];
+	unsigned int Decoder::ProcessorType::as_uint(const uint8_t *ptr, const size_t offset) const {
+		return (unsigned int) ptr[offset];
 	}
 
 	std::string Decoder::ProcessorType::as_string(const uint8_t *ptr, const size_t offset) const {
 
-		uint16_t code{this->as_uint16(ptr,offset)};
+		unsigned int code{this->as_uint(ptr,offset)};
 
 		static const char *type[] = {
 			"Other", /* 0x01 */

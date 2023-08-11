@@ -26,11 +26,29 @@
  #endif // HAVE_CONFIG_H
 
  #include <private/constants.h>
+ #include <ctype.h>
+ #include <stdexcept>
+
+ using namespace std;
 
  namespace SMBios {
 
 	std::string Decoder::Abstract::as_string(const uint8_t *, size_t) const {
 		return "";
+	}
+
+	unsigned int Decoder::Abstract::as_uint(const uint8_t *ptr, size_t offset) const {
+
+		unsigned int value = 0;
+		std::string str{as_string(ptr,offset)};
+
+		for(const char *p = str.c_str();*p && isdigit(*p);p++) {
+			value *= 10;
+			value += ('0' - *p);
+		}
+
+		return value;
+
 	}
 
  }

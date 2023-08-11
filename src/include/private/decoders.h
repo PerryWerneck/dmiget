@@ -81,8 +81,7 @@
 			constexpr UInt16() : Abstract{Value::Integer} {
 			}
 
-			virtual uint16_t as_uint16(const uint8_t *ptr, const size_t offset) const;
-
+			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 
 		};
@@ -91,7 +90,7 @@
 
 			constexpr ProcessorType() = default;
 
-			uint16_t as_uint16(const uint8_t *ptr, const size_t offset) const override;
+			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
