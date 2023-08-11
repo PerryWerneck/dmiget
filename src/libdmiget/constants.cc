@@ -39,12 +39,14 @@
 	};
 
 	static const Value::Info System[] = {
-		{ "manufacturer",	Decoder::StringIndex{},				1,		"Manufacturer"			},
-		{ "model",			Decoder::StringIndex{},				2,		"Product Name"			},
-		{ "version",		Decoder::StringIndex{},				3,		"Version"				},
-		{ "serial",			Decoder::StringIndex{},				4,		"Serial Number"			},
-		{ "sku",			Decoder::StringIndex{},				5,		"SKU Number"			},
-		{ "family",			Decoder::StringIndex{},				6,		"Family"				},
+		{ "manufacturer",	Decoder::String{},				0x04,		"Manufacturer"			},
+		{ "model",			Decoder::String{},				0x05,		"Product Name"			},
+		{ "version",		Decoder::String{},				0x06,		"Version"				},
+		{ "serial",			Decoder::String{},				0x07,		"Serial Number"			},
+//		{ "uuid",			Decoder::SystemUUID{},			0x08,		"uuid"					},
+//		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
+		{ "sku",			Decoder::String{},				0x19,		"SKU Number"			},
+		{ "family",			Decoder::String{},				0x1A,		"Family"				},
 		{}
 	};
 
@@ -169,7 +171,7 @@
 			1,
 			false,
 			"System",
-			"System",
+			"System Information",
 			System
 		},
 		{
