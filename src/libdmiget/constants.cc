@@ -68,11 +68,14 @@
 	};
 
 	static const Value::Info Processor[] = {
-		{ "socket",			Decoder::StringIndex{},				1,	"Socket Designation"		},
-		{ "manufacturer",	Decoder::StringIndex{},				2,	"Manufacturer"				},
+		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
+		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
+		{ "version",		Decoder::String{},					0x10,	"Version"					},
+		{ "serial",			Decoder::String{},					0x20,	"Serial Number"				},
+		{ "atag",			Decoder::String{},					0x21,	"Asset Tag"					},
+		{ "partnumber",		Decoder::String{},					0x22,	"Part Number"				},
 		{}
 	};
-
 
 	static const Value::Info Cache[] = {
 		{ "socket",			Decoder::StringIndex{},	1,	"Socket Designation"	},
