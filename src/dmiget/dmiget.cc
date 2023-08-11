@@ -307,7 +307,7 @@
 				url += "/";
 				if(index) {
 					url += std::to_string(index);
-					url += "/'";
+					url += "/";
 				}
 				url += value.name();
 				writer->write(url.c_str(),value.to_string().c_str());

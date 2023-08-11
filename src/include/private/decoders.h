@@ -81,10 +81,18 @@
 			constexpr UInt16() : Abstract{Value::Integer} {
 			}
 
-			virtual uint16_t as_int16(const uint8_t *ptr, const size_t offset) const;
+			virtual uint16_t as_uint16(const uint8_t *ptr, const size_t offset) const;
 
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 
+		};
+
+		struct ProcessorType : public UInt16 {
+
+			constexpr ProcessorType() = default;
+
+			uint16_t as_uint16(const uint8_t *ptr, const size_t offset) const override;
+			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
 		struct MemoryDeviceWidth : public UInt16 {

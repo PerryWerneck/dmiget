@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implement integer decoders.
+  * @brief Implements processor type decoders.
   */
 
  #ifdef HAVE_CONFIG_H
@@ -35,25 +35,28 @@
 
  namespace SMBios {
 
-	uint16_t Decoder::UInt16::as_uint16(const uint8_t *ptr, const size_t offset) const {
-		return *((uint16_t *)(ptr+offset));
+	uint16_t Decoder::ProcessorType::as_uint16(const uint8_t *ptr, const size_t offset) const {
+		return (uint16_t) ptr[offset];
 	}
 
-	std::string Decoder::UInt16::as_string(const uint8_t *ptr, const size_t offset) const {
-		return std::to_string(as_uint16(ptr,offset));
-	}
+	std::string Decoder::ProcessorType::as_string(const uint8_t *ptr, const size_t offset) const {
 
-	std::string Decoder::MemoryDeviceWidth::as_string(const uint8_t *ptr, const size_t offset) const {
+		uint16_t code{this->as_uint16(ptr,offset)};
 
-		uint16_t code = UInt16::as_uint16(ptr,offset);
+		static const char *type[] = {
+			"Other", /* 0x01 */
+			"Unknown",
+			"Central Processor",
+			"Math Processor",
+			"DSP Processor",
+			"Video Processor" /* 0x06 */
+		};
 
-		if(code == 0 || code == 0xFFFF) {
-			return "";
-		}
+		if (code >= 0x01 && code <= 0x06)
+			return type[code - 0x01];
 
-		return (std::to_string(code) + " bits");
+		return "Unknown";
 
 	}
 
  }
-

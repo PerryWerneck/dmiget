@@ -68,6 +68,7 @@
 	};
 
 	static const Value::Info Processor[] = {
+		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
 		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
 		{ "version",		Decoder::String{},					0x10,	"Version"					},
@@ -83,9 +84,11 @@
 	};
 
 	static const Value::Info PortConnectors[] = {
-		{ "internal",	Decoder::StringIndex{},	1,	"Internal Reference Designator"	},
-		{ "external",	Decoder::StringIndex{},	2,	"External Reference Designator"	},
+		{ "internal",		Decoder::String{},					0x04,	"Internal Reference Designator"	},
+		{ "type",			Decoder::String{},					0x05,	"Internal Connector Type"		},
+		{ "external",		Decoder::String{},					0x06,	"External Reference Designator"	},
 		{}
+
 	};
 
 	static const Value::Info Slots[] = {
@@ -228,8 +231,8 @@
 		{
 			10,
 			false,
-			"OnBoardDevices",
-			"On Board Devices",
+			"OnBoardDevice",
+			"On Board Devices Information",
 			EmptyTable
 		},
 		{
