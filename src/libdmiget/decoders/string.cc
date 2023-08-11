@@ -26,6 +26,7 @@
  #endif // HAVE_CONFIG_H
 
  #include <private/constants.h>
+ #include <private/decoders.h>
  #include <smbios/node.h>
  #include <iostream>
  #include <string>
@@ -97,6 +98,41 @@
 
 		return "";
 
+	}
+
+	std::string Decoder::MemorySize::as_string(const uint8_t *ptr, const size_t) const {
+
+		Node::Header *header{(Node::Header *) ptr};
+
+		if(header->length >= 0x20 && *((uint16_t *) (ptr+0x0C)) == 0x7FFF) {
+
+			// Extended size
+			uint32_t code = *((uint32_t *) (ptr+0x1c)) & 0x7FFFFFFFUL;
+
+			if (code & 0x3FFUL)
+				return string{"Size "} + std::to_string((unsigned long) code) + "MB";
+			else if (code & 0xFFC00UL)
+				return string{"Size "} + std::to_string((unsigned long) (code >> 10)) + " GB";
+			else
+				return string{"Size "} + std::to_string((unsigned long) (code >> 20)) + " TB";
+
+		} else {
+
+			// Device size
+			uint16_t code = *((uint16_t *) (ptr+0x0c));
+
+			if(code == 0 || code == 0xFFFF) {
+				return "";
+			}
+
+			u64 s;
+			s.l = (code & 0x7FFF);
+			if(!(code & 0x8000))
+				s.l <<= 10;
+
+			return s.as_memory_size(1);
+
+		}
 	}
 
  }

@@ -30,18 +30,6 @@
 
  namespace SMBios {
 
-	struct Node::Info {
-		uint8_t id = 0;
-		bool multiple = false;
-		const char *name = nullptr;
-		const char *description = nullptr;
-		const Value::Info * values = nullptr;
-
-		size_t size() const noexcept;
-
-		static const Info * find(uint8_t id);
-	};
-
 	namespace Decoder {
 
 		/// @brief Abstract decoder.
@@ -62,58 +50,19 @@
 
 		};
 
-		/// @brief Decode to string by index.
-		struct StringIndex : public Abstract {
-
-			constexpr StringIndex() : Abstract{Value::String} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t index) const override;
-		};
-
-		struct String : public Abstract {
-
-			constexpr String() : Abstract{Value::String} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t index) const override;
-		};
-
-		/// @brief Decode firmware revision.
-		struct FirmwareRevision : public Abstract {
-
-			constexpr FirmwareRevision() : Abstract{Value::Integer} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct UInt16 : public Abstract {
-
-			constexpr UInt16() : Abstract{Value::Integer} {
-			}
-
-			virtual uint16_t as_int16(const uint8_t *ptr, const size_t offset) const;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-
-		};
-
-		struct MemoryDeviceWidth : public UInt16 {
-
-			constexpr MemoryDeviceWidth() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct MemoryDeviceFormFactor : public String {
-
-			constexpr MemoryDeviceFormFactor() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
 	}
+
+	struct Node::Info {
+		uint8_t id = 0;
+		bool multiple = false;
+		const char *name = nullptr;
+		const char *description = nullptr;
+		const Value::Info * values = nullptr;
+
+		size_t size() const noexcept;
+
+		static const Info * find(uint8_t id);
+	};
 
 	struct Value::Info {
 
