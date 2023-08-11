@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements abstract value.
+  * @brief Implements basic value.
   */
 
  #ifdef HAVE_CONFIG_H
@@ -45,6 +45,9 @@
 
 	Value::Value(std::shared_ptr<Data> d, size_t o, const Value::Info *t, size_t i)
 		: data{d}, offset{o}, info{t}, item{i} {
+	}
+
+	Value::~Value() {
 	}
 
 	Value & Value::operator=(const Value & src) {
@@ -80,7 +83,7 @@
 		throw std::system_error(EINVAL,std::system_category());
 	}
 
- 	Value::operator bool() const {
+ 	bool Value::valid() const {
 		return info && info[item].name && *info[item].name;
 	}
 
@@ -115,6 +118,13 @@
 	unsigned int Value::as_uint() const {
 		if(info && info[item].name && *info[item].name) {
 			return info[item].decoder.as_uint((*data)[offset],(size_t) info[item].offset);
+		}
+		return 0;
+	}
+
+	uint64_t Value::as_uint64() const {
+		if(info && info[item].name && *info[item].name) {
+			return info[item].decoder.as_uint64((*data)[offset],(size_t) info[item].offset);
 		}
 		return 0;
 	}

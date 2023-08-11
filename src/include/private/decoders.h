@@ -34,19 +34,19 @@
 
  namespace SMBios {
 
+	struct u64 {
 #ifdef BIGENDIAN
-	struct u64 {
 		uint32_t h = 0;
 		uint32_t l = 0;
-		std::string as_memory_size(int shift = 1) const;
-	};
 #else
-	struct u64 {
 		uint32_t l = 0;
 		uint32_t h = 0;
-		std::string as_memory_size(int shift = 1) const;
-	};
 #endif
+		void decode_memory_size(unsigned long &capacity, int &i) const;
+		std::string as_memory_size_string(int shift = 1) const;
+		uint64_t as_memory_size_bytes(int shift = 1) const;
+
+	};
 
 	namespace Decoder {
 
@@ -113,6 +113,8 @@
 			constexpr MemorySize() = default;
 
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
+			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
+
 		};
 
 	}

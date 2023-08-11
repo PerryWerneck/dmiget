@@ -34,14 +34,22 @@
 
  namespace SMBios {
 
-	std::string u64::as_memory_size(int shift) const {
+	static const struct {
+		uint64_t value;
+		const char *name;
+	} units[8] = {
+		{ 1LL,						"bytes"		},
+		{ 1024LL,					"kB"		},
+		{ 1048576LL,				"MB"		},
+		{ 1073741824LL,				"GB"		},
+		{ 1099511627776LL,			"TB"		},
+		{ 1125899906842624LL,		"PB"		},
+		{ 1152921504606846976LL,	"EB"		}
+	};
 
-		unsigned long capacity;
+	void u64::decode_memory_size(unsigned long &capacity, int &i) const {
+
 		uint16_t split[7];
-		static const char *unit[8] = {
-			"bytes", "kB", "MB", "GB", "TB", "PB", "EB", "ZB"
-		};
-		int i;
 
 		//
 		// We split the overall size in powers of thousand: EB, PB, TB, GB,
@@ -61,20 +69,37 @@
 		// is also non-zero, we use that as our base. If the following is zero,
 		// we simply display the highest unit.
 		//
-		for (i = 6; i > 0; i--)
-		{
+		for (i = 6; i > 0; i--) {
 			if (split[i])
 				break;
 		}
-		if (i > 0 && split[i - 1])
-		{
+
+		if (i > 0 && split[i - 1]) {
 			i--;
 			capacity = split[i] + (split[i + 1] << 10);
-		}
-		else
+		} else {
 			capacity = split[i];
+		}
 
-		return std::to_string(capacity) + " " + unit[i + shift];
+	}
+
+	std::string u64::as_memory_size_string(int shift) const {
+
+		unsigned long capacity;
+		int i;
+
+		decode_memory_size(capacity,i);
+		return std::to_string(capacity) + " " + units[i + shift].name;
+
+	}
+
+	uint64_t u64::as_memory_size_bytes(int shift) const {
+
+		unsigned long capacity;
+		int i;
+
+		decode_memory_size(capacity,i);
+		return ((uint64_t) capacity) * units[i + shift].value;
 
 	}
 

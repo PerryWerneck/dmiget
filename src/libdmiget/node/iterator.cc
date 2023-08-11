@@ -110,6 +110,20 @@
 
 	}
 
+	bool Node::for_each(uint8_t type, const std::function<bool(const Node &node)> &call) {
+
+		for(Node node{""};node;node.next("")) {
+
+			if(node.type() == type && call(node)) {
+				return true;
+			}
+
+		}
+
+		return false;
+
+	}
+
 	bool Node::for_each(const std::function<bool(const Node &node)> &call) {
 
 		for(Node node{""};node;node.next("")) {

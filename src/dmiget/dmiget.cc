@@ -28,6 +28,7 @@
  #include <iomanip>
 
  #include <smbios/node.h>
+ #include <smbios/memsize.h>
 
  using namespace std;
  using namespace SMBios;
@@ -190,6 +191,9 @@
  };
 
  int main(int argc, char **argv) {
+
+	cout << "---[ " << SMBios::MemSize{}.as_string() << " ]------------";
+	return 0;
 
 	try {
 

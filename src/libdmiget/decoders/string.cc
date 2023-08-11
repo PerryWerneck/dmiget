@@ -100,6 +100,42 @@
 
 	}
 
+	uint64_t Decoder::MemorySize::as_uint64(const uint8_t *ptr, const size_t) const {
+
+		Node::Header *header{(Node::Header *) ptr};
+
+		if(header->length >= 0x20 && *((uint16_t *) (ptr+0x0C)) == 0x7FFF) {
+
+			// Extended size
+			uint32_t code = *((uint32_t *) (ptr+0x1c)) & 0x7FFFFFFFUL;
+
+			if (code & 0x3FFUL)
+				return ((uint64_t) code) * 1048576LL; // MB
+			else if (code & 0xFFC00UL)
+				return ((uint64_t) (code >> 10)) * 1073741824LL; // GB
+			else
+				return ((uint64_t) (code >> 20)) * 1099511627776LL; // TB
+
+		} else {
+
+			// Device size
+			uint16_t code = *((uint16_t *) (ptr+0x0c));
+
+			if(code == 0 || code == 0xFFFF) {
+				return 0;
+			}
+
+			u64 s;
+			s.l = (code & 0x7FFF);
+			if(!(code & 0x8000))
+				s.l <<= 10;
+
+			return s.as_memory_size_bytes(1);
+
+		}
+
+	}
+
 	std::string Decoder::MemorySize::as_string(const uint8_t *ptr, const size_t) const {
 
 		Node::Header *header{(Node::Header *) ptr};
@@ -130,7 +166,7 @@
 			if(!(code & 0x8000))
 				s.l <<= 10;
 
-			return s.as_memory_size(1);
+			return s.as_memory_size_string(1);
 
 		}
 	}

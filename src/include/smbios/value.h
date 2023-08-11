@@ -30,7 +30,43 @@
 
  namespace SMBios {
 
-	class SMBIOS_API Value {
+ 	namespace Abstract {
+
+		class SMBIOS_API Value {
+		public:
+			virtual std::string as_string() const = 0;
+			virtual const char *name() const noexcept;
+			virtual const char *description() const noexcept;
+			virtual bool valid() const;
+			virtual uint64_t as_uint64() const = 0;
+			virtual unsigned int as_uint() const;
+
+			inline operator bool() const {
+				return valid();
+			}
+
+			inline operator uint64_t() const {
+				return as_uint64();
+			}
+
+			inline operator unsigned int() const {
+				return as_uint();
+			}
+
+			inline operator std::string() const {
+				return as_string();
+			}
+
+#ifndef _MSC_VER
+			inline std::string to_string() const {
+				return as_string();
+			}
+#endif /// !_MSC_VER
+		};
+
+ 	}
+
+	class SMBIOS_API Value : public Abstract::Value {
 	public:
 		struct Info;
 
@@ -49,6 +85,12 @@
 		Value & operator=(const Value & src);
 		Value & operator=(const char *name);
 		Value & operator=(const size_t index);
+
+		virtual ~Value();
+
+		bool valid() const override;
+
+		std::string as_string() const override;
 
 		class SMBIOS_API Iterator {
 		private:
@@ -92,27 +134,11 @@
 
 		};
 
-		const char *name() const noexcept;
-		const char *description() const noexcept;
+		uint64_t as_uint64() const override;
+		unsigned int as_uint() const override;
 
-		std::string as_string() const;
-		unsigned int as_uint() const;
-
-		operator bool() const;
-
-		inline operator std::string() const {
-			return as_string();
-		}
-
-		inline operator unsigned int() const {
-			return as_uint();
-		}
-
-#ifndef _MSC_VER
-		inline std::string to_string() const {
-			return as_string();
-		}
-#endif /// !_MSC_VER
+		const char *name() const noexcept override;
+		const char *description() const noexcept override;
 
 		Value & next();
 

@@ -44,6 +44,7 @@
 		<Unit filename="src/include/private/python.h" />
 		<Unit filename="src/include/private/smbios.h" />
 		<Unit filename="src/include/smbios/defs.h" />
+		<Unit filename="src/include/smbios/memsize.h" />
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/constants.cc" />
@@ -66,7 +67,9 @@
 		<Unit filename="src/libdmiget/os/linux/private.h" />
 		<Unit filename="src/libdmiget/os/windows/data.cc" />
 		<Unit filename="src/libdmiget/os/windows/native_win32.h" />
+		<Unit filename="src/libdmiget/value/abstract.cc" />
 		<Unit filename="src/libdmiget/value/iterator.cc" />
+		<Unit filename="src/libdmiget/value/memsize.cc" />
 		<Unit filename="src/libdmiget/value/url.cc" />
 		<Unit filename="src/libdmiget/value/value.cc" />
 		<Unit filename="src/python/init.c">

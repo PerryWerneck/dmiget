@@ -18,51 +18,35 @@
  */
 
  /**
-  * @brief Declare abstract decoder.
+  * @brief Implements abstract value.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/constants.h>
- #include <ctype.h>
- #include <stdexcept>
+ #include <smbios/value.h>
 
  using namespace std;
 
  namespace SMBios {
 
-	std::string Decoder::Abstract::as_string(const uint8_t *, size_t) const {
+	const char * Abstract::Value::name() const noexcept {
 		return "";
 	}
 
-	unsigned int Decoder::Abstract::as_uint(const uint8_t *ptr, size_t offset) const {
-
-		unsigned int value = 0;
-		std::string str{as_string(ptr,offset)};
-
-		for(const char *p = str.c_str();*p && isdigit(*p);p++) {
-			value *= 10;
-			value += ('0' - *p);
-		}
-
-		return value;
-
+	const char * Abstract::Value::description() const noexcept {
+		return "";
 	}
 
-	uint64_t Decoder::Abstract::as_uint64(const uint8_t *ptr, const size_t offset) const {
-
-		uint64_t value = 0;
-		std::string str{as_string(ptr,offset)};
-
-		for(const char *p = str.c_str();*p && isdigit(*p);p++) {
-			value *= 10;
-			value += ('0' - *p);
-		}
-
-		return value;
-
+	bool Abstract::Value::valid() const {
+		return true;
 	}
+
+	unsigned int Abstract::Value::as_uint() const {
+		return (unsigned int) as_uint64();
+	}
+
 
  }
+
