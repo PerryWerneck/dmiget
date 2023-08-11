@@ -94,12 +94,11 @@
 	// .tp_iternext =
 
 	.tp_str = dmiget_value_str,
+	.tp_repr = dmiget_value_str,
 	.tp_methods = dmiget_value_methods,
 	.tp_getset = dmiget_value_attributes,
 
 	//.tp_dict =
-
-	//.tp_methods = dmiget_value_methods,
 
  };
 

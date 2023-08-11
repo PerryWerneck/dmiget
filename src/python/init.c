@@ -120,6 +120,7 @@
 	// .tp_iternext =
 
 	.tp_str = dmiget_node_str,
+	.tp_repr = dmiget_node_str,
 	.tp_methods = dmiget_node_methods,
 	.tp_getset = dmiget_node_attributes,
 
