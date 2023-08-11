@@ -29,8 +29,10 @@ LIBRARY_SOURCES= \
 
 PYTHON_SOURCES= \
 	$(wildcard src/python/*.c) \
-	$(wildcard src/python/*.cc)
-
+	$(wildcard src/python/*.cc) \
+	$(wildcard src/python/value/*.c) \
+	$(wildcard src/python/value/*.cc)
+	
 APPLICATION_SOURCES= \
 	$(wildcard src/dmiget/*.cc)
 

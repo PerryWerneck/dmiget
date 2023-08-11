@@ -68,6 +68,16 @@
  SMBIOS_PRIVATE PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *);
  SMBIOS_PRIVATE void dmiget_value_dealloc(PyObject * self);
 
+ //
+ // smbios.value object
+ //
+ extern SMBIOS_PRIVATE PyMethodDef dmiget_value_methods[];
+ extern SMBIOS_PRIVATE PyGetSetDef dmiget_value_attributes[];
+ extern SMBIOS_PRIVATE PyTypeObject dmiget_value_python_type;
+
+ SMBIOS_PRIVATE int dmiget_value_bool(PyObject *self);
+ SMBIOS_PRIVATE PyObject * dmiget_value_int(PyObject *self);
+
  SMBIOS_PRIVATE PyObject * dmiget_value_getattr(PyObject *, char *);
  SMBIOS_PRIVATE PyObject * dmiget_value_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_value_name(PyObject *self, void *);
@@ -75,6 +85,9 @@
  SMBIOS_PRIVATE PyObject * dmiget_value_next(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_value_empty(PyObject *self, PyObject *args);
 
+ //
+ // smbios.node object
+ //
  SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_node_value(PyObject *self, PyObject *args);

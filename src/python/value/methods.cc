@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements python 'value' object.
+  * @brief Implements python 'value' methods
   */
 
  #ifdef HAVE_CONFIG_H
@@ -152,7 +152,7 @@
  PyObject * dmiget_value_str(PyObject *self) {
 
 	return call(self, [](SMBios::Value &value) {
-		return PyUnicode_FromString(value.to_string().c_str());
+		return PyUnicode_FromString(value.as_string().c_str());
 	});
 
  }
@@ -191,6 +191,41 @@
 
 			value.next();
 			return PyBool_FromLong(value ? 1 : 0);
+
+	});
+
+ }
+
+ int dmiget_value_bool(PyObject *self) {
+
+	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
+	if(!pvt) {
+		return 0;
+	}
+
+	try {
+
+		return pvt->value ? 1 : 0;
+
+	} catch(const std::exception &e) {
+
+			PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+			PyErr_SetString(PyExc_RuntimeError, "Unexpected error in Patrimonial library");
+
+	}
+
+	return 0;
+
+ }
+
+ PyObject * dmiget_value_int(PyObject *self) {
+
+	return call(self, [](SMBios::Value &value) {
+
+		return PyBool_FromLong(value.as_uint());
 
 	});
 

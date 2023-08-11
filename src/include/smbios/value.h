@@ -36,8 +36,8 @@
 
 		enum Type {
 			Invalid,
-			String,
-			Integer
+			String,		///< @brief Non numeric.
+			Unsigned,	///< @brief Unsigned value.
 		};
 
 		Value(const Value &src);
@@ -95,9 +95,24 @@
 		const char *name() const noexcept;
 		const char *description() const noexcept;
 
+		std::string as_string() const;
+		unsigned int as_uint() const;
+
 		operator bool() const;
 
-		std::string to_string() const;
+		inline operator std::string() const {
+			return as_string();
+		}
+
+		inline operator unsigned int() const {
+			return as_uint();
+		}
+
+#ifndef _MSC_VER
+		inline std::string to_string() const {
+			return as_string();
+		}
+#endif /// !_MSC_VER
 
 		Value & next();
 
@@ -118,15 +133,15 @@
  namespace std {
 
 	inline string to_string(const SMBios::Value &value) {
-			return value.to_string();
+		return value.as_string();
 	}
 
 	inline ostream& operator<< (ostream& os, const SMBios::Value &value) {
-			return os << value.to_string();
+			return os << value.as_string();
 	}
 
 	inline ostream& operator<< (ostream& os, const SMBios::Value *value) {
-			return os << value->to_string();
+			return os << value->as_string();
 	}
 
  }

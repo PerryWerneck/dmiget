@@ -105,11 +105,18 @@
 		return "";
 	}
 
-	std::string Value::to_string() const {
+	std::string Value::as_string() const {
 		if(info && info[item].name && *info[item].name) {
-			return info[item].decoder.to_string((*data)[offset],(size_t) info[item].offset);
+			return info[item].decoder.as_string((*data)[offset],(size_t) info[item].offset);
 		}
 		return "";
+	}
+
+	unsigned int Value::as_uint() const {
+		if(info && info[item].name && *info[item].name) {
+			return info[item].decoder.as_uint((*data)[offset],(size_t) info[item].offset);
+		}
+		return 0;
 	}
 
  }

@@ -70,7 +70,7 @@
 		/// @brief Decode firmware revision.
 		struct FirmwareRevision : public Abstract {
 
-			constexpr FirmwareRevision() : Abstract{Value::Integer} {
+			constexpr FirmwareRevision() : Abstract{Value::Unsigned} {
 			}
 
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
@@ -78,7 +78,7 @@
 
 		struct UInt16 : public Abstract {
 
-			constexpr UInt16() : Abstract{Value::Integer} {
+			constexpr UInt16() : Abstract{Value::Unsigned} {
 			}
 
 			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;

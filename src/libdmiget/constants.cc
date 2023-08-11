@@ -188,7 +188,7 @@
 		},
 		{
 			4,
-			false,
+			true,
 			"Processor",
 			"Processor",
 			Processor

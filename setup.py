@@ -32,6 +32,12 @@ for filename in glob.glob("src/python/*.cc"):
 for filename in glob.glob("src/python/*.c"):
 	src_files.append(filename)
 
+for filename in glob.glob("src/python/value/*.c"):
+	src_files.append(filename)
+
+for filename in glob.glob("src/python/value/*.cc"):
+	src_files.append(filename)
+
 package_version='0.1'
 with open(r'configure.ac', 'r') as fp:
     lines = fp.readlines()

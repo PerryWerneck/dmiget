@@ -45,9 +45,11 @@
 			virtual std::string as_string(const uint8_t *ptr, const size_t offset) const;
 			virtual unsigned int as_uint(const uint8_t *ptr, const size_t offset) const;
 
+#ifndef _MSC_VER
 			inline std::string to_string(const uint8_t *ptr, const size_t offset) const {
 				return as_string(ptr, offset);
 			}
+#endif /// !_MSC_VER
 
 		};
 

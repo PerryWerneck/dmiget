@@ -310,7 +310,7 @@
 					url += "/";
 				}
 				url += value.name();
-				writer->write(url.c_str(),value.to_string().c_str());
+				writer->write(url.c_str(),value.as_string().c_str());
 				return false;
 			});
 			break;
