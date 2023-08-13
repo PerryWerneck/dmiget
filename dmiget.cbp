@@ -46,6 +46,7 @@
 		<Unit filename="src/include/smbios/defs.h" />
 		<Unit filename="src/include/smbios/memsize.h" />
 		<Unit filename="src/include/smbios/node.h" />
+		<Unit filename="src/include/smbios/object.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/constants.cc" />
 		<Unit filename="src/libdmiget/data.cc" />
@@ -55,14 +56,9 @@
 		<Unit filename="src/libdmiget/decoders/processor.cc" />
 		<Unit filename="src/libdmiget/decoders/string.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
-		<Unit filename="src/libdmiget/include/config.h" />
-		<Unit filename="src/libdmiget/include/dmiget/defs.h" />
-		<Unit filename="src/libdmiget/include/dmiget/table.h" />
-		<Unit filename="src/libdmiget/include/dmiget/value.h" />
-		<Unit filename="src/libdmiget/include/internals.h" />
-		<Unit filename="src/libdmiget/include/pydmiget.h" />
 		<Unit filename="src/libdmiget/node/iterator.cc" />
 		<Unit filename="src/libdmiget/node/node.cc" />
+		<Unit filename="src/libdmiget/object.cc" />
 		<Unit filename="src/libdmiget/os/linux/data.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />
 		<Unit filename="src/libdmiget/os/windows/data.cc" />
