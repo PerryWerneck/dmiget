@@ -157,6 +157,14 @@
 	},
 
 	{
+		"memsize",
+		pydmi_get_memsize,
+		METH_VARARGS,
+		"Get installed memory"
+
+	},
+
+	{
 		NULL,
 		NULL,
 		0,

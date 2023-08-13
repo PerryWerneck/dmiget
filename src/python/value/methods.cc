@@ -31,8 +31,8 @@
  #include <stdexcept>
 
  struct pyValuePrivate {
-	SMBios::Value value;
-	pyValuePrivate(SMBios::Value &v) : value{v} {
+ 	std::shared_ptr<SMBios::Abstract::Value> value;
+	pyValuePrivate(shared_ptr<SMBios::Abstract::Value> v) : value{v} {
 	}
  };
 
@@ -40,11 +40,6 @@
  }
 
  int dmiget_value_init(PyObject *self, PyObject *args, PyObject *) {
-
-	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
-	if(pvt) {
-		delete pvt;
-	}
 
 	try {
 
@@ -59,7 +54,7 @@
 				if (!PyArg_ParseTuple(args, "s", &url))
 					throw runtime_error("Invalid argument");
 
-				((pyValue *) self)->pvt = new pyValuePrivate{*SMBios::Value::find(url)};
+				dmiget_set_value(self,SMBios::Value::find(url));
 
 			}
 			break;
@@ -72,7 +67,7 @@
 				if (!PyArg_ParseTuple(args, "ss", &nodename, &valuename))
 					throw runtime_error("Invalid argument");
 
-				((pyValue *) self)->pvt = new pyValuePrivate{*SMBios::Node{nodename}.find(valuename)};
+				dmiget_set_value(self,SMBios::Node{nodename}.find(valuename));
 
 			}
 			break;
@@ -97,7 +92,7 @@
 
  }
 
- void dmiget_set_value(PyObject *self, SMBios::Value &value) {
+ void dmiget_set_value(PyObject *self, shared_ptr<SMBios::Abstract::Value> value) {
 	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
 	if(pvt) {
 		delete pvt;
@@ -123,7 +118,7 @@
 	Py_TYPE(self)->tp_free(self);
  }
 
- static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Value &value)> &worker) {
+ static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Abstract::Value &value)> &worker) {
 
 	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
 	if(!pvt) {
@@ -133,7 +128,7 @@
 
 	try {
 
-		return worker(pvt->value);
+		return worker(*pvt->value);
 
 	} catch(const std::exception &e) {
 
@@ -151,7 +146,7 @@
 
  PyObject * dmiget_value_str(PyObject *self) {
 
-	return call(self, [](SMBios::Value &value) {
+	return call(self, [](SMBios::Abstract::Value &value) {
 		return PyUnicode_FromString(value.as_string().c_str());
 	});
 
@@ -159,7 +154,7 @@
 
  PyObject * dmiget_value_name(PyObject *self, void *) {
 
-	return call(self, [](SMBios::Value &value) {
+	return call(self, [](SMBios::Abstract::Value &value) {
 		return PyUnicode_FromString(value.name());
 	});
 
@@ -167,7 +162,7 @@
 
  PyObject * dmiget_value_description(PyObject *self, void *) {
 
-	return call(self, [](SMBios::Value &value) {
+	return call(self, [](SMBios::Abstract::Value &value) {
 		return PyUnicode_FromString(value.description());
 	});
 
@@ -179,7 +174,7 @@
 		return PyBool_FromLong(1);
 	}
 
-	return call(self, [](SMBios::Value &value) {
+	return call(self, [](SMBios::Abstract::Value &value) {
 		return PyBool_FromLong(value ? 0 : 1);
 	});
 
@@ -187,10 +182,16 @@
 
  PyObject * dmiget_value_next(PyObject *self, PyObject *) {
 
-	return call(self, [](SMBios::Value &value) {
+	return call(self, [](SMBios::Abstract::Value &v) {
 
-			value.next();
-			return PyBool_FromLong(value ? 1 : 0);
+		SMBios::Value *value = dynamic_cast<SMBios::Value *>(&v);
+
+		if(!value) {
+			throw runtime_error("Value is not iterable");
+		}
+
+		value->next();
+		return PyBool_FromLong((*value) ? 1 : 0);
 
 	});
 
@@ -205,7 +206,7 @@
 
 	try {
 
-		return pvt->value ? 1 : 0;
+		return (*pvt->value) ? 1 : 0;
 
 	} catch(const std::exception &e) {
 
@@ -213,7 +214,7 @@
 
 	} catch(...) {
 
-			PyErr_SetString(PyExc_RuntimeError, "Unexpected error in Patrimonial library");
+			PyErr_SetString(PyExc_RuntimeError, "Unexpected error in smbios library");
 
 	}
 
@@ -223,9 +224,9 @@
 
  PyObject * dmiget_value_int(PyObject *self) {
 
-	return call(self, [](SMBios::Value &value) {
+	return call(self, [](SMBios::Abstract::Value &value) {
 
-		return PyBool_FromLong(value.as_uint());
+		return PyLong_FromUnsignedLong(value.as_uint64());
 
 	});
 

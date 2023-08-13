@@ -41,6 +41,13 @@ print(value)
 
 ```python
 import smbios
+value = smbios.memsize()
+print(value)
+print(int(value))
+```
+
+```python
+import smbios
 for node in smbios.nodes():
 	print(node)
 	for value in node.values():

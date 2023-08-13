@@ -29,9 +29,12 @@
  #include <Python.h>
 
  #ifdef __cplusplus
+ #include <memory>
+
  using namespace std;
  using namespace SMBios;
  #include <functional>
+ #include <smbios/value.h>
 
  extern "C" {
  #endif // __cplusplus
@@ -103,13 +106,15 @@
  /// @brief Build node array.
  SMBIOS_PRIVATE PyObject * pydmi_get_nodes(PyObject *self, PyObject *args);
 
+ SMBIOS_PRIVATE PyObject * pydmi_get_memsize(PyObject *self, PyObject *args);
+
  /// @brief Build Python objet by typename.
  /// @param name The nome of python object to build;
  SMBIOS_PRIVATE PyObject * PyObjectByName(const char *name);
 
 
  #ifdef __cplusplus
- SMBIOS_PRIVATE void dmiget_set_value(PyObject *self, SMBios::Value &value);
+ SMBIOS_PRIVATE void dmiget_set_value(PyObject *self, std::shared_ptr<SMBios::Abstract::Value> value);
 
  }
  #endif // __cplusplus

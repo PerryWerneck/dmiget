@@ -135,6 +135,23 @@
 
 	}
 
+	bool Node::for_each(const std::function<bool(std::shared_ptr<Value> v)> &call) const {
+
+		if(offset < 0) {
+			return false;
+		}
+
+		Value value{data,(size_t) offset,info->values,0};
+		while(value) {
+			if(call(make_shared<Value>(value))) {
+				return true;
+			}
+			value.next();
+		}
+
+		return false;
+	}
+
 	bool Node::for_each(const std::function<bool(const Value &v)> &call) const {
 
 		if(offset < 0) {

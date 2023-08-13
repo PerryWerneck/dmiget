@@ -260,7 +260,7 @@
 		}
 
 		PyObject *object = PyObjectByName("value");
-		dmiget_set_value(object,*node.find(name));
+		dmiget_set_value(object,node.find(name));
 
 		return object;
  	});
@@ -281,11 +281,20 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 
 		PyObject *pynodes = PyList_New(0);
 
+		node.for_each([pynodes](std::shared_ptr<Value> value){
+			PyObject *pyobject = PyObjectByName("value");
+			dmiget_set_value(pyobject,value);
+			PyList_Append(pynodes,pyobject);
+			return false;
+		});
+
+		/*
 		for(auto &value : node) {
 			PyObject *pyobject = PyObjectByName("value");
 			dmiget_set_value(pyobject,value);
 			PyList_Append(pynodes,pyobject);
 		}
+		*/
 
 		return pynodes;
 
