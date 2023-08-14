@@ -365,11 +365,11 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 
 	} catch(const std::exception &e) {
 
-			PyErr_SetString(PyExc_RuntimeError, e.what());
+		PyErr_SetString(PyExc_RuntimeError, e.what());
 
 	} catch(...) {
 
-			PyErr_SetString(PyExc_RuntimeError, "Unexpected error in smbios library");
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in smbios library");
 
 	}
 

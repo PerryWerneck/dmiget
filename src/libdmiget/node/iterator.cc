@@ -137,10 +137,31 @@
 
 	bool Node::for_each(const std::function<bool(std::shared_ptr<Value> v)> &call) const {
 
-		if(offset < 0) {
+		if(offset < 0 || !(info && info->values)) {
 			return false;
 		}
 
+		class InternalValue : public Value {
+		public:
+			InternalValue(std::shared_ptr<Data> data, size_t offset, const Value::Info *info) : Value(data,offset,info,0) {
+			}
+
+			bool set(size_t item) {
+				this->item = item;
+				return info[item].name;
+			}
+
+		};
+
+		auto value = make_shared<InternalValue>(data,offset,info->values);
+
+		for(size_t item = 0; value->set(item);item++) {
+			if(call(value)) {
+				return true;
+			}
+		}
+
+		/*
 		Value value{data,(size_t) offset,info->values,0};
 		while(value) {
 			if(call(make_shared<Value>(value))) {
@@ -148,6 +169,7 @@
 			}
 			value.next();
 		}
+		*/
 
 		return false;
 	}

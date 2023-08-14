@@ -285,18 +285,25 @@
 				if(show_node) {
 					writer->write(node);
 					writer->open();
-					for(auto &value : node) {
-						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
-							writer->write(value);
+
+					node.for_each([](std::shared_ptr<Value> value){
+						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
+							writer->write(*value);
 						}
-					}
+						return false;
+					});
+
 					writer->close();
+
 				} else {
-					for(auto &value : node) {
-						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
-							writer->write(value,false);
+
+					node.for_each([](std::shared_ptr<Value> value){
+						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
+							writer->write(*value,false);
 						}
-					}
+						return false;
+					});
+
 				}
 			}
 			break;
