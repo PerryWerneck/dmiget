@@ -110,6 +110,22 @@
 
 	}
 
+	bool Node::for_each(const char *name,const std::function<bool(const Node &node)> &call) {
+
+		if(name && *name) {
+			return for_each(Node::Info::find(name)->id,call);
+		}
+
+		for(Node node;node;node.next()) {
+			if(call(node)) {
+				return true;
+			}
+
+		}
+
+		return false;
+	}
+
 	bool Node::for_each(uint8_t type, const std::function<bool(const Node &node)> &call) {
 
 		for(Node node;node;node.next()) {

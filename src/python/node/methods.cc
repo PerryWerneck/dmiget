@@ -318,14 +318,13 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 			throw runtime_error("Invalid arguments");
 		}
 
-		SMBios::Node node{name.c_str()};
-
 		PyObject *pynodes = PyList_New(0);
-		do {
+		SMBios::Node::for_each(name.c_str(),[pynodes](const Node &node){
 			PyObject *pyobject = PyObjectByName("node");
-			dmiget_set_node(pyobject,node);
+			dmiget_set_node(pyobject,const_cast<Node &>(node));
 			PyList_Append(pynodes,pyobject);
-		} while(node.next(name.c_str()));
+			return false;
+		});
 
 		return pynodes;
 
