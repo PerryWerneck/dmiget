@@ -192,9 +192,6 @@
 
  int main(int argc, char **argv) {
 
-	cout << "---[ " << SMBios::MemSize{}.as_string() << " ]------------";
-	return 0;
-
 	try {
 
 		// Check command-line arguments.
