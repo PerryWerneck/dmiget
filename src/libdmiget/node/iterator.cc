@@ -153,23 +153,13 @@
 
 		};
 
-		auto value = make_shared<InternalValue>(data,offset,info->values);
+		InternalValue value{data,(size_t) offset,info->values};
 
-		for(size_t item = 0; value->set(item);item++) {
-			if(call(value)) {
-				return true;
-			}
-		}
-
-		/*
-		Value value{data,(size_t) offset,info->values,0};
-		while(value) {
+		for(size_t item = 0; value.set(item);item++) {
 			if(call(make_shared<Value>(value))) {
 				return true;
 			}
-			value.next();
 		}
-		*/
 
 		return false;
 	}

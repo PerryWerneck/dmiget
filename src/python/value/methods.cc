@@ -32,14 +32,16 @@
 
  struct pyValuePrivate {
  	std::shared_ptr<SMBios::Abstract::Value> value;
-	pyValuePrivate(shared_ptr<SMBios::Abstract::Value> v) : value{v} {
-	}
  };
 
  void dmiget_value_type_init() {
  }
 
  int dmiget_value_init(PyObject *self, PyObject *args, PyObject *) {
+
+	if(!((pyValue *) self)->pvt) {
+		((pyValue *) self)->pvt = new pyValuePrivate();
+	}
 
 	try {
 
@@ -92,12 +94,9 @@
 
  }
 
- void dmiget_set_value(PyObject *self, shared_ptr<SMBios::Abstract::Value> value) {
-	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
-	if(pvt) {
-		delete pvt;
-	}
-	((pyValue *) self)->pvt = new pyValuePrivate{value};
+ PyObject * dmiget_set_value(PyObject *self, shared_ptr<SMBios::Abstract::Value> value) {
+	((pyValue *) self)->pvt->value = value;
+	return self;
  }
 
  void dmiget_value_finalize(PyObject *self) {

@@ -27,6 +27,7 @@
 
  #include <private/python.h>
  #include <smbios/node.h>
+ #include <smbios/value.h>
  #include <stdexcept>
  #include <vector>
 
@@ -282,19 +283,9 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 		PyObject *pynodes = PyList_New(0);
 
 		node.for_each([pynodes](std::shared_ptr<Value> value){
-			PyObject *pyobject = PyObjectByName("value");
-			dmiget_set_value(pyobject,value);
-			PyList_Append(pynodes,pyobject);
+			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value));
 			return false;
 		});
-
-		/*
-		for(auto &value : node) {
-			PyObject *pyobject = PyObjectByName("value");
-			dmiget_set_value(pyobject,value);
-			PyList_Append(pynodes,pyobject);
-		}
-		*/
 
 		return pynodes;
 

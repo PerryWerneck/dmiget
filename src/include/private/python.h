@@ -121,7 +121,7 @@
 
 
  #ifdef __cplusplus
- SMBIOS_PRIVATE void dmiget_set_value(PyObject *self, std::shared_ptr<SMBios::Abstract::Value> value);
+ SMBIOS_PRIVATE PyObject * dmiget_set_value(PyObject *self, std::shared_ptr<SMBios::Abstract::Value> value);
 
  }
  #endif // __cplusplus
