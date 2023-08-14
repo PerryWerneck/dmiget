@@ -30,11 +30,11 @@
 	};
 
 	static const Value::Info BiosInformation[] = {
-		{ "vendor",			Decoder::StringIndex{},				1,		"Vendor"				},
-		{ "version",		Decoder::StringIndex{},				2,		"Version"				},
-		{ "date",			Decoder::StringIndex{},				3,		"Release Date"			},
-		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,	"BIOS Revision"			},
-		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,	"Firmware Revision" 	},
+		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
+		{ "version",		Decoder::String{},				0x05,		"Version"				},
+		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
+		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
+		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
 		{}
 	};
 
@@ -85,7 +85,7 @@
 	};
 
 	static const Value::Info Cache[] = {
-		{ "socket",			Decoder::StringIndex{},	1,	"Socket Designation"	},
+		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"	},
 		{}
 	};
 
@@ -103,7 +103,7 @@
 	};
 
 	static const Value::Info GroupAssociations[] = {
-		{ "name",	Decoder::StringIndex{},	1,	"Name"	},
+		{ "name",			Decoder::String{},					0x04,	"Name"	},
 		{}
 	};
 
@@ -123,16 +123,23 @@
 	};
 
 	static const Value::Info PortableBattery[] = {
-		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
-		{ "manufacturer",	Decoder::StringIndex{},	2,	"Manufacturer"		},
-		{ "date",			Decoder::StringIndex{},	3,	"Manufacture Date"	},
-		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
-		{ "name",			Decoder::StringIndex{},	5,	"Name"				},
+		{ "location",		Decoder::String{},					0x04,	"Location"			},
+		{ "manufacturer",	Decoder::String{},					0x05,	"Manufacturer"		},
+		{ "date",			Decoder::String{},					0x06,	"Manufacture Date"	},
+		{ "serial",			Decoder::String{},					0x07,	"Serial Number"		},
+		{ "name",			Decoder::String{},					0x08,	"Name"				},
 		{}
 	};
 
 	static const Value::Info TemperatureProbe[] = {
-		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{ "description",	Decoder::String{},						0x04,	"Description"	},
+//		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"	},
+//		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"	},
+		{ "maximum",		Decoder::TemperatureProbeValue{},		0x06,	"Maximum Value"	},
+		{ "minimum",		Decoder::TemperatureProbeValue{},		0x08,	"Minimum Value"	},
+		{ "tolerance",		Decoder::TemperatureProbeValue{},		0x08,	"Tolerance"	},
+//		{ "accuracy",		Decoder::TemperatureProbeAccuracy{},	0x0E,	"Accuracy"	},
+		{ "value",			Decoder::TemperatureProbeValue{},		0x14,	"Nominal Value"	},
 		{}
 	};
 

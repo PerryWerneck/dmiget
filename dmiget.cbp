@@ -52,6 +52,7 @@
 		<Unit filename="src/libdmiget/decoders/abstract.cc" />
 		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />
+		<Unit filename="src/libdmiget/decoders/probes.cc" />
 		<Unit filename="src/libdmiget/decoders/processor.cc" />
 		<Unit filename="src/libdmiget/decoders/string.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
