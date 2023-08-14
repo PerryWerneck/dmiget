@@ -108,18 +108,18 @@
 	}
  } workers[] {
 	{
-		'n',"node",
+		'N',"node",
 		"",
-		false,
+		true,
 		[](const char *name) {
 			node_name = name;
 			return false;
 		}
 	},
 	{
-		'v',"value",
+		'V',"value",
 		"",
-		false,
+		true,
 		[](const char *name) {
 			value_name = name;
 			return false;
@@ -281,7 +281,7 @@
 
 		case Complete:
 			// Show standard output.
-			for(SMBios::Node node = Node::factory(filename);node;node.next()) {
+			for(SMBios::Node node = Node::factory(filename,node_name);node;node.next(node_name)) {
 				if(show_node) {
 					writer->write(node);
 					writer->open();
@@ -309,6 +309,7 @@
 			break;
 
 		case Urls:
+
 			SMBios::Node::for_each([](const SMBios::Node &node, const size_t index, const Value &value) {
 				string url{"dmi:///"};
 				url += node.name();

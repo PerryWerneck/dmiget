@@ -288,52 +288,11 @@
 	}
 
 	Node & Node::next(const char *name) {
-		return next(Info::find(name)->id);
+		if(name && *name) {
+			return next(Info::find(name)->id);
+		}
+		return next();
 	}
-	/*
-	Node & Node::next(const char *name) {
-
-
-		// Get next node.
-		do {
-			index++;
-			if((data->count() && index >= data->count())) {
-				offset = -1;
-				return *this;
-			}
-
-			// Look for the next handle
-			const uint8_t *buf = data->get(0);
-			const uint8_t *next = buf+offset+header.length;
-
-			while ((unsigned long)(next - buf + 1) < data->size() && (next[0] != 0 || next[1] != 0))
-				next++;
-			next += 2;
-
-			offset = (next - buf);
-
-			if( (offset+4) > ((int) data->size()) ) {
-				offset = -1;
-				return *this;
-			}
-
-			header.type = next[0];
-			header.length = next[1];
-			header.handle = WORD(next+2);
-
-			if(header.length < 4 || header.type == 127) {
-				offset = -1;
-				return *this;
-			}
-
-			info = Node::Info::find(*data->get(offset));
-
-		} while(name && *name && strcasecmp(name,info->name));
-
-		return *this;
-
-	}
-	*/
 
 	std::shared_ptr<Value> Node::find(const char *name) const {
 
