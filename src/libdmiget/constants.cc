@@ -51,23 +51,27 @@
 	};
 
 	static const Value::Info BaseBoard[] = {
-		{ "manufacturer",	Decoder::StringIndex{},				1,		"Manufacturer"			},
-		{ "model",			Decoder::StringIndex{},				2,		"Product Name"			},
-		{ "version",		Decoder::StringIndex{},				3,		"Version"				},
-		{ "serial",			Decoder::StringIndex{},				4,		"Serial Number"			},
-		{ "atag",			Decoder::StringIndex{},				5,		"Asset Tag"				},
-		{ "location",		Decoder::StringIndex{},				6,		"Location In Chassis"	},
+		{ "manufacturer",	Decoder::String{},				0x04,		"Manufacturer"			},
+		{ "model",			Decoder::String{},				0x05,		"Product Name"			},
+		{ "version",		Decoder::String{},				0x06,		"Version"				},
+		{ "serial",			Decoder::String{},				0x07,		"Serial Number"			},
+		{ "atag",			Decoder::String{},				0x08,		"Asset Tag"				},
+//		{ "features",		Decoder::BaseBoardFeatures{},	0x09,		"Base board features"	},
+		{ "location",		Decoder::String{},				0x0A,		"Location In Chassis"	},
 		{}
 	};
 
 	static const Value::Info Chassis[] = {
-		{ "manufacturer",	Decoder::StringIndex{},				1,	"Manufacturer"				},
-		{ "version",		Decoder::StringIndex{},				2,	"Version"					},
-		{ "serial",			Decoder::StringIndex{},				3,	"Serial Number"				},
-		{ "atag",			Decoder::StringIndex{},				4,	"Asset Tag"					},
-		{ "sku",			Decoder::StringIndex{},				5,	"SKU Number"				},
+		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
+		// { "type",	Decoder::ChassisType{},				0x05,	"Type"				},
+		// { "lock",	Decoder::ChassisLock{},				0x05,	"Lock"				},
+		{ "version",		Decoder::String{},				0x06,	"Version"					},
+		{ "serial",			Decoder::String{},				0x07,	"Serial Number"				},
+		{ "atag",			Decoder::String{},				0x08,	"Asset Tag"					},
+//		{ "sku",			Decoder::ChassisSKU{},			0x00,	"SKU Number"				},
 		{}
 	};
+
 
 	static const Value::Info Processor[] = {
 		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
@@ -94,7 +98,7 @@
 	};
 
 	static const Value::Info Slots[] = {
-		{ "designation",	Decoder::StringIndex{},	1,	"Designation"	},
+		{ "designation",	Decoder::String{},					0x04,	"Designation"					},
 		{}
 	};
 
