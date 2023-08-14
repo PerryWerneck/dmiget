@@ -29,6 +29,7 @@
  #include <iterator>
  #include <memory>
  #include <functional>
+ #include <cstdint>
 
  namespace SMBios {
 
@@ -97,6 +98,10 @@
 		/// @brief Construct an empty node.
 		Node();
 
+		/// @brief Construct node from id.
+		/// @param type SMBIos rype.
+		Node(uint8_t type, int index = 0);
+
 		/// @brief Construct node.
 		/// @param name	Node name (empty for the first one)
 		/// @param index Node index.
@@ -106,9 +111,10 @@
 		/// @param SMBios dump file (empty for the system's table).
 		/// @param name	Node name (empty for the first one)
 		/// @param index Node index.
-		Node(const char *filename, const char *name, int index = 0);
+		static Node factory(const char *filename, const char *name = "", int index = 0);
 
 		Node & operator=(const Node & src);
+		Node & operator=(const uint8_t type);
 		Node & operator=(const char *name);
 
 		operator bool() const;
@@ -135,7 +141,10 @@
 		Value::Iterator begin() const;
 		Value::Iterator end() const;
 
-		Node & next(const char *name = "");
+		Node & rewind();
+		Node & next();
+		Node & next(uint8_t type);
+		Node & next(const char *name);
 
 		Value::Iterator begin();
 		Value::Iterator end();

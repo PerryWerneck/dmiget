@@ -66,6 +66,7 @@
 		size_t size() const noexcept;
 
 		static const Info * find(uint8_t id);
+		static const Info * find(const char *name);
 	};
 
 	struct Value::Info {

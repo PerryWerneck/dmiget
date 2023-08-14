@@ -281,7 +281,7 @@
 
 		case Complete:
 			// Show standard output.
-			for(SMBios::Node node{filename,node_name};node;node.next(node_name)) {
+			for(SMBios::Node node = Node::factory(filename);node;node.next()) {
 				if(show_node) {
 					writer->write(node);
 					writer->open();

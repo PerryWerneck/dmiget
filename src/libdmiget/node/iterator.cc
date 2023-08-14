@@ -88,7 +88,7 @@
 		char indexes[0xff];
 		memset(indexes,0,sizeof(indexes));
 
-		for(Node node{""};node;node.next("")) {
+		for(Node node;node;node.next()) {
 
 			Value value{node.data,(size_t) node.offset,node.info->values,0};
 
@@ -112,7 +112,7 @@
 
 	bool Node::for_each(uint8_t type, const std::function<bool(const Node &node)> &call) {
 
-		for(Node node{""};node;node.next("")) {
+		for(Node node;node;node.next()) {
 
 			if(node.type() == type && call(node)) {
 				return true;
@@ -126,7 +126,7 @@
 
 	bool Node::for_each(const std::function<bool(const Node &node)> &call) {
 
-		for(Node node{""};node;node.next("")) {
+		for(Node node;node;node.next()) {
 			if(call(node)) {
 				return true;
 			}

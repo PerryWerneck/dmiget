@@ -37,8 +37,47 @@
 
  namespace SMBios {
 
-	Node::Node() : info{Node::Info::find(0)} {
+	Node::Node() : Node{SMBios::Data::factory(),0} {
 	}
+
+	Node::Node(uint8_t type, int index) : Node{} {
+
+		if(header.type != type) {
+			next(type);
+		}
+
+		while(index-- > 0 && *this) {
+			next(type);
+		}
+
+	}
+
+	Node::Node(const char *name, int index) : Node{Node::Info::find(name)->id,index} {
+	}
+
+	Node Node::factory(const char *filename, const char *name, int index) {
+
+		Node node{SMBios::Data::factory(filename),0};
+
+		if(name && *name) {
+
+			uint8_t type = Node::Info::find(name)->id;
+
+			if(node.header.type != type) {
+				node.next(type);
+			}
+
+			while(index-- > 0 && node) {
+				node.next(type);
+			}
+
+		}
+
+		return node;
+	}
+
+
+	/*
 
 	Node::Node(const char *name, int index) : Node{SMBios::Data::factory(),0} {
 
@@ -50,7 +89,7 @@
 
 	}
 
-	Node::Node(const char *filename, const char *name, int index) : Node{SMBios::Data::factory(filename),0} {
+	Node::Node(const char *filename, const char *name, int index) :  {
 
 		if(name && *name) {
 			do {
@@ -60,6 +99,7 @@
 
 	}
 
+	*/
 
 	Node::Node(std::shared_ptr<Data> d, const int o) : data{d}, offset{o}, info{Node::Info::find(*d->get(o))} {
 
@@ -95,26 +135,18 @@
 		return *this;
 	}
 
+	Node & Node::operator=(const uint8_t type) {
+
+		rewind();
+		if(header.type == type) {
+			return *this;
+		}
+
+		return next(type);
+	}
+
 	Node & Node::operator=(const char *name) {
-
-		if(!data) {
-			data = SMBios::Data::factory();
-		}
-
-		offset = 0;
-		index = 0;
-		info = Node::Info::find(0);
-
-		const uint8_t *ptr = data->get(offset);
-		header.type = ptr[0];
-		header.length = ptr[1];
-		header.handle = WORD(ptr+2);
-
-		if(name && *name) {
-			next(name);
-		}
-
-		return *this;
+		return operator=(info->find(name)->id);
 	}
 
 	const char * Node::name() const noexcept {
@@ -189,16 +221,78 @@
 		return false;
 	}
 
+	Node & Node::rewind() {
+		offset = 0;
 
-	Node & Node::next(const char *name) {
+		const uint8_t *ptr = data->get(offset);
+		header.type = ptr[0];
+		header.length = ptr[1];
+		header.handle = WORD(ptr+2);
+
+		if(header.length < 4 || header.type == 127) {
+			offset = -1;
+			return *this;
+		}
+		info = Node::Info::find(header.type);
+		return *this;
+	}
+
+	Node & Node::next() {
 
 		if(offset < 0) {
 			return *this;
 		}
 
-		if(!data) {
-			data = SMBios::Data::factory();
+		index++;
+		if((data->count() && index >= data->count())) {
+			offset = -1;
+			return *this;
 		}
+
+		// Look for the next handle
+		const uint8_t *buf = data->get(0);
+		const uint8_t *next = buf+offset+header.length;
+
+		while ((unsigned long)(next - buf + 1) < data->size() && (next[0] != 0 || next[1] != 0))
+			next++;
+		next += 2;
+
+		offset = (next - buf);
+
+		if( (offset+4) > ((int) data->size()) ) {
+			offset = -1;
+			return *this;
+		}
+
+		header.type = next[0];
+		header.length = next[1];
+		header.handle = WORD(next+2);
+
+		if(header.length < 4 || header.type == 127) {
+			offset = -1;
+			return *this;
+		}
+
+		info = Node::Info::find(header.type);
+		return *this;
+	}
+
+	Node & Node::next(uint8_t type) {
+
+		next();
+		while(header.type != type && *this) {
+			next();
+		}
+
+		return *this;
+	}
+
+	Node & Node::next(const char *name) {
+		return next(Info::find(name)->id);
+	}
+	/*
+	Node & Node::next(const char *name) {
+
 
 		// Get next node.
 		do {
@@ -239,6 +333,7 @@
 		return *this;
 
 	}
+	*/
 
 	std::shared_ptr<Value> Node::find(const char *name) const {
 

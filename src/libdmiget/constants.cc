@@ -22,6 +22,10 @@
  #include <smbios/value.h>
  #include <private/constants.h>
  #include <private/decoders.h>
+ #include <cstring>
+
+ #include <csignal>
+ #include <unistd.h>
 
  namespace SMBios {
 
@@ -482,6 +486,36 @@
 
 	};
 
+	static const Node::Info no_type = {
+		0xFF,
+		true,
+		"unknown",
+		"unknown"
+	};
+
+	const Node::Info * Node::Info::find(const char *name) {
+
+		if(!(name && *name)) {
+			kill(getpid(),11);
+			throw std::system_error(EINVAL,std::system_category(),"Node type cant be null or empty");
+		}
+
+		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
+			if(!strcasecmp(types[ix].name,name)) {
+				return types+ix;
+			}
+		}
+
+		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
+			if(!strcasecmp(types[ix].description,name)) {
+				return types+ix;
+			}
+		}
+
+		return &no_type;
+
+	}
+
 	const Node::Info * Node::Info::find(uint8_t id) {
 
 		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
@@ -504,14 +538,7 @@
 			return &oemtype;
 		}
 
-		static const Node::Info deftype = {
-			0xFF,
-			true,
-			"unknown",
-			"unknown"
-		};
-
-		return &deftype;
+		return &no_type;
 	}
 
  }
