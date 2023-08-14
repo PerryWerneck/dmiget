@@ -79,6 +79,10 @@
 		<Unit filename="src/python/memsize.cc" />
 		<Unit filename="src/python/moduleinfo.cc" />
 		<Unit filename="src/python/node.cc" />
+		<Unit filename="src/python/node/methods.cc" />
+		<Unit filename="src/python/node/type.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/python/tools.cc" />
 		<Unit filename="src/python/value/methods.cc" />
 		<Unit filename="src/python/value/type.c">

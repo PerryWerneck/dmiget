@@ -351,3 +351,42 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 	return NULL;
 
  }
+
+ int dmiget_node_bool(PyObject *self) {
+
+	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+	if(!pvt) {
+		return 0;
+	}
+
+	try {
+
+		return (pvt->node ? 1 : 0);
+
+	} catch(const std::exception &e) {
+
+			PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+			PyErr_SetString(PyExc_RuntimeError, "Unexpected error in smbios library");
+
+	}
+
+	return 0;
+
+ }
+
+ PyObject * dmiget_node_int(PyObject *self) {
+
+	return call(self, [](SMBios::Node &node) {
+
+		if(node) {
+			return PyLong_FromLong(node.type());
+		}
+
+		return PyLong_FromLong(-1);
+
+	});
+
+ }

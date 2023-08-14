@@ -45,7 +45,7 @@
 		if(name && *name) {
 			do {
 				next(name);
-			} while(index-- > 0);
+			} while(*this && index-- > 0);
 		}
 
 	}
@@ -55,7 +55,7 @@
 		if(name && *name) {
 			do {
 				next(name);
-			} while(index-- > 0);
+			} while(*this && index-- > 0);
 		}
 
 	}
@@ -118,10 +118,16 @@
 	}
 
 	const char * Node::name() const noexcept {
+		if(offset < 0) {
+			return "";
+		}
 		return info->name;
 	}
 
 	const char * Node::description() const noexcept {
+		if(offset < 0) {
+			return "";
+		}
 		return info->description;
 	}
 

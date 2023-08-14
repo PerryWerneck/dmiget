@@ -91,6 +91,13 @@
  //
  // smbios.node object
  //
+ extern SMBIOS_PRIVATE PyMethodDef dmiget_node_methods[];
+ extern SMBIOS_PRIVATE PyGetSetDef dmiget_node_attributes[];
+ extern SMBIOS_PRIVATE PyTypeObject dmiget_node_python_type;
+
+ SMBIOS_PRIVATE int dmiget_node_bool(PyObject *self);
+ SMBIOS_PRIVATE PyObject * dmiget_node_int(PyObject *self);
+
  SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_node_value(PyObject *self, PyObject *args);
