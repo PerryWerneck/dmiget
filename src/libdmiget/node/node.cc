@@ -60,6 +60,7 @@
 		Node node{SMBios::Data::factory(filename),0};
 
 		if(!node) {
+			cout << "offset: " << ((int) node.offset) << " hlen=" << ((int) node.header.length) << " htype=" << ((int) node.header.type) << endl;
 			throw runtime_error("Unable to find first node");
 		}
 
