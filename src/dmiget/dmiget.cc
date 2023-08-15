@@ -208,6 +208,9 @@
 				snprintf(buffer,9,"%02x",*ptr);
 				memcpy(line+(10+(col*3)),buffer,2);
 
+				snprintf(buffer,9,"%08lx",offset);
+				memcpy(line,buffer,8);
+
 				line[61+col] = (*ptr >= ' ' && *ptr < 128) ? *ptr : '.';
 
 			}

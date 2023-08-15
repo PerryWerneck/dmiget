@@ -64,8 +64,6 @@
 				throw std::system_error(err,std::system_category(),filename);
 			}
 
-			cout << "---------> " << filename << " " << statbuf.st_blksize << endl;
-
 			if(!statbuf.st_blksize) {
 				statbuf.st_blksize = 4096;
 			}
@@ -81,7 +79,7 @@
 			while(pos < length) {
 
 				size_t blksize = (length-pos);
-				if(blksize > statbuf.st_blksize) {
+				if(blksize > (size_t) statbuf.st_blksize) {
 					blksize = statbuf.st_blksize;
 				}
 
