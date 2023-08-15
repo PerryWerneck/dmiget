@@ -73,7 +73,7 @@
 			size_t pos = 0;
 			while(pos < length) {
 
-				ssize_t bytes = read(fd,ptr,(length-pos));
+				ssize_t bytes = read(fd,ptr+pos,(length-pos));
 
 				if(bytes < 0) {
 					if(errno != EINTR) {

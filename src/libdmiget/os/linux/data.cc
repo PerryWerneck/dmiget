@@ -64,7 +64,8 @@
 				throw std::system_error(err,std::system_category(),filename);
 			}
 
-			cout << "---------> " << statbuf.st_blksize << endl;
+			cout << "---------> " << filename << " " << statbuf.st_blksize << endl;
+
 			if(!statbuf.st_blksize) {
 				statbuf.st_blksize = 4096;
 			}
@@ -84,7 +85,7 @@
 					blksize = statbuf.st_blksize;
 				}
 
-				ssize_t bytes = pread(fd,ptr,blksize,pos);
+				ssize_t bytes = read(fd,ptr+pos,blksize);
 
 				if(bytes < 0) {
 					if(errno != EINTR) {
