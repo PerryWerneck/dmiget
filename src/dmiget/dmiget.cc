@@ -27,6 +27,7 @@
  #include <exception>
  #include <iomanip>
 
+ #include <private/data.h>
  #include <smbios/node.h>
  #include <smbios/memsize.h>
 
@@ -177,6 +178,47 @@
 		[](const char *) {
 			show_value_label = false;
 			return false;
+		}
+	},
+	{
+		'D',"dump-table",
+		"Dump data table",
+		false,
+		[](const char *) {
+
+		// 00000000001111111111222222222233333333334444444444555555555566666666667777777777
+		// 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+		// 00000000  5f 53 4d 5f 0a 1f 02 04  73 00 00 00 00 00 00 00  |_SM_....s.......|
+
+			char line[80];
+			line[0] = 0;
+
+			auto smbios = SMBios::Data::factory(filename);
+
+			for(size_t offset = 0; offset < smbios->size(); offset++) {
+
+				size_t col = offset%16;
+				if(col == 0) {
+					cout << line << endl;
+					memset(line,' ',80);
+					memset(line,'0',8);
+					line[79] = 0;
+					line[60] = line[77] = '|';
+				}
+
+				char buffer[10];
+
+				const uint8_t *ptr = smbios->get(offset);
+				snprintf(buffer,9,"%02x",*ptr);
+				memcpy(line+(10+(col*3)),buffer,2);
+
+				line[61+col] = (*ptr >= ' ' && *ptr < 128) ? *ptr : '.';
+
+			}
+			cout << line << endl;
+
+
+			return true;
 		}
 	},
 	{
