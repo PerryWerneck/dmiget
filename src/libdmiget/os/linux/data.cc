@@ -55,16 +55,21 @@
 				throw std::system_error(errno,std::system_category(),filename);
 			}
 
+			struct stat statbuf;
+			memset(&statbuf,0,sizeof(statbuf));
+
+			if(fstat(fd, &statbuf) != 0) {
+				int err = errno;
+				::close(fd);
+				throw std::system_error(err,std::system_category(),filename);
+			}
+
+			cout << "---------> " << statbuf.st_blksize << endl;
+			if(!statbuf.st_blksize) {
+				statbuf.st_blksize = 4096;
+			}
+
 			if(!length) {
-				struct stat statbuf;
-				memset(&statbuf,0,sizeof(statbuf));
-
-				if (fstat(fd, &statbuf) != 0) {
-					int err = errno;
-					::close(fd);
-					throw std::system_error(err,std::system_category(),filename);
-				}
-
 				length = statbuf.st_size;
 			}
 
@@ -74,7 +79,12 @@
 			size_t pos = 0;
 			while(pos < length) {
 
-				ssize_t bytes = pread(fd,ptr,(length-pos),pos);
+				size_t blksize = (length-pos);
+				if(blksize > statbuf.st_blksize) {
+					blksize = statbuf.st_blksize;
+				}
+
+				ssize_t bytes = pread(fd,ptr,blksize,pos);
 
 				if(bytes < 0) {
 					if(errno != EINTR) {
