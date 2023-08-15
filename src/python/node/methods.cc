@@ -37,11 +37,15 @@
 
 	SMBios::Node node;
 
+	pyNodePrivate() {
+	}
+
 	pyNodePrivate(const char *name) : node{name} {
 	}
 
 	pyNodePrivate(SMBios::Node &n) : node{n} {
 	}
+
  };
 
  void dmiget_node_type_init() {
@@ -50,13 +54,13 @@
 
  int dmiget_node_init(PyObject *self, PyObject *args, PyObject *) {
 
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(pvt) {
-		delete pvt;	// Just in case
-		((pyNode *) self)->pvt = NULL;
-	}
-
 	try {
+
+		pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+		if(pvt) {
+			delete pvt;	// Just in case
+			((pyNode *) self)->pvt = NULL;
+		}
 
 		switch(PyTuple_Size(args)) {
 		case 0:	// Create an empty node.
@@ -65,10 +69,16 @@
 		case 1:
 			{
 				const char *name = "";
+
 				if (!PyArg_ParseTuple(args, "s", &name))
 					throw runtime_error("Invalid argument");
 
-				((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
+				if(name && *name) {
+					((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
+				} else {
+					((pyNode *) self)->pvt = pvt = new pyNodePrivate{};
+				}
+
 			}
 			return 0;
 
@@ -115,12 +125,12 @@
 
  static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Node &node)> &worker) {
 
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		((pyNode *) self)->pvt = pvt = new pyNodePrivate{""};
-	}
-
 	try {
+
+		pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+		if(!pvt) {
+			((pyNode *) self)->pvt = pvt = new pyNodePrivate{};
+		}
 
 		return worker(pvt->node);
 
