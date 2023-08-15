@@ -92,4 +92,8 @@
 
 	}
 
+	Data::~Data() {
+		delete[] ptr;
+	}
+
  }

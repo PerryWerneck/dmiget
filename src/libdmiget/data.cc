@@ -52,10 +52,6 @@
 
  namespace SMBios {
 
-	Data::~Data() {
-		delete[] ptr;
-	}
-
  }
 
 
