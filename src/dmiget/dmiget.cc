@@ -109,7 +109,7 @@
  } workers[] {
 	{
 		'N',"node",
-		"",
+		"\t\tShow only nodes of required type",
 		true,
 		[](const char *name) {
 			node_name = name;
@@ -118,7 +118,7 @@
 	},
 	{
 		'V',"value",
-		"",
+		"\t\tShow only selected value",
 		true,
 		[](const char *name) {
 			value_name = name;
@@ -127,7 +127,7 @@
 	},
 	{
 		'v',"verbose",
-		"Verbose output (default)",
+		"\tVerbose output (default)",
 		false,
 		[](const char *) {
 			verbose = true;
@@ -136,7 +136,7 @@
 	},
 	{
 		'q',"quiet",
-		"Less verbose output",
+		"\t\tLess verbose output",
 		false,
 		[](const char *) {
 			verbose = false;
@@ -145,7 +145,7 @@
 	},
 	{
 		'u',"urls",
-		"Show URLs and values",
+		"\t\tShow URLs and values",
 		false,
 		[](const char *) {
 			output_format = Urls;
@@ -154,7 +154,7 @@
 	},
 	{
 		'f',"dump-file",
-		"Read from dump file",
+		"\tRead from dump file",
 		true,
 		[](const char *arg) {
 			filename = arg;
@@ -163,7 +163,7 @@
 	},
 	{
 		'\0',"hide-nodes",
-		"Hide node information",
+		"\tHide node information",
 		false,
 		[](const char *) {
 			show_node = false;
@@ -172,7 +172,7 @@
 	},
 	{
 		'\0',"hide-value-labels",
-		"Hide node information",
+		"Hide value labels",
 		false,
 		[](const char *) {
 			show_value_label = false;
@@ -181,7 +181,7 @@
 	},
 	{
 		'T',"text",
-		"Text mode output (default)",
+		"\t\tText mode output (default)",
 		false,
 		[](const char *) {
 			writer = make_shared<Writer::Text>();
@@ -192,6 +192,8 @@
 
  int main(int argc, char **argv) {
 
+	const char *appname = argv[0];
+
 	try {
 
 		// Check command-line arguments.
@@ -201,7 +203,15 @@
 			bool found = false;
 			const char *argument = *(++argv);
 
-			if(!strncmp(argument,"--",2)) {
+			if(!(strcasecmp(argument,"--help") && strcmp(argument,"-h") && strcmp(argument,"-?") && strcmp(argument,"help") && strcmp(argument,"?"))) {
+
+				cout << "Use " << appname << " [options] [dmi:///node/value]" << endl << endl;
+				for(const Worker &worker : workers) {
+					cout << "--" << worker.long_arg << "\t" << worker.help << endl;
+				}
+				return 0;
+
+			} else if(!strncmp(argument,"--",2)) {
 
 				argument += 2;
 				const char *value = strchr(argument,'=');
