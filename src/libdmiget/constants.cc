@@ -496,7 +496,6 @@
 	const Node::Info * Node::Info::find(const char *name) {
 
 		if(!(name && *name)) {
-			kill(getpid(),11);
 			throw std::system_error(EINVAL,std::system_category(),"Node type cant be null or empty");
 		}
 
