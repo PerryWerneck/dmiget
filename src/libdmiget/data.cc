@@ -34,7 +34,7 @@
 	#pragma warning(suppress : 4996)
  #endif // _MSC_VER
 
- #include <private/smbios.h>
+ #include <private/data.h>
  #include <stdexcept>
  #include <system_error>
 
@@ -51,72 +51,6 @@
  using namespace std;
 
  namespace SMBios {
-
-	std::shared_ptr<Data> Data::factory() {
-		return make_shared<Data>();
-	}
-
-	std::shared_ptr<Data> Data::factory(const char *filename) {
-
-		if(!(filename && *filename)) {
-			return factory();
-		}
-
-		int fd = open(filename,O_RDONLY);
-
-		if(fd < 0) {
-			throw std::system_error(errno,std::system_category(),filename);
-		}
-
-		struct stat statbuf;
-		if (fstat(fd, &statbuf) != 0) {
-			int err = errno;
-			::close(fd);
-			throw std::system_error(err,std::system_category(),filename);
-		}
-
-		size_t datalength = statbuf.st_size - 0x0020;
-
-		uint8_t *buffer = new uint8_t[datalength+1];
-		memset(buffer,0,datalength+1);
-
-		uint8_t *ptr = buffer;
-
-		if(lseek(fd,0x0020, SEEK_SET) != 0x0020) {
-			::close(fd);
-			throw std::runtime_error("Error positioning input file");
-		}
-
-		size_t pos = 0;
-		while(pos < datalength) {
-
-			auto bytes = read(fd,ptr,(datalength - pos));
-
-			if(bytes < 0) {
-				if(errno != EINTR) {
-					int err = errno;
-					delete[] buffer;
-					::close(fd);
-					throw std::system_error(err,std::system_category(),filename);
-				}
-			} else if(bytes == 0) {
-				break;
-
-			} else {
-				ptr += bytes;
-				pos += bytes;
-			}
-
-		}
-
-		::close(fd);
-
-		return make_shared<Data>(buffer,datalength);
-
-	}
-
-	Data::Data(uint8_t *p, int l) : ptr{p}, length{(size_t) l} {
-	}
 
 	Data::~Data() {
 		delete[] ptr;

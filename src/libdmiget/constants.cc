@@ -26,6 +26,10 @@
 
  #include <csignal>
  #include <unistd.h>
+ #include <string>
+ #include <stdexcept>
+
+ using namespace std;
 
  namespace SMBios {
 
@@ -486,13 +490,6 @@
 
 	};
 
-	static const Node::Info no_type = {
-		0xFF,
-		true,
-		"unknown",
-		"unknown"
-	};
-
 	const Node::Info * Node::Info::find(const char *name) {
 
 		if(!(name && *name)) {
@@ -511,7 +508,7 @@
 			}
 		}
 
-		return &no_type;
+		throw runtime_error(string{"Invalid node type '"}+name+"'");
 
 	}
 
@@ -536,6 +533,13 @@
 
 			return &oemtype;
 		}
+
+		static const Node::Info no_type = {
+			0xFF,
+			true,
+			"unknown",
+			"unknown"
+		};
 
 		return &no_type;
 	}

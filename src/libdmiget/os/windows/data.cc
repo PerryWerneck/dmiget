@@ -27,7 +27,7 @@
 
  #include <windows.h>
 
- #include <private/smbios.h>
+ #include <private/data.h>
  #include <stdexcept>
  #include <system_error>
 
@@ -69,10 +69,11 @@
 
 						RawSMBIOSData * data = (RawSMBIOSData *) buffer;
 
-						this->length = data->Length;
-						this->ptr = new uint8_t[this->length+1];
-						this->ptr[this->length] = 0;
-						memcpy(this->ptr,data->SMBIOSTableData,this->length);
+						this->dmi.version = (((uint16_t) data->SMBIOSMajorVersion) << 8) | ((uint16_t) data->SMBIOSMinorVersion);
+						this->dmi.length = data->Length;
+						this->ptr = new uint8_t[this->dmi.length+1];
+						this->ptr[this->dmi.length] = 0;
+						memcpy(this->ptr,data->SMBIOSTableData,this->dmi.length);
 
 					} else {
 						cerr << "Invalid response on GetSystemFirmwareTable()" << endl;

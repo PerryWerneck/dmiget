@@ -25,7 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/smbios.h>
+ #include <private/data.h>
  #include <smbios/defs.h>
  #include <smbios/value.h>
  #include <stdexcept>

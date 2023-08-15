@@ -24,7 +24,7 @@
  #pragma once
 
  #include <smbios/defs.h>
- #include <private/smbios.h>
+ #include <private/data.h>
  #include <smbios/value.h>
  #include <smbios/node.h>
 

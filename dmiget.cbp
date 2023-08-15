@@ -39,16 +39,17 @@
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
 		<Unit filename="src/include/private/constants.h" />
+		<Unit filename="src/include/private/data.h" />
 		<Unit filename="src/include/private/decoders.h" />
 		<Unit filename="src/include/private/intl.h" />
 		<Unit filename="src/include/private/python.h" />
-		<Unit filename="src/include/private/smbios.h" />
 		<Unit filename="src/include/smbios/defs.h" />
 		<Unit filename="src/include/smbios/memsize.h" />
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/constants.cc" />
 		<Unit filename="src/libdmiget/data.cc" />
+		<Unit filename="src/libdmiget/datafactory.cc" />
 		<Unit filename="src/libdmiget/decoders/abstract.cc" />
 		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />

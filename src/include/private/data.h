@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Declares SMBiosData blass
+  * @brief Declare SMBios::Data class
   */
 
  #pragma once
@@ -57,26 +57,29 @@
 
 	private:
 
-		struct {
-
+		struct Dmi {
 			/// @brief SMBios type.
 			Type type = Invalid;
 
-		} options;
+			/// @brief Length of the SMBIOS Data block.
+			size_t length = 0;
+
+			/// @brief Itens on the SMBIOS Data block.
+			size_t num = 0;
+
+			uint64_t base = 0;
+
+			uint32_t version = 0;
+
+		} dmi;
 
 		/// @brief Pointer to SMBIOS Data block.
 		uint8_t *ptr = nullptr;
 
-		/// @brief Length of the SMBIOS Data block.
-		size_t length = 0;
-
-		/// @brief Itens on the SMBIOS Data block.
-		size_t num = 0;
-
 	public:
 
 		Data();
-		Data(uint8_t *ptr, int length);
+		Data(const char *smbios_entry_point, const char *table);
 		~Data();
 
 		/// @brief Build data from BIOS.
@@ -86,11 +89,19 @@
 		static std::shared_ptr<Data> factory(const char *filename);
 
 		inline size_t size() const noexcept {
-			return length;
+			return dmi.length;
 		}
 
 		inline size_t count() const noexcept {
-			return num;
+			return dmi.num;
+		}
+
+		inline uint32_t version() const noexcept {
+			return dmi.version;
+		}
+
+		inline uint32_t type() const noexcept {
+			return dmi.type;
 		}
 
 		const uint8_t * get(int addr) const noexcept {

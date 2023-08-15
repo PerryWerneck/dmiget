@@ -28,7 +28,7 @@
  #include <smbios/defs.h>
  #include <smbios/node.h>
  #include <smbios/value.h>
- #include <private/smbios.h>
+ #include <private/data.h>
  #include <private/constants.h>
  #include <stdexcept>
  #include <cstring>
@@ -59,6 +59,10 @@
 
 		Node node{SMBios::Data::factory(filename),0};
 
+		if(!node) {
+			throw runtime_error("Unable to find first node");
+		}
+
 		if(name && *name) {
 
 			uint8_t type = Node::Info::find(name)->id;
@@ -67,39 +71,21 @@
 				node.next(type);
 			}
 
+			if(!node) {
+				throw runtime_error(string{"Unable to find first node for '"}+name+"'");
+			}
+
 			while(index-- > 0 && node) {
 				node.next(type);
 			}
 
+			if(!node) {
+				throw runtime_error(string{"Unable to find node '"}+name+"'");
+			}
 		}
 
 		return node;
 	}
-
-
-	/*
-
-	Node::Node(const char *name, int index) : Node{SMBios::Data::factory(),0} {
-
-		if(name && *name) {
-			do {
-				next(name);
-			} while(*this && index-- > 0);
-		}
-
-	}
-
-	Node::Node(const char *filename, const char *name, int index) :  {
-
-		if(name && *name) {
-			do {
-				next(name);
-			} while(*this && index-- > 0);
-		}
-
-	}
-
-	*/
 
 	Node::Node(std::shared_ptr<Data> d, const int o) : data{d}, offset{o}, info{Node::Info::find(*d->get(o))} {
 
