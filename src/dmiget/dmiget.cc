@@ -52,7 +52,7 @@
 	class Abstract {
 	public:
 		virtual void write(const Node &node) = 0;
-		virtual void write(const Value &value, bool tab = true) = 0;
+		virtual void write(const SMBios::Abstract::Value &value, bool tab = true) = 0;
 		virtual void write(const char *url, const char *value) = 0;
 
 		virtual void open() {
@@ -72,14 +72,14 @@
 			cout << node.description() << endl;
 		}
 
-		void write(const Value &value, bool tab) override {
+		void write(const SMBios::Abstract::Value &value, bool tab) override {
 			if(tab) {
 				cout << "\t";
 			}
 			if(show_value_label) {
 				cout << value.description() << ": ";
 			}
-			cout << value << endl;
+			cout << value.as_string() << endl;
 		}
 
 		void write(const char *url, const char *value) override {
@@ -340,7 +340,7 @@
 					writer->write(node);
 					writer->open();
 
-					node.for_each([](std::shared_ptr<Value> value){
+					node.for_each([](std::shared_ptr<Abstract::Value> value){
 						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
 							writer->write(*value);
 						}
@@ -351,7 +351,7 @@
 
 				} else {
 
-					node.for_each([](std::shared_ptr<Value> value){
+					node.for_each([](std::shared_ptr<Abstract::Value> value){
 						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
 							writer->write(*value,false);
 						}

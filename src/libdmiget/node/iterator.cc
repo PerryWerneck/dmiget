@@ -31,6 +31,7 @@
  #include <stdexcept>
  #include <private/data.h>
  #include <private/constants.h>
+ #include <private/oemstring.h>
  #include <cstring>
 
  using namespace std;
@@ -151,9 +152,48 @@
 
 	}
 
-	bool Node::for_each(const std::function<bool(std::shared_ptr<Value> v)> &call) const {
+	bool Node::for_each(const std::function<bool(const char *str)> &call) const {
 
-		if(offset < 0 || !(info && info->values)) {
+		return false;
+
+		if(offset < 0) {
+			return false;
+		}
+
+		const uint8_t *ptr = data->get(offset + header.length);
+
+		while (*ptr) {
+
+			if(call((const char *) ptr)) {
+				return true;
+			}
+			ptr += strlen((const char *) ptr);
+			ptr++;
+		}
+
+		return false;
+
+	}
+
+
+	bool Node::for_each(const std::function<bool(std::shared_ptr<Abstract::Value> v)> &call) const {
+
+		if(offset < 0) {
+			return false;
+		}
+
+		if(header.type == 11) {
+
+			// Is an OEM String node, enumerate strings.
+			size_t index = 0;
+			return for_each([&index,call](const char *str){
+				return call(std::make_shared<OEMString>(++index,str));
+			});
+
+		}
+
+		// Enumerate children.
+		if(!(info && info->values)) {
 			return false;
 		}
 
@@ -180,12 +220,26 @@
 		return false;
 	}
 
-	bool Node::for_each(const std::function<bool(const Value &v)> &call) const {
+	bool Node::for_each(const std::function<bool(const Abstract::Value &v)> &call) const {
 
 		if(offset < 0) {
 			return false;
 		}
 
+		if(header.type == 11) {
+
+			// Is an OEM String node, enumerate strings.
+			size_t index = 0;
+			return for_each([&index,call](const char *str){
+				return call(OEMString{++index,str});
+			});
+
+		}
+
+		// Enumerate children.
+		if(!(info && info->values)) {
+			return false;
+		}
 		Value value{data,(size_t) offset,info->values,0};
 
 		while(value) {

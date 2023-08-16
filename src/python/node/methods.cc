@@ -292,7 +292,7 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 
 		PyObject *pynodes = PyList_New(0);
 
-		node.for_each([pynodes](std::shared_ptr<Value> value){
+		node.for_each([pynodes](std::shared_ptr<Abstract::Value> value){
 			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value));
 			return false;
 		});

@@ -281,29 +281,6 @@
 		return next();
 	}
 
-	bool Node::for_each(const std::function<bool(const char *str)> &call) const {
-
-		return false;
-
-		if(offset < 0) {
-			return false;
-		}
-
-		const uint8_t *ptr = data->get(offset + header.length);
-
-		while (*ptr) {
-
-			if(call((const char *) ptr)) {
-				return true;
-			}
-			ptr += strlen((const char *) ptr);
-			ptr++;
-		}
-
-		return false;
-
-	}
-
 	std::vector<std::string> Node::strings() const {
 
 		std::vector<std::string> rc;

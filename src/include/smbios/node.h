@@ -141,10 +141,10 @@
 		bool for_each(const std::function<bool(const char *str)> &call) const;
 
 		/// @brief Enumerate all node values.
-		bool for_each(const std::function<bool(const Value &v)> &call) const;
+		bool for_each(const std::function<bool(const Abstract::Value &v)> &call) const;
 
 		/// @brief Enumerate all node values.
-		bool for_each(const std::function<bool(std::shared_ptr<Value> v)> &call) const;
+		bool for_each(const std::function<bool(std::shared_ptr<Abstract::Value> v)> &call) const;
 
 		const Value::Info * values() const noexcept;
 
