@@ -154,8 +154,6 @@
 
 	bool Node::for_each(const std::function<bool(const char *str)> &call) const {
 
-		return false;
-
 		if(offset < 0) {
 			return false;
 		}
