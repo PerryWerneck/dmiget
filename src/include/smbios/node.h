@@ -30,6 +30,7 @@
  #include <memory>
  #include <functional>
  #include <cstdint>
+ #include <vector>
 
  namespace SMBios {
 
@@ -113,6 +114,9 @@
 		/// @param index Node index.
 		static Node factory(const char *filename, const char *name = "", int index = 0);
 
+		/// @brief Get list of all node strings, independent of values.
+		std::vector<std::string> strings() const;
+
 		Node & operator=(const Node & src);
 		Node & operator=(const uint8_t type);
 		Node & operator=(const char *name);
@@ -132,7 +136,14 @@
 		static bool for_each(const char *name,const std::function<bool(const Node &node)> &call);
 		static bool for_each(const std::function<bool(const Node &node)> &call);
 		static bool for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call);
+
+		/// @brief Enumerate all node strings.
+		bool for_each(const std::function<bool(const char *str)> &call) const;
+
+		/// @brief Enumerate all node values.
 		bool for_each(const std::function<bool(const Value &v)> &call) const;
+
+		/// @brief Enumerate all node values.
 		bool for_each(const std::function<bool(std::shared_ptr<Value> v)> &call) const;
 
 		const Value::Info * values() const noexcept;
