@@ -27,12 +27,54 @@
 
  #include <smbios/defs.h>
  #include <smbios/value.h>
+ #include <private/decoders.h>
+ #include <private/data.h>
 
  #include <stdexcept>
 
  using namespace std;
 
  namespace SMBios {
+
+	Value::Iterator::~Iterator() {
+	}
+
+	Value::Iterator::operator bool() const {
+		return value.get() && *value;
+	}
+
+	Value::Iterator Value::Iterator::operator++(int) {
+
+		if(!*this) {
+			return *this;
+		}
+
+		Iterator it{value->clone()};
+		operator++();
+
+		return it;
+
+	}
+
+	Value::Iterator & Value::Iterator::operator++() {
+		if(*this) {
+			value->next();
+		}
+		return *this;
+	}
+
+ }
+
+ /*
+ #include <private/data.h>
+ #include <smbios/value.h>
+ #include <stdexcept>
+
+ using namespace std;
+
+ namespace SMBios {
+
+
 
 	Value::Iterator::operator bool() const {
 		return value && value->empty();
@@ -73,19 +115,6 @@
 		}
 		return *this;
 	}
-
-
- }
-
- /*
- #include <private/data.h>
- #include <smbios/value.h>
- #include <stdexcept>
-
- using namespace std;
-
- namespace SMBios {
-
 
  }
  */

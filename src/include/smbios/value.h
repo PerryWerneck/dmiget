@@ -35,33 +35,30 @@
 	class SMBIOS_API Value {
 	public:
 
+		/// @brief Iterator for node contents.
 		class SMBIOS_API Iterator {
 		private:
 			std::shared_ptr<Value> value;
 
-		public:
-			using iterator_category = std::forward_iterator_tag;
-			using difference_type   = std::ptrdiff_t;
-			using value_type        = Value;
-			using pointer           = std::shared_ptr<Value>;
-			using reference         = Value &;
-
-			Iterator(const Iterator &i) : value{i.value} {
-			}
-
-			Iterator(const Iterator *i) : value{i->value} {
-			}
-
 			Iterator(std::shared_ptr<Value> v) : value{v} {
 			}
 
-			~Iterator();
-
-			reference operator*() const {
-				return *value;
+			Iterator() {
 			}
 
-			pointer operator->() {
+		public:
+			using iterator_category = std::forward_iterator_tag;
+			// using difference_type   = std::ptrdiff_t;
+			// using value_type        = std::shared_ptr<Value>;
+			// using pointer           = std::shared_ptr<Value>;
+			// using reference         = std::shared_ptr<Value>;
+
+			~Iterator();
+
+			/// @brief Create a new value for current item.
+			std::shared_ptr<Value> operator*() const;
+
+			std::shared_ptr<Value> operator->() {
 				return value;
 			}
 
@@ -71,16 +68,21 @@
 
 			bool operator==(const Iterator& rhs) const;
 
-			bool operator!=(const Iterator& rhs) const;
+			bool operator!=(const Iterator& rhs) const {
+				return !operator==(rhs);
+			}
 
 			Iterator & operator++();
 
 		};
 
+
 		// Pure abstract object, cant copy it.
 
 		Value(const Value &src) = delete;
 		Value(const Value *src) = delete;
+
+		bool operator==(const Value &src) const noexcept;
 
 		bool operator==(const char *name) const noexcept {
 			return strcasecmp(this->name(),name) == 0;
@@ -131,7 +133,17 @@
 #endif /// !_MSC_VER
 
 	protected:
+		int offset = -1;
+		size_t item = (size_t) -1;
+
 		constexpr Value() = default;
+
+		constexpr Value(int o, size_t i) : offset{o}, item{i} {
+		}
+
+		/// @brief Create a copy of the object as shared_ptr
+		virtual std::shared_ptr<Value> clone() const;
+
 
 	};
 

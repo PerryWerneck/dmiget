@@ -32,8 +32,16 @@
 
  namespace SMBios {
 
+	bool Value::operator==(const Value &src) const noexcept {
+		return offset == src.offset && item == src.item;
+	}
+
 	uint64_t Value::as_uint64() const {
 		return as_uint();
+	}
+
+	std::shared_ptr<Value> Value::clone() const {
+		throw runtime_error("Value is not a cloneable");
 	}
 
 	unsigned int Value::as_uint() const {

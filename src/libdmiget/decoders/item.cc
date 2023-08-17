@@ -43,12 +43,10 @@
 		private:
 			const Decoder::Item *decoder;
 			std::shared_ptr<Data> data;
-			int offset;
-			size_t item;
 
 		public:
 			Value(const Decoder::Item *d, std::shared_ptr<Data> p, size_t o, size_t i)
-				: decoder{d}, data{p}, offset{(int) o}, item{i} {
+				: SMBios::Value{o,i}, decoder{d}, data{p} {
 			}
 
 			virtual ~Value() {
