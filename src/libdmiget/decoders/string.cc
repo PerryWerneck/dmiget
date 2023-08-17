@@ -25,6 +25,38 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <string>
+ #include <private/decoders.h>
+
+ using namespace std;
+
+ namespace SMBios {
+
+	string Decoder::String::as_string(const Node::Header &header, const uint8_t *ptr) const {
+
+		if(offset > header.length) {
+			return "";
+		}
+
+		uint8_t index = ptr[offset];
+		if (index == 0)
+			return "";
+
+		ptr += header.length;
+
+		while (index > 1 && *ptr) {
+			ptr += strlen((const char *) ptr);
+			ptr++;
+			index--;
+		}
+
+		return string{(const char *) ptr};
+
+	}
+
+
+ }
+
  /*
  #include <private/constants.h>
  #include <private/decoders.h>

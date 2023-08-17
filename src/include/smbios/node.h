@@ -34,16 +34,26 @@
 
  namespace SMBios {
 
-	/*
-	class SMBIOS_API Node {
+ 	class SMBIOS_API Node {
 	public:
-		struct Info;
 
+		#pragma pack(1)
 		struct Header{
 			uint8_t type = 0;
 			uint8_t length = 0;
 			uint16_t handle = 0;
 		};
+		#pragma pack()
+
+ 	};
+
+ }
+
+	/*
+	class SMBIOS_API Node {
+	public:
+		struct Info;
+
 
 		class SMBIOS_API Iterator {
 		private:

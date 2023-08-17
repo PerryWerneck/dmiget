@@ -35,18 +35,6 @@
 	class SMBIOS_API Value {
 	public:
 
-		/// @brief The content type for values.
-		enum Type {
-			Undefined,
-			String,		///< @brief Non numeric.
-			Unsigned,	///< @brief Unsigned value.
-		};
-
-	private:
-		Type content_type = Undefined;
-
-	public:
-
 		class SMBIOS_API Iterator {
 		private:
 			std::shared_ptr<Value> value;
@@ -93,13 +81,6 @@
 
 		Value(const Value &src) = delete;
 		Value(const Value *src) = delete;
-
-		/// @brief Get the value type.
-		Type type() const;
-
-		bool operator==(const Type type) const noexcept {
-			return this->content_type == type;
-		}
 
 		bool operator==(const char *name) const noexcept {
 			return strcasecmp(this->name(),name) == 0;
@@ -150,8 +131,7 @@
 #endif /// !_MSC_VER
 
 	protected:
-		constexpr Value(Type type = Undefined) : content_type{type} {
-		}
+		constexpr Value() = default;
 
 	};
 

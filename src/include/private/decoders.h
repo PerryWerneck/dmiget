@@ -32,43 +32,61 @@
  #include <smbios/defs.h>
  #include <private/data.h>
  #include <smbios/value.h>
+ #include <smbios/node.h>
 
  namespace SMBios {
 
 	namespace Decoder {
 
-		struct Abstract {
+		struct Item {
 
 			const char *name = nullptr;			///< @brief The value name.
 			uint8_t offset = 0xFF;				///< @brief The offset for value identifier.
 			const char *description = nullptr;	///< @brief The value description.
 
-			constexpr Abstract(const char *n = nullptr, const char *d = nullptr, uint8_t o = 0) : name{n},offset{o},description{d} {
+			constexpr Item(const char *n = nullptr, const char *d = nullptr, uint8_t o = 0) : name{n},offset{o},description{d} {
 			}
 
-			virtual std::string as_string(const uint8_t *ptr, const size_t offset) const;
-			virtual unsigned int as_uint(const uint8_t *ptr, const size_t offset) const;
-			virtual uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const;
-		};
+			virtual std::string as_string(const Node::Header &header, const uint8_t *ptr) const;
+			virtual unsigned int as_uint(const Node::Header &header, const uint8_t *ptr) const;
+			virtual uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr) const;
 
-		/// @brief Construct SMBios value from decoder & header offset
-		/// @param data Pointer to SMBios data.
-		/// @param offset Offset to the beggining of SMBios structure.
-		/// @param decoder Pointer to the decoder item.
-		/// @param item The decoder item.
-		std::shared_ptr<SMBios::Value> ValueFactory(std::shared_ptr<Data> data, size_t offset, const Decoder::Abstract *decoder, size_t item = 0);
-
-		struct String : public Abstract {
-
-			constexpr String(const char *name, const char *description, uint8_t offset = 0) : Abstract{name,description,offset} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
+			/// @brief Construct SMBios value.
+			/// @param data Pointer to SMBios data.
+			/// @param offset Offset to the beggining of SMBios structure.
+			/// @param decoder Pointer to the decoder item.
+			/// @param item The decoder item.
+			virtual std::shared_ptr<SMBios::Value> ValueFactory(std::shared_ptr<Data> data, size_t offset, size_t item = 0) const;
 
 		};
 
+		struct String : public Item {
+
+			constexpr String(const char *name, const char *description, uint8_t offset = 0) : Item{name,description,offset} {
+			}
+
+			std::string as_string(const Node::Header &header, const uint8_t *ptr) const override;
+
+		};
+
+		/// @brief List of generic decoders for an SMBios data type.
+		struct Generic {
+
+			uint8_t type = 0;
+			bool multiple = false;
+			const char *name = nullptr;
+			const char *description = nullptr;
+
+			const Decoder::Item *items = nullptr;
+
+			constexpr Generic(uint8_t t, bool m, const char *n, const char *d, const Decoder::Item *i)
+				: type{t}, multiple{m}, name{n}, description{d}, items{i} {
+			}
+
+		};
+
+		const Generic & get(const uint8_t type);
+		const Generic & get(const char *name);
 
 	};
 

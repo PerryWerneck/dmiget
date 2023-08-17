@@ -38,6 +38,7 @@
 			<Add directory="src/libdmiget/include" />
 		</Compiler>
 		<Unit filename="src/dmiget/dmiget.cc" />
+		<Unit filename="src/include/config.h" />
 		<Unit filename="src/include/private/constants.h" />
 		<Unit filename="src/include/private/data.h" />
 		<Unit filename="src/include/private/decoders.h" />
@@ -48,20 +49,23 @@
 		<Unit filename="src/include/smbios/memsize.h" />
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
-		<Unit filename="src/libdmiget/constants.cc" />
 		<Unit filename="src/libdmiget/data.cc" />
 		<Unit filename="src/libdmiget/decoders/abstract.cc" />
 		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />
+		<Unit filename="src/libdmiget/decoders/item.cc" />
 		<Unit filename="src/libdmiget/decoders/probes.cc" />
 		<Unit filename="src/libdmiget/decoders/processor.cc" />
 		<Unit filename="src/libdmiget/decoders/string.cc" />
+		<Unit filename="src/libdmiget/decoders/table.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/node/iterator.cc" />
 		<Unit filename="src/libdmiget/node/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/data.cc" />
+		<Unit filename="src/libdmiget/os/linux/private.h" />
 		<Unit filename="src/libdmiget/os/windows/data.cc" />
 		<Unit filename="src/libdmiget/os/windows/fromfile.cc" />
+		<Unit filename="src/libdmiget/os/windows/native_win32.h" />
 		<Unit filename="src/libdmiget/value/abstract.cc" />
 		<Unit filename="src/libdmiget/value/decoded.cc" />
 		<Unit filename="src/libdmiget/value/iterator.cc" />
