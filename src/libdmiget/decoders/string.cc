@@ -25,6 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <private/constants.h>
  #include <private/decoders.h>
  #include <smbios/node.h>
@@ -73,7 +74,7 @@
 	string Decoder::MemoryDeviceFormFactor::as_string(const uint8_t *ptr, const size_t offset) const {
 
 		static const char *form_factor[] = {
-			"Other", /* 0x01 */
+			"Other", // 0x01
 			"Unknown",
 			"SIMM",
 			"SIP",
@@ -88,7 +89,7 @@
 			"SODIMM",
 			"SRIMM",
 			"FB-DIMM",
-			"Die" /* 0x10 */
+			"Die" // 0x10
 		};
 
 		uint8_t code = ptr[offset];
@@ -172,3 +173,4 @@
 	}
 
  }
+ */

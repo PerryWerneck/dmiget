@@ -27,6 +27,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <smbios/defs.h>
  #include <smbios/value.h>
  #include <string>
@@ -53,7 +54,10 @@
 		bool valid() const override;
 		uint64_t as_uint64() const override;
 		unsigned int as_uint() const override;
+		Abstract::Value & next() override;
+
  	};
 
  }
+ */
 

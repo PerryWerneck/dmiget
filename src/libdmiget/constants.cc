@@ -18,6 +18,30 @@
  */
 
  #include <smbios/defs.h>
+ #include <private/decoders.h>
+ #include <stdexcept>
+
+ using namespace std;
+
+ namespace SMBios {
+
+	static const Decoder::Abstract NoDecoders[] = {
+		{}
+	};
+
+	static const Decoder::Abstract BiosInformation[] = {
+		Decoder::String{ "vendor", "Vendor", 0x04, },
+		Decoder::String{ "version", "Version", 0x05, },
+		Decoder::String{ "date", "Release Date", 0x08, },
+//		Decoder::FirmwareRevision{ "biosrev", "BIOS Revision", 0x14 },
+//		Decoder::FirmwareRevision{ "firmwarerev", "Firmware Revision", 0x16 },
+		{}
+	};
+
+
+ }
+
+ /*
  #include <smbios/node.h>
  #include <smbios/value.h>
  #include <private/constants.h>
@@ -34,15 +58,6 @@
  namespace SMBios {
 
 	static const Value::Info EmptyTable[] = {
-		{}
-	};
-
-	static const Value::Info BiosInformation[] = {
-		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
-		{ "version",		Decoder::String{},				0x05,		"Version"				},
-		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
-		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
-		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
 		{}
 	};
 
@@ -545,3 +560,4 @@
 	}
 
  }
+ */

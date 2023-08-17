@@ -26,8 +26,8 @@
  #include <smbios/defs.h>
  #include <private/data.h>
  #include <smbios/value.h>
- #include <smbios/node.h>
 
+ /*
  namespace SMBios {
 
 	namespace Decoder {
@@ -39,7 +39,7 @@
 			constexpr Abstract(const Value::Type t) : type{t} {
 			}
 
-			constexpr Abstract() : type{Value::Invalid} {
+			constexpr Abstract() : type{Value::Undefined} {
 			}
 
 			virtual std::string as_string(const uint8_t *ptr, const size_t offset) const;
@@ -69,6 +69,7 @@
 		static const Info * find(const char *name);
 	};
 
+
 	struct Value::Info {
 
 		const char *name = nullptr;
@@ -79,4 +80,5 @@
 	};
 
  }
+ */
 

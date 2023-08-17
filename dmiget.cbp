@@ -63,11 +63,11 @@
 		<Unit filename="src/libdmiget/os/windows/data.cc" />
 		<Unit filename="src/libdmiget/os/windows/fromfile.cc" />
 		<Unit filename="src/libdmiget/value/abstract.cc" />
+		<Unit filename="src/libdmiget/value/decoded.cc" />
 		<Unit filename="src/libdmiget/value/iterator.cc" />
 		<Unit filename="src/libdmiget/value/memsize.cc" />
 		<Unit filename="src/libdmiget/value/oemstring.cc" />
 		<Unit filename="src/libdmiget/value/url.cc" />
-		<Unit filename="src/libdmiget/value/value.cc" />
 		<Unit filename="src/python/init.c">
 			<Option compilerVar="CC" />
 		</Unit>

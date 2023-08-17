@@ -25,6 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <private/decoders.h>
  #include <smbios/node.h>
  #include <iostream>
@@ -44,12 +45,12 @@
 		unsigned int code{this->as_uint(ptr,offset)};
 
 		static const char *type[] = {
-			"Other", /* 0x01 */
+			"Other", // 0x01
 			"Unknown",
 			"Central Processor",
 			"Math Processor",
 			"DSP Processor",
-			"Video Processor" /* 0x06 */
+			"Video Processor" // 0x06
 		};
 
 		if (code >= 0x01 && code <= 0x06)
@@ -60,3 +61,4 @@
 	}
 
  }
+ */

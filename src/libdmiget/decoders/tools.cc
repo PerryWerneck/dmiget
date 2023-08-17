@@ -25,6 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <private/decoders.h>
  #include <smbios/node.h>
  #include <string>
@@ -104,3 +105,4 @@
 	}
 
  }
+ */

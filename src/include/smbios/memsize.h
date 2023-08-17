@@ -30,6 +30,7 @@
 
  namespace SMBios {
 
+	/*
 	class SMBIOS_API MemSize : public Abstract::Value {
 	private:
 		uint64_t value;
@@ -56,6 +57,7 @@
 
 
 	};
+	*/
 
  };
 

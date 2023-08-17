@@ -25,6 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <private/data.h>
  #include <smbios/defs.h>
  #include <smbios/node.h>
@@ -251,4 +252,5 @@
 	}
 
  }
+ */
 

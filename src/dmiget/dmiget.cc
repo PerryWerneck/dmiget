@@ -21,6 +21,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <iostream>
  #include <functional>
  #include <cstring>
@@ -30,10 +31,17 @@
  #include <private/data.h>
  #include <smbios/node.h>
  #include <smbios/memsize.h>
+ */
 
- using namespace std;
- using namespace SMBios;
+// using namespace std;
+// using namespace SMBios;
 
+ int main(int argc, char **argv) {
+
+	return 0;
+ }
+
+ /*
  static bool verbose = true;
  static bool show_node = true;
  static bool show_value_label = true;
@@ -389,4 +397,5 @@
 
 	return 0;
  }
+ */
 

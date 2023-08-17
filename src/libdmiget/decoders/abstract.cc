@@ -25,6 +25,17 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <smbios/defs.h>
+ #include <private/data.h>
+ #include <smbios/value.h>
+ #include <private/decoders.h>
+
+ namespace SMBios {
+
+
+ }
+
+ /*
  #include <private/constants.h>
  #include <ctype.h>
  #include <stdexcept>
@@ -66,3 +77,4 @@
 	}
 
  }
+ */

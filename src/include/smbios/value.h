@@ -27,54 +27,139 @@
  #include <iostream>
  #include <iterator>
  #include <memory>
+ #include <cstring>
 
  namespace SMBios {
 
- 	namespace Abstract {
+	/// @brief SMBios value.
+	class SMBIOS_API Value {
+	public:
 
-		class SMBIOS_API Value {
-		public:
-			virtual std::string as_string() const = 0;
-			virtual const char *name() const noexcept;
-			virtual const char *description() const noexcept;
-			virtual bool valid() const;
-			virtual uint64_t as_uint64() const = 0;
-			virtual unsigned int as_uint() const;
-
-			inline operator bool() const {
-				return valid();
-			}
-
-			inline operator uint64_t() const {
-				return as_uint64();
-			}
-
-			inline operator unsigned int() const {
-				return as_uint();
-			}
-
-			inline operator std::string() const {
-				return as_string();
-			}
-
-#ifndef _MSC_VER
-			inline std::string to_string() const {
-				return as_string();
-			}
-#endif /// !_MSC_VER
+		/// @brief The content type for values.
+		enum Type {
+			Undefined,
+			String,		///< @brief Non numeric.
+			Unsigned,	///< @brief Unsigned value.
 		};
 
- 	}
+	private:
+		Type content_type = Undefined;
 
+	public:
+
+		class SMBIOS_API Iterator {
+		private:
+			std::shared_ptr<Value> value;
+
+		public:
+			using iterator_category = std::forward_iterator_tag;
+			using difference_type   = std::ptrdiff_t;
+			using value_type        = Value;
+			using pointer           = std::shared_ptr<Value>;
+			using reference         = Value &;
+
+			Iterator(const Iterator &i) : value{i.value} {
+			}
+
+			Iterator(const Iterator *i) : value{i->value} {
+			}
+
+			Iterator(std::shared_ptr<Value> v) : value{v} {
+			}
+
+			~Iterator();
+
+			reference operator*() const {
+				return *value;
+			}
+
+			pointer operator->() {
+				return value;
+			}
+
+			operator bool() const;
+
+			Iterator operator++(int);
+
+			bool operator==(const Iterator& rhs) const;
+
+			bool operator!=(const Iterator& rhs) const;
+
+			Iterator & operator++();
+
+		};
+
+		// Pure abstract object, cant copy it.
+
+		Value(const Value &src) = delete;
+		Value(const Value *src) = delete;
+
+		/// @brief Get the value type.
+		Type type() const;
+
+		bool operator==(const Type type) const noexcept {
+			return this->content_type == type;
+		}
+
+		bool operator==(const char *name) const noexcept {
+			return strcasecmp(this->name(),name) == 0;
+		}
+
+		/// @brief Get value name.
+		virtual const char *name() const noexcept = 0;
+
+		/// @brief Get value description.
+		virtual const char *description() const noexcept = 0;
+
+		/// @brief Get value as string.
+		virtual std::string as_string() const = 0;
+
+		/// @brief Does the value has contents?
+		virtual bool empty() const = 0;
+
+		/// @brief Get value as an uint64.
+		virtual uint64_t as_uint64() const;
+
+		/// @brief Get value as an unsigned int.
+		virtual unsigned int as_uint() const;
+
+		/// @brief Skip to next value.
+		virtual Value & next();
+
+		virtual operator bool() const {
+			return !empty();
+		}
+
+		inline operator uint64_t() const {
+			return as_uint64();
+		}
+
+		inline operator unsigned int() const {
+			return as_uint();
+		}
+
+		inline operator std::string() const {
+			return as_string();
+		}
+
+
+#ifndef _MSC_VER
+		inline std::string to_string() const {
+			return as_string();
+		}
+#endif /// !_MSC_VER
+
+	protected:
+		constexpr Value(Type type = Undefined) : content_type{type} {
+		}
+
+	};
+
+	/*
 	class SMBIOS_API Value : public Abstract::Value {
 	public:
 		struct Info;
 
-		enum Type {
-			Invalid,
-			String,		///< @brief Non numeric.
-			Unsigned,	///< @brief Unsigned value.
-		};
 
 		Value(const Value &src);
 
@@ -140,7 +225,7 @@
 		const char *name() const noexcept override;
 		const char *description() const noexcept override;
 
-		Value & next();
+		Abstract::Value & next() override;
 
 		/// @brief Find value using url formatter as DMI:///node/value
 		static std::shared_ptr<Value> find(const char *url);
@@ -153,6 +238,7 @@
 		size_t item;
 
 	};
+	*/
 
  };
 

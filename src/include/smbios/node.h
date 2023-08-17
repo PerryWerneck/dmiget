@@ -34,6 +34,7 @@
 
  namespace SMBios {
 
+	/*
 	class SMBIOS_API Node {
 	public:
 		struct Info;
@@ -206,5 +207,5 @@
 	}
 
  }
-
+ */
 

@@ -25,13 +25,56 @@
  *
  */
 
- #include <smbios/defs.h>
- #include <private/constants.h>
-
  /**
   * @brief Decoders definitions.
   */
 
+ #include <smbios/defs.h>
+ #include <private/data.h>
+ #include <smbios/value.h>
+
+ namespace SMBios {
+
+	namespace Decoder {
+
+		struct Abstract {
+
+			const char *name = nullptr;			///< @brief The value name.
+			uint8_t offset = 0xFF;				///< @brief The offset for value identifier.
+			const char *description = nullptr;	///< @brief The value description.
+
+			constexpr Abstract(const char *n = nullptr, const char *d = nullptr, uint8_t o = 0) : name{n},offset{o},description{d} {
+			}
+
+			virtual std::string as_string(const uint8_t *ptr, const size_t offset) const;
+			virtual unsigned int as_uint(const uint8_t *ptr, const size_t offset) const;
+			virtual uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const;
+		};
+
+		/// @brief Construct SMBios value from decoder & header offset
+		/// @param data Pointer to SMBios data.
+		/// @param offset Offset to the beggining of SMBios structure.
+		/// @param decoder Pointer to the decoder item.
+		/// @param item The decoder item.
+		std::shared_ptr<SMBios::Value> ValueFactory(std::shared_ptr<Data> data, size_t offset, const Decoder::Abstract *decoder, size_t item = 0);
+
+		struct String : public Abstract {
+
+			constexpr String(const char *name, const char *description, uint8_t offset = 0) : Abstract{name,description,offset} {
+			}
+
+			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
+			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
+			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
+
+		};
+
+
+	};
+
+ }
+
+ /*
  namespace SMBios {
 
 	struct u64 {
@@ -129,3 +172,4 @@
 	}
 
  }
+ */

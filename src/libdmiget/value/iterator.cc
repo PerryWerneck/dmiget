@@ -25,9 +25,9 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/data.h>
  #include <smbios/defs.h>
  #include <smbios/value.h>
+
  #include <stdexcept>
 
  using namespace std;
@@ -35,28 +35,30 @@
  namespace SMBios {
 
 	Value::Iterator::operator bool() const {
-		return value && *value;
+		return value && value->empty();
 	}
 
 	Value::Iterator::~Iterator() {
-		delete value;
 	}
 
 	bool Value::Iterator::operator==(const Iterator& rhs) const {
-
-		if(value && rhs.value) {
-			return value->offset == rhs.value->offset && value->item == rhs.value->item;
+		if(value->empty() && rhs.value->empty()) {
+			return true;
 		}
-
-		return value == rhs.value;
-
+		if(value->empty() || rhs.value->empty()) {
+			return false;
+		}
+		return strcasecmp(value->name(),rhs.value->name()) == 0;
  	}
 
 	bool Value::Iterator::operator!=(const Iterator& rhs) const {
-		if(value && rhs.value) {
-			return value->offset != rhs.value->offset || value->item != rhs.value->item;
+		if(value->empty() && rhs.value->empty()) {
+			return false;
 		}
-		return rhs.value != value;
+		if(value->empty() || rhs.value->empty()) {
+			return true;
+		}
+		return strcasecmp(value->name(),rhs.value->name()) != 0;
 	}
 
 	Value::Iterator Value::Iterator::operator++(int) {
@@ -66,11 +68,25 @@
 	}
 
 	Value::Iterator & Value::Iterator::operator++() {
-		if(value && *value) {
+		if(value && !value->empty()) {
 			value->next();
 		}
 		return *this;
 	}
 
+
  }
+
+ /*
+ #include <private/data.h>
+ #include <smbios/value.h>
+ #include <stdexcept>
+
+ using namespace std;
+
+ namespace SMBios {
+
+
+ }
+ */
 
