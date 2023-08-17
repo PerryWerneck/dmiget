@@ -98,6 +98,9 @@
 		static bool for_each(const std::function<bool(const Node &node, size_t index)> &call);
 		static bool for_each(uint8_t type,const std::function<bool(const Node &node)> &call);
 		static bool for_each(const char *name,const std::function<bool(const Node &node)> &call);
+		static bool for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call);
+
+		bool for_each(const std::function<bool(const Value &v)> &call);
 
 	private:
 

@@ -84,5 +84,42 @@
 		return for_each(Decoder::get(name)->type,call);
 	}
 
+	bool Node::for_each(const std::function<bool(const Value &v)> &call) {
+
+		if(!*this) {
+			return false;
+		}
+
+		for(size_t item = 0; decoder->items[item].name; item++) {
+			auto value = decoder->items[item].ValueFactory(data,offset,item);
+			if(call(*value)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	bool Node::for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call) {
+
+		size_t indexes[0x0100];
+		memset(indexes,0,sizeof(indexes));
+
+		for(Node node;node;node.next()) {
+
+			size_t index = 0;
+			if(node.decoder->multiple) {
+				index = ++indexes[node.decoder->type];
+			}
+
+			if(node.for_each([&node,index,&call](const Value &value){
+				return call(node,index,value);
+			})) {
+				return true;
+			};
+		}
+
+		return false;
+	}
 
  }
