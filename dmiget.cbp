@@ -50,7 +50,6 @@
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/data.cc" />
-		<Unit filename="src/libdmiget/decoders/abstract.cc" />
 		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />
 		<Unit filename="src/libdmiget/decoders/item.cc" />
@@ -59,7 +58,9 @@
 		<Unit filename="src/libdmiget/decoders/string.cc" />
 		<Unit filename="src/libdmiget/decoders/table.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
+		<Unit filename="src/libdmiget/node/foreach.cc" />
 		<Unit filename="src/libdmiget/node/iterator.cc" />
+		<Unit filename="src/libdmiget/node/next.cc" />
 		<Unit filename="src/libdmiget/node/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/data.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />

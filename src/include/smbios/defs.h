@@ -54,6 +54,12 @@
 	class Node;
 	class Value;
 
+	namespace Decoder {
+
+		struct Generic;
+
+	}
+
  }
 
 

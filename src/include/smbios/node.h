@@ -37,13 +37,80 @@
  	class SMBIOS_API Node {
 	public:
 
-		#pragma pack(1)
 		struct Header{
 			uint8_t type = 0;
 			uint8_t length = 0;
 			uint16_t handle = 0;
+
+			static const Header & get(std::shared_ptr<Data> data, const int offset);
+
 		};
-		#pragma pack()
+
+		/// @brief Construct an empty node.
+		Node();
+
+		/// @brief Construct node from id.
+		/// @param type SMBIos rype.
+		Node(uint8_t type, int index = 0);
+
+		/// @brief Construct node.
+		/// @param name	Node name (empty for the first one)
+		/// @param index Node index.
+		Node(const char *name, int index = 0);
+
+		/// @brief Construct node reading SMBios from dump file.
+		/// @param SMBios dump file (empty for the system's table).
+		/// @param name	Node name (empty for the first one)
+		/// @param index Node index.
+		Node factory(const char *filename, const char *name = "", int index = 0);
+
+		Node & operator=(const uint8_t type);
+		Node & operator=(const char *name);
+
+		operator bool() const;
+
+		Node & rewind();
+		Node & next();
+		Node & next(uint8_t type, size_t count = 1);
+		Node & next(const char *name, size_t count = 1);
+
+		const char *name() const noexcept;
+		const char *description() const noexcept;
+
+		bool multiple() const noexcept;
+
+		inline short type() const noexcept {
+			return (short) header.type;
+		}
+
+		inline size_t size() const noexcept {
+			return (size_t) header.length;
+		}
+
+		inline uint16_t handle() const noexcept {
+			return header.handle;
+		}
+
+		std::shared_ptr<Value> operator[](size_t index) const;
+		std::shared_ptr<Value> operator[](const char *name) const;
+
+		static bool for_each(const std::function<bool(const Node &node)> &call);
+		static bool for_each(const std::function<bool(const Node &node, size_t index)> &call);
+		static bool for_each(uint8_t type,const std::function<bool(const Node &node)> &call);
+		static bool for_each(const char *name,const std::function<bool(const Node &node)> &call);
+
+	private:
+
+		/// @brief Private decoder for this node.
+		std::shared_ptr<Data> data;
+		int offset;
+		size_t index = 0;
+		Header header;
+		const Decoder::Generic *decoder = nullptr;
+
+		Node & setup(int offset = 0);
+
+		Node(std::shared_ptr<Data> data, const int offset = 0);
 
  	};
 
@@ -135,17 +202,7 @@
 		operator bool() const;
 
 		/// @brief Get value by index.
-		Value operator[](size_t index) const;
-		Value operator[](const char *name) const;
 
-		const char *name() const noexcept;
-		const char *description() const noexcept;
-
-		bool multiple() const noexcept;
-
-		static bool for_each(uint8_t type,const std::function<bool(const Node &node)> &call);
-		static bool for_each(const char *name,const std::function<bool(const Node &node)> &call);
-		static bool for_each(const std::function<bool(const Node &node)> &call);
 		static bool for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call);
 
 		/// @brief Enumerate all node strings.
@@ -164,25 +221,9 @@
 		Value::Iterator begin() const;
 		Value::Iterator end() const;
 
-		Node & rewind();
-		Node & next();
-		Node & next(uint8_t type);
-		Node & next(const char *name);
-
 		Value::Iterator begin();
 		Value::Iterator end();
 
-		short type() const noexcept {
-			return (short) header.type;
-		}
-
-		size_t size() const noexcept {
-			return (size_t) header.length;
-		}
-
-		uint16_t handle() const noexcept {
-			return header.handle;
-		}
 
 	private:
 

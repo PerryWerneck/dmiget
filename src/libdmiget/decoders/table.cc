@@ -315,7 +315,7 @@
 
 	};
 
-	const Decoder::Generic & get(const uint8_t type) {
+	const Decoder::Generic * Decoder::get(const uint8_t type) {
 
 		if(type >= 128) {
 			// Is a generic OEM type.
@@ -324,13 +324,13 @@
 				NoDecoders
 			};
 
-			return OEMType;
+			return &OEMType;
 
 		}
 
 		for(const Decoder::Generic &decoder : decoders) {
 			if(decoder.type == type) {
-				return decoder;
+				return &decoder;
 			}
 		}
 
@@ -338,22 +338,29 @@
 
 	}
 
-	const Decoder::Generic & get(const char *name) {
+	const Decoder::Generic * Decoder::get(const char *name) {
 
 		for(const Decoder::Generic &decoder : decoders) {
 			if(!strcasecmp(decoder.name,name)) {
-				return decoder;
+				return &decoder;
 			}
 		}
 
 		for(const Decoder::Generic &decoder : decoders) {
 			if(!strcasecmp(decoder.description,name)) {
-				return decoder;
+				return &decoder;
 			}
 		}
 
 		throw std::system_error(ENOENT,std::system_category(),string{"SMBIos::"}+name);
 
+	}
+
+	const Decoder::Generic * Decoder::get(std::shared_ptr<Data> data, const int offset) {
+		if(offset < 0) {
+			return nullptr;
+		}
+		return get(*data->get(offset));
 	}
 
  }

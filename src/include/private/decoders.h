@@ -85,8 +85,9 @@
 
 		};
 
-		const Generic & get(const uint8_t type);
-		const Generic & get(const char *name);
+		const Generic * get(const uint8_t type);
+		const Generic * get(const char *name);
+		const Generic * get(std::shared_ptr<Data> data, const int offset);
 
 	};
 

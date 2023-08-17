@@ -21,22 +21,27 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- /*
+ #include <smbios/node.h>
  #include <iostream>
+ #include <iomanip>
+
+ /*
  #include <functional>
  #include <cstring>
  #include <exception>
- #include <iomanip>
 
  #include <private/data.h>
- #include <smbios/node.h>
  #include <smbios/memsize.h>
  */
 
-// using namespace std;
-// using namespace SMBios;
+ using namespace std;
+ using namespace SMBios;
 
  int main(int argc, char **argv) {
+
+ 	for(Node node;node;node.next()) {
+		cout << node.name() << endl;
+ 	}
 
 	return 0;
  }
