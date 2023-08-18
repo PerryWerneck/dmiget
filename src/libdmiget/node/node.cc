@@ -144,9 +144,9 @@
 			throw std::system_error(ENODATA,std::system_category());
 		}
 
-		for(size_t item = 0; decoder->items[item].name; item++) {
+		for(size_t item = 0; decoder->itens[item].name; item++) {
 			if(item == index) {
-				return decoder->items[item].ValueFactory(data,offset,item);
+				return decoder->itens[item].factory(data,offset,*decoder,item);
 			}
 		}
 
@@ -160,9 +160,9 @@
 			throw std::system_error(ENODATA,std::system_category());
 		}
 
-		for(size_t item = 0; decoder->items[item].name; item++) {
-			if(!strcasecmp(name,decoder->items[item].name)) {
-				return decoder->items[item].ValueFactory(data,offset,item);
+		for(size_t item = 0; decoder->itens[item].name; item++) {
+			if(!strcasecmp(name,decoder->itens[item].name)) {
+				return decoder->itens[item].factory(data,offset,*decoder,item);
 			}
 		}
 
@@ -172,8 +172,8 @@
 
 	Value::Iterator Node::begin() {
 
-		if(*this && decoder && decoder->items && decoder->items[0].name) {
-			return Value::Iterator{decoder->items[0].ValueFactory(data,offset,0)};
+		if(*this && decoder && decoder->itens && decoder->itens[0].name) {
+			return Value::Iterator{decoder->itens[0].factory(data,offset,*decoder,0)};
 		}
 
 		return end();

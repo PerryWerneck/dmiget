@@ -36,6 +36,35 @@
 
  namespace SMBios {
 
+	std::shared_ptr<SMBios::Value> empty_value_factory(std::shared_ptr<Data> data, size_t offset, const Decoder &decoder, size_t item);
+	std::shared_ptr<SMBios::Value> string_value_factory(std::shared_ptr<Data> data, size_t offset, const Decoder &decoder, size_t item);
+
+ 	struct Decoder {
+
+		struct Item {
+
+			const char *name = nullptr;
+			std::shared_ptr<SMBios::Value> (*factory)(std::shared_ptr<Data> data, size_t offset, const Decoder &decoder, size_t item) = empty_value_factory;
+			uint8_t offset = 0xFF;
+			const char *description = nullptr;
+
+		};
+
+		uint8_t type = 0;
+		bool multiple = false;
+		const char *name = nullptr;
+		const char *description = nullptr;
+		const Item *itens = nullptr;
+
+		static const Decoder * get(const uint8_t type);
+		static const Decoder * get(const char *name);
+		static const Decoder * get(std::shared_ptr<Data> data, const int offset);
+
+ 	};
+
+ }
+
+	/*
 	namespace Decoder {
 
 		struct Item {
@@ -69,6 +98,8 @@
 
 		};
 
+		typedef const Item * Worker;
+
 		/// @brief List of generic decoders for an SMBios data type.
 		struct Generic {
 
@@ -77,21 +108,19 @@
 			const char *name = nullptr;
 			const char *description = nullptr;
 
-			const Decoder::Item *items = nullptr;
+			const Worker *items = nullptr;
 
-			constexpr Generic(uint8_t t, bool m, const char *n, const char *d, const Decoder::Item *i)
+			constexpr Generic(uint8_t t, bool m, const char *n, const char *d, const Worker *i)
 				: type{t}, multiple{m}, name{n}, description{d}, items{i} {
 			}
 
 		};
 
-		const Generic * get(const uint8_t type);
-		const Generic * get(const char *name);
-		const Generic * get(std::shared_ptr<Data> data, const int offset);
 
 	};
 
  }
+ */
 
  /*
  namespace SMBios {

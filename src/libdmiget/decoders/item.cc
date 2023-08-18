@@ -36,6 +36,7 @@
 
  namespace SMBios {
 
+	/*
 	std::shared_ptr<SMBios::Value> Decoder::Item::ValueFactory(std::shared_ptr<Data> data, size_t offset, size_t item) const {
 
 		/// @brief SMBIos value using decoders to translate data.
@@ -130,5 +131,6 @@
 		return rc;
 
 	}
+	*/
 
  }

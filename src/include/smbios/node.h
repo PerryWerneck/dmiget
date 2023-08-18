@@ -112,7 +112,7 @@
 		int offset;
 		size_t index = 0;
 		Header header;
-		const Decoder::Generic *decoder = nullptr;
+		const Decoder *decoder = nullptr;
 
 		Node & setup(int offset = 0);
 

@@ -32,6 +32,11 @@
 
  namespace SMBios {
 
+	std::shared_ptr<SMBios::Value> string_value_factory(std::shared_ptr<Data> data, size_t offset, const Decoder *decoders, size_t item) {
+
+	}
+
+	/*
 	string Decoder::String::as_string(const Node::Header &header, const uint8_t *ptr) const {
 
 		if(offset > header.length) {
@@ -53,7 +58,7 @@
 		return string{(const char *) ptr};
 
 	}
-
+	*/
 
  }
 

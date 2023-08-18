@@ -90,8 +90,8 @@
 			return false;
 		}
 
-		for(size_t item = 0; decoder->items[item].name; item++) {
-			auto value = decoder->items[item].ValueFactory(data,offset,item);
+		for(size_t item = 0; decoder->itens[item].name; item++) {
+			auto value = decoder->itens[item].factory(data,offset,*decoder,item);
 			if(call(*value)) {
 				return true;
 			}

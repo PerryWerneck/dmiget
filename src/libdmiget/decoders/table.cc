@@ -25,342 +25,461 @@
 
  namespace SMBios {
 
-	static const Decoder::Item NoDecoders[] = {
+	static const Decoder::Item EmptyTable[] = {
 		{}
 	};
 
-	static const Decoder::Generic decoders[] = {
-		Decoder::Generic {
-			0,false,"BIOS","BIOS Information",
-			(const Decoder::Item[]) {
-				Decoder::String{ "vendor", "Vendor", 0x04, },
-				Decoder::String{ "version", "Version", 0x05, },
-				Decoder::String{ "date", "Release Date", 0x08, },
-				//Decoder::FirmwareRevision{ "biosrev", "BIOS Revision", 0x14 },
-				//Decoder::FirmwareRevision{ "firmwarerev", "Firmware Revision", 0x16 },
-				{}
-			}
+	static const Decoder::Item BiosInformation[] = {
+		{ "vendor",			string_value_factory,				0x04,		"Vendor"				},
+		{ "version",		string_value_factory,				0x05,		"Version"				},
+		{ "date",			string_value_factory,				0x08,		"Release Date"			},
+//		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
+//		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
+		{}
+	};
 
-		},
-		Decoder::Generic {
-			1,false,"System","System Information",
-			(const Decoder::Item []) {
-				Decoder::String{ "manufacturer", "Manufacturer", 0x04},
-				Decoder::String{ "model", "Product Name", 0x05},
-				Decoder::String{ "version", "Version", 0x06},
-				Decoder::String{ "serial", "Serial Number", 0x07},
-		//		Decoder::SystemUUID{ "uuid", "uuid", 0x08},
-		//		Decoder::SystemWakeUpType{ "wakeup", "Wake-up Type", 0x18},
-				Decoder::String{ "sku", "SKU Number", 0x19},
-				Decoder::String{ "family", "Family", 0x1A},
-				{}
-			}
-		},
-		Decoder::Generic {
-			2,false,"BaseBoard","Base Board",
-			(const Decoder::Item []) {
-				Decoder::String{ "manufacturer", "Manufacturer", 0x04},
-				Decoder::String{ "model", "Product Name", 0x05},
-				Decoder::String{ "version", "Version", 0x06},
-				Decoder::String{ "serial", "Serial Number", 0x07},
-				Decoder::String{ "atag", "Asset Tag", 0x08},
-		//		Decoder::BaseBoardFeatures{ "features", "Base board features", 0x09},
-				Decoder::String{ "location", "Location In Chassis", 0x0A},
-				{}
-			}
-		},
-		Decoder::Generic {
-			3,false,"Chassis","Chassis Information",
-			(const Decoder::Item []) {
-				Decoder::String{ "manufacturer", "Manufacturer", 0x04},
-		//		Decoder::ChassisType{ "type", "Type", 0x05},
-		//		Decoder::ChassisLock{ "lock", "Lock", 0x05},
-				Decoder::String{ "version", "Version", 0x06},
-				Decoder::String{ "serial", "Serial Number", 0x07},
-				Decoder::String{ "atag", "Asset Tag", 0x08},
-		//		Decoder::ChassisSKU{ "sku", "SKU Number", 0x00},
-				{}
-			}
-		},
-		Decoder::Generic {
-			4,true,"Processor","Processor",
-			(const Decoder::Item []) {
-		//		Decoder::ProcessorType{ "type", "Type", 0x05},
-				Decoder::String{ "socket", "Socket Designation", 0x04},
-				Decoder::String{ "manufacturer", "Manufacturer", 0x07},
-				Decoder::String{ "version", "Version", 0x10},
-				Decoder::String{ "serial", "Serial Number", 0x20},
-				Decoder::String{ "atag", "Asset Tag", 0x21},
-				Decoder::String{ "partnumber", "Part Number", 0x22},
-				{}
-			}
-		},
-		Decoder::Generic {
-			5,false,"MemoryController","Memory Controller",
-			NoDecoders
-		},
-		Decoder::Generic {
-			6,false,"MemoryModule","Memory Module",
-			NoDecoders
-		},
-		Decoder::Generic {
-			7,true,"Cache","Cache",
-			(const Decoder::Item []) {
-				Decoder::String{ "socket", "Socket Designation", 0x04},
-				{}
-			}
-		},
-		Decoder::Generic {
-			8,true,"PortConnectors","Port Connector",
-			(const Decoder::Item []) {
-				Decoder::String{ "internal", "Internal Reference Designator", 0x04},
-				Decoder::String{ "type", "Internal Connector Type", 0x05},
-				Decoder::String{ "external", "External Reference Designator", 0x06},
-				{}
-			}
-		},
-		Decoder::Generic {
-			9,true,"Slots","System Slots",
-			(const Decoder::Item []) {
-				Decoder::String{ "designation", "Designation", 0x04},
-				{}
-			}
-		},
-		Decoder::Generic {
-			10,false,"OnBoardDevice","On Board Devices Information",
-			NoDecoders
-		},
-		Decoder::Generic {
-			11,false,"OEMstrings","OEM Strings",
-			NoDecoders
-		},
-		Decoder::Generic {
-			12,false,"SysConfigOpts","System Configuration Options",
-			NoDecoders
-		},
-		Decoder::Generic {
-			13,false,"BIOSLanguage","BIOS Language",
-			NoDecoders
-		},
-		Decoder::Generic {
-			14,true,"GroupAssociations","Group Associations",
-			(const Decoder::Item []) {
-				{ "name", "Name", 0x04},
-				{}
-			}
-		},
-		Decoder::Generic {
-			15,false,"EventLog","System Event Log",
-			NoDecoders
+	static const Decoder::Item System[] = {
+		{ "manufacturer",	string_value_factory,				0x04,		"Manufacturer"			},
+		{ "model",			string_value_factory,				0x05,		"Product Name"			},
+		{ "version",		string_value_factory,				0x06,		"Version"				},
+		{ "serial",			string_value_factory,				0x07,		"Serial Number"			},
+//		{ "uuid",			Decoder::SystemUUID{},			0x08,		"uuid"					},
+//		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
+		{ "sku",			string_value_factory,				0x19,		"SKU Number"			},
+		{ "family",			string_value_factory,				0x1A,		"Family"				},
+		{}
+	};
+
+	static const Decoder::Item BaseBoard[] = {
+		{ "manufacturer",	string_value_factory,				0x04,		"Manufacturer"			},
+		{ "model",			string_value_factory,				0x05,		"Product Name"			},
+		{ "version",		string_value_factory,				0x06,		"Version"				},
+		{ "serial",			string_value_factory,				0x07,		"Serial Number"			},
+		{ "atag",			string_value_factory,				0x08,		"Asset Tag"				},
+//		{ "features",		Decoder::BaseBoardFeatures{},	0x09,		"Base board features"	},
+		{ "location",		string_value_factory,				0x0A,		"Location In Chassis"	},
+		{}
+	};
+
+	static const Decoder::Item Chassis[] = {
+		{ "manufacturer",	string_value_factory,				0x04,	"Manufacturer"				},
+		// { "type",	Decoder::ChassisType{},				0x05,	"Type"				},
+		// { "lock",	Decoder::ChassisLock{},				0x05,	"Lock"				},
+		{ "version",		string_value_factory,				0x06,	"Version"					},
+		{ "serial",			string_value_factory,				0x07,	"Serial Number"				},
+		{ "atag",			string_value_factory,				0x08,	"Asset Tag"					},
+//		{ "sku",			Decoder::ChassisSKU{},			0x00,	"SKU Number"				},
+		{}
+	};
+
+
+	static const Decoder::Item Processor[] = {
+//		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
+		{ "socket",			string_value_factory,					0x04,	"Socket Designation"		},
+		{ "manufacturer",	string_value_factory,					0x07,	"Manufacturer"				},
+		{ "version",		string_value_factory,					0x10,	"Version"					},
+		{ "serial",			string_value_factory,					0x20,	"Serial Number"				},
+		{ "atag",			string_value_factory,					0x21,	"Asset Tag"					},
+		{ "partnumber",		string_value_factory,					0x22,	"Part Number"				},
+		{}
+	};
+
+	static const Decoder::Item Cache[] = {
+		{ "socket",			string_value_factory,					0x04,	"Socket Designation"	},
+		{}
+	};
+
+	static const Decoder::Item PortConnectors[] = {
+		{ "internal",		string_value_factory,					0x04,	"Internal Reference Designator"	},
+		{ "type",			string_value_factory,					0x05,	"Internal Connector Type"		},
+		{ "external",		string_value_factory,					0x06,	"External Reference Designator"	},
+		{}
+	};
+
+	static const Decoder::Item Slots[] = {
+		{ "designation",	string_value_factory,					0x04,	"Designation"					},
+		{}
+	};
+
+	static const Decoder::Item GroupAssociations[] = {
+		{ "name",			string_value_factory,					0x04,	"Name"	},
+		{}
+	};
+
+	static const Decoder::Item MemoryDevice[] = {
+//		{ "twidth",			Decoder::MemoryDeviceWidth{},		0x08,	"Total Width"		},
+//		{ "dwidth",			Decoder::MemoryDeviceWidth{},		0x0A,	"Data Width"		},
+//		{ "size",			Decoder::MemorySize{},				0x0C,	"Size"		},
+//		{ "formfactor",		Decoder::MemoryDeviceFormFactor{},	0x0E,	"Form Factor"		},
+		{ "locator",		string_value_factory,					0x10,	"Locator"			},
+		{ "bank",			string_value_factory,					0x11,	"Bank Locator"		},
+		{ "manufacturer",	string_value_factory,					0x17,	"Manufacturer"		},
+		{ "serial",			string_value_factory,					0x18,	"Serial Number"		},
+		{ "atag",			string_value_factory,					0x19,	"Asset Tag"			},
+		{ "partnumber",		string_value_factory,					0x1A,	"Part Number"		},
+
+		{}
+	};
+
+	static const Decoder::Item PortableBattery[] = {
+		{ "location",		string_value_factory,					0x04,	"Location"			},
+		{ "manufacturer",	string_value_factory,					0x05,	"Manufacturer"		},
+		{ "date",			string_value_factory,					0x06,	"Manufacture Date"	},
+		{ "serial",			string_value_factory,					0x07,	"Serial Number"		},
+		{ "name",			string_value_factory,					0x08,	"Name"				},
+		{}
+	};
+
+	static const Decoder::Item TemperatureProbe[] = {
+		{ "description",	string_value_factory,						0x04,	"Description"	},
+//		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"	},
+//		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"	},
+//		{ "maximum",		Decoder::TemperatureProbeValue{},		0x06,	"Maximum Value"	},
+//		{ "minimum",		Decoder::TemperatureProbeValue{},		0x08,	"Minimum Value"	},
+//		{ "tolerance",		Decoder::TemperatureProbeValue{},		0x08,	"Tolerance"	},
+//		{ "accuracy",		Decoder::TemperatureProbeAccuracy{},	0x0E,	"Accuracy"	},
+//		{ "value",			Decoder::TemperatureProbeValue{},		0x14,	"Nominal Value"	},
+		{}
+	};
+
+	static const Decoder::Item OnboardDevice[] = {
+//		{ "reference",	Decoder::StringIndex{},	1,	"Reference Designation"	},
+		{}
+	};
+
+	static const Decoder::Item PowerSupply[] = {
+//		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
+//		{ "name",			Decoder::StringIndex{},	2,	"Name"				},
+//		{ "manufacturer",	Decoder::StringIndex{},	3,	"Manufacturer"		},
+//		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
+//		{ "atag",			Decoder::StringIndex{},	5,	"Asset Tag"			},
+//		{ "modelpn",		Decoder::StringIndex{},	6,	"Model Part Number"	},
+//		{ "revision",		Decoder::StringIndex{},	7,	"Revision"			},
+		{}
+	};
+
+	static const Decoder::Item VoltageProbe[] = {
+//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{}
+	};
+
+	static const Decoder::Item CoolingDevice[] = {
+//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{}
+	};
+
+	static const Decoder decoders[] = {
+
+		{
+			0,
+			false,
+			"BIOS",
+			"BIOS Information",
+			BiosInformation
 		},
 		{
-			16,false,"PhysicalMemoryArray","Physical Memory Array",
-			NoDecoders
+			1,
+			false,
+			"System",
+			"System Information",
+			System
 		},
-		Decoder::Generic {
-			17,true,"MemoryDevice","Memory Device",
-			(const Decoder::Item []) {
-		//		Decoder::MemoryDeviceWidth{ "twidth", "Total Width", 0x08},
-		//		Decoder::MemoryDeviceWidth{ "dwidth", "Data Width", 0x0A},
-		//		Decoder::MemorySize{ "size", "Size", 0x0C},
-		//		Decoder::MemoryDeviceFormFactor{ "formfactor", "Form Factor", 0x0E},
-				Decoder::String{ "locator", "Locator", 0x10},
-				Decoder::String{ "bank", "Bank Locator", 0x11},
-				Decoder::String{ "manufacturer", "Manufacturer", 0x17},
-				Decoder::String{ "serial", "Serial Number", 0x18},
-				Decoder::String{ "atag", "Asset Tag", 0x19},
-				Decoder::String{ "partnumber", "Part Number", 0x1A},
-				{}
-			}
+		{
+			2,
+			false,
+			"BaseBoard",
+			"Base Board",
+			BaseBoard
 		},
-		Decoder::Generic {
-			18,false,"32BitMemoryError","32-bit Memory Error",
-			NoDecoders
+		{
+			3,
+			false,
+			"Chassis",
+			"Chassis Information",
+			Chassis
 		},
-		Decoder::Generic {
-			19,true,"MemoryArrayAddressMap","Memory Array Mapped Address",
-			NoDecoders
+		{
+			4,
+			true,
+			"Processor",
+			"Processor",
+			Processor
 		},
-		Decoder::Generic {
-			20,false,"MemoryDeviceAddressMap","Memory Device Mapped Address",
-			NoDecoders
+		{
+			5,
+			false,
+			"MemoryController",
+			"Memory Controller",
+			EmptyTable
 		},
-		Decoder::Generic {
-			21,false,"BuiltinPointingDevice","Built-in Pointing Device",
-			NoDecoders
+		{
+			6,
+			false,
+			"MemoryModule",
+			"Memory Module",
+			EmptyTable
 		},
-		Decoder::Generic {
-			22,false,"PortableBattery","Portable Battery",
-			(const Decoder::Item []) {
-				Decoder::String{ "location", "Location", 0x04},
-				Decoder::String{ "manufacturer", "Manufacturer", 0x05},
-				Decoder::String{ "date", "Manufacture Date", 0x06},
-				Decoder::String{ "serial", "Serial Number", 0x07},
-				Decoder::String{ "name", "Name", 0x08},
-				{}
-			}
+		{
+			7,
+			true,
+			"Cache",
+			"Cache",
+			Cache
 		},
-		Decoder::Generic {
-			23,false,"SystemReset","System Reset",
-			NoDecoders
+		{
+			8,
+			true,
+			"PortConnectors",
+			"Port Connector",
+			PortConnectors
 		},
-		Decoder::Generic {
-			24,false,"HWsecurity","Hardware Security",
-			NoDecoders
+		{
+			9,
+			true,
+			"Slots",
+			"System Slots",
+			Slots
 		},
-		Decoder::Generic {
-			25,false,"SysPowerCtrl","System Power Controls",
-			NoDecoders
+		{
+			10,
+			false,
+			"OnBoardDevice",
+			"On Board Devices Information",
+			EmptyTable
 		},
-		Decoder::Generic {
-			26,false,"VoltageProbe","Voltage Probe",
-			(const Decoder::Item []) {
-		//		{ "description", Decoder::StringIndex{}, 1, "Description"},
-				{}
-			}
+		{
+			11,
+			false,
+			"OEMstrings",
+			"OEM Strings",
+			EmptyTable
 		},
-		Decoder::Generic {
-			27,false,"CoolingDevice","Cooling Device",
-			(const Decoder::Item []) {
-		//		{ "description", Decoder::StringIndex{}, 1, "Description"},
-				{}
-			}
+		{
+			12,
+			false,
+			"SysConfigOpts",
+			"System Configuration Options",
+			EmptyTable
 		},
-		Decoder::Generic {
-			28,false,"TemperatureProbe","Temperature Probe",
-			(const Decoder::Item []) {
-				Decoder::String{ "description", "Description", 0x04},
-		//		Decoder::TemperatureProbeLocation{ "location", "Location", 0x05},
-		//		Decoder::TemperatureProbeStatus{ "status", "Status", 0x05},
-		//		Decoder::TemperatureProbeValue{ "maximum", "Maximum Value", 0x06},
-		//		Decoder::TemperatureProbeValue{ "minimum", 0x08, "Minimum Value"},
-		//		Decoder::TemperatureProbeValue{ "tolerance", "Tolerance", 0x08},
-		//		Decoder::TemperatureProbeAccuracy{ "accuracy", "Accuracy", 0x0E},
-		//		Decoder::TemperatureProbeValue{ "value", "Nominal Value", 0x14},
-				{}
-			}
+		{
+			13,
+			false,
+			"BIOSLanguage",
+			"BIOS Language",
+			EmptyTable
 		},
-		Decoder::Generic {
-			29,false,"ElectricalCurrentProbe","Electrical Current Probe",
-			NoDecoders
+		{
+			14,
+			true,
+			"GroupAssociations",
+			"Group Associations",
+			GroupAssociations
 		},
-		Decoder::Generic {
-			30,false,"RemoteAccess","Out-of-band Remote Access",
-			NoDecoders
+		{
+			15,
+			false,
+			"EventLog",
+			"System Event Log",
+			EmptyTable
 		},
-		Decoder::Generic {
-			31,false,"BootIntegrityServices","Boot Integrity Services",
-			NoDecoders
+		{
+			16,
+			false,
+			"PhysicalMemoryArray",
+			"Physical Memory Array",
+			EmptyTable
 		},
-		Decoder::Generic {
-			32,false,"SystemBoot","System Boot",
-			NoDecoders
+		{
+			17,
+			true,
+			"MemoryDevice",
+			"Memory Device",
+			MemoryDevice
 		},
-		Decoder::Generic {
-			33,false,"64BitMemoryError","64-bit Memory Error",
-			NoDecoders
+		{
+			18,
+			false,
+			"32BitMemoryError",
+			"32-bit Memory Error",
+			EmptyTable
 		},
-		Decoder::Generic {
-			34,false,"ManagementDevice","Management Device",
-			NoDecoders
+		{
+			19,
+			true,
+			"MemoryArrayAddressMap",
+			"Memory Array Mapped Address",
+			EmptyTable
 		},
-		Decoder::Generic {
-			35,false,"ManagementDeviceComponent","Management Device Component",
-			NoDecoders
+		{
+			20,
+			false,
+			"MemoryDeviceAddressMap",
+			"Memory Device Mapped Address",
+			EmptyTable
 		},
-		Decoder::Generic {
-			36,false,"ManagementDeviceThreshold","Management Device Threshold Data",
-			NoDecoders
+		{
+			21,
+			false,
+			"BuiltinPointingDevice",
+			"Built-in Pointing Device",
+			EmptyTable
 		},
-		Decoder::Generic {
-			37,false,"MemoryChannel","Memory Channel",
-			NoDecoders
+		{
+			22,
+			false,
+			"PortableBattery",
+			"Portable Battery",
+			PortableBattery
 		},
-		Decoder::Generic {
-			38,false,"IPMIdevice","IPMI Device",
-			NoDecoders
+		{
+			23,
+			false,
+			"SystemReset",
+			"System Reset",
+			EmptyTable
 		},
-		Decoder::Generic {
-			39,false,"PowerSupply","Power Supply",
-			(const Decoder::Item []) {
-		//		{ "location", Decoder::StringIndex{}, 1, "Location"},
-		//		{ "name", Decoder::StringIndex{}, 2, "Name"},
-		//		{ "manufacturer", Decoder::StringIndex{}, 3, "Manufacturer"},
-		//		{ "serial", Decoder::StringIndex{}, 4, "Serial Number"},
-		//		{ "atag", Decoder::StringIndex{}, 5, "Asset Tag"},
-		//		{ "modelpn", Decoder::StringIndex{}, 6, "Model Part Number"},
-		//		{ "revision", Decoder::StringIndex{}, 7, "Revision"},
-				{}
-			}
+		{
+			24,
+			false,
+			"HWsecurity",
+			"Hardware Security",
+			EmptyTable
 		},
-		Decoder::Generic {
-			40,false,"AdditionalInfo","Additional Information",
-			NoDecoders
+		{
+			25,
+			false,
+			"SysPowerCtrl",
+			"System Power Controls",
+			EmptyTable
 		},
-		Decoder::Generic {
-			41,true,"OnboardDevice","Onboard Device",
-			(const Decoder::Item []) {
-		//		{ "reference", Decoder::StringIndex{}, 1, "Reference Designation"},
-				{}
-			}
+		{
+			26,
+			false,
+			"VoltageProbe",
+			"Voltage Probe",
+			VoltageProbe
 		},
-		Decoder::Generic {
-			42,false,"MgmntCtrltHostIntf","Management Controller Host Interface",
-			NoDecoders
+		{
+			27,
+			false,
+			"CoolingDevice",
+			"Cooling Device",
+			CoolingDevice
 		},
-		Decoder::Generic {
-			43,false,"TPMDevice","TPM Device",
-			NoDecoders
+		{
+			28,
+			false,
+			"TemperatureProbe",
+			"Temperature Probe",
+			TemperatureProbe
+		},
+		{
+			29,
+			false,
+			"ElectricalCurrentProbe",
+			"Electrical Current Probe",
+			EmptyTable
+		},
+		{
+			30,
+			false,
+			"RemoteAccess",
+			"Out-of-band Remote Access",
+			EmptyTable
+		},
+		{
+			31,
+			false,
+			"BootIntegritySrv",
+			"Boot Integrity Services",
+			EmptyTable
+		},
+		{
+			32,
+			false,
+			"SystemBoot",
+			"System Boot",
+			EmptyTable
+		},
+		{
+			33,
+			false,
+			"64BitMemoryError",
+			"64-bit Memory Error",
+			EmptyTable
+		},
+		{
+			34,
+			false,
+			"ManagementDevice",
+			"Management Device",
+			EmptyTable
+		},
+		{
+			35,
+			false,
+			"ManagementDeviceComponent",
+			"Management Device Component",
+			EmptyTable
+		},
+		{
+			36,
+			false,
+			"ManagementDeviceThreshold",
+			"Management Device Threshold Data",
+			EmptyTable
+		},
+		{
+			37,
+			false,
+			"MemoryChannel",
+			"Memory Channel",
+			EmptyTable
+		},
+		{
+			38,
+			false,
+			"IPMIdevice",
+			"IPMI Device",
+			EmptyTable
+		},
+		{
+			39,
+			false,
+			"PowerSupply",
+			"Power Supply",
+			PowerSupply
+		},
+		{
+			40,
+			false,
+			"AdditionalInfo",
+			"Additional Information",
+			EmptyTable
+		},
+		{
+			41,
+			false,
+			"OnboardDevice",
+			"Onboard Device",
+			OnboardDevice
+		},
+		{
+			42,
+			false,
+			"MgmntCtrltHostIntf",
+			"Management Controller Host Interface",
+			EmptyTable
+		},
+		{
+			43,
+			false,
+			"TPMDevice",
+			"TPM Device",
+			EmptyTable
 		}
 
 	};
 
-	const Decoder::Generic * Decoder::get(const uint8_t type) {
-
-		if(type >= 128) {
-			// Is a generic OEM type.
-			static const Decoder::Generic OEMType {
-				128,true,"oem","OEM-specific",
-				NoDecoders
-			};
-
-			return &OEMType;
-
-		}
-
-		for(const Decoder::Generic &decoder : decoders) {
-			if(decoder.type == type) {
-				return &decoder;
-			}
-		}
-
-		throw std::system_error(ENOENT,std::system_category(),string{"SMBIos::"}+to_string((int) type));
-
-	}
-
-	const Decoder::Generic * Decoder::get(const char *name) {
-
-		for(const Decoder::Generic &decoder : decoders) {
-			if(!strcasecmp(decoder.name,name)) {
-				return &decoder;
-			}
-		}
-
-		for(const Decoder::Generic &decoder : decoders) {
-			if(!strcasecmp(decoder.description,name)) {
-				return &decoder;
-			}
-		}
-
-		throw std::system_error(ENOENT,std::system_category(),string{"SMBIos::"}+name);
-
-	}
-
-	const Decoder::Generic * Decoder::get(std::shared_ptr<Data> data, const int offset) {
-		if(offset < 0) {
-			return nullptr;
-		}
-		return get(*data->get(offset));
-	}
-
  }
+
