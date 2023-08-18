@@ -85,9 +85,10 @@
 
 		};
 
+		/// @brief Find value using url formatter as DMI:///node/value
+		static std::shared_ptr<Value> find(const char *url);
 
 		// Pure abstract object, cant copy it.
-
 		Value(const Value &src) = delete;
 		Value(const Value *src) = delete;
 
@@ -257,4 +258,7 @@
 			return os << value->as_string();
 	}
 
+	inline ostream& operator<< (ostream& os, const shared_ptr<SMBios::Value> value) {
+			return os << value->as_string();
+	}
  }

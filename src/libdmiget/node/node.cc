@@ -184,6 +184,36 @@
 		return Value::Iterator{};
 	}
 
+	std::shared_ptr<Value> Node::find(const char *url) const {
+
+		if(!*this) {
+			throw std::system_error(ENODATA,std::system_category());
+		}
+
+		string name;
+		const char *ptr = strchr(url,'/');
+		if(ptr) {
+			name = string{url,(size_t) (ptr-url) };
+		} else {
+			name = url;
+		}
+		url += name.size()+1;
+
+#ifdef DEBUG
+//		cout << "name= '" << name << "' url= '" << url << "'" << endl;
+#endif // DEBUG
+
+		for(size_t item = 0; decoder->itens[item].name; item++) {
+			if(!strcasecmp(name.c_str(),decoder->itens[item].name)) {
+				return decoder->factory(*decoder,data,offset,item);
+			}
+		}
+
+		throw std::system_error(ENOENT,std::system_category());
+
+	}
+
+
 
  }
 

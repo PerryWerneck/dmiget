@@ -26,50 +26,19 @@
  #include <smbios/node.h>
  #include <iostream>
  #include <iomanip>
+ #include <private/data.h>
+
+ using namespace std;
+ using namespace SMBios;
 
  /*
  #include <functional>
  #include <cstring>
  #include <exception>
 
- #include <private/data.h>
  #include <smbios/memsize.h>
  */
 
- using namespace std;
- using namespace SMBios;
-
- int main(int argc, char **argv) {
-
-	Node node{"system"};
-	if(!node) {
-		cout << "Cant find node" << endl;
-		exit(-1);
-	}
-
-	cout << node.description() << endl << endl;
-
-	auto value = node.begin();
-	cout << value->description() << ": " << value->as_string() << endl;
-
-	/*
-	for(auto value : node) {
-		cout << value->description() << ": " << value->as_string() << endl;
-	}
-	*/
-
-	/*
- 	for(Node node;node;node.next()) {
-		cout << node.name() << endl;
-		auto it = node.begin();
-		cout << "---> " << it->name() << endl << endl;
- 	}
- 	*/
-
-	return 0;
- }
-
- /*
  static bool verbose = true;
  static bool show_node = true;
  static bool show_value_label = true;
@@ -88,7 +57,7 @@
 	class Abstract {
 	public:
 		virtual void write(const Node &node) = 0;
-		virtual void write(const SMBios::Abstract::Value &value, bool tab = true) = 0;
+		virtual void write(const SMBios::Value &value, bool tab = true) = 0;
 		virtual void write(const char *url, const char *value) = 0;
 
 		virtual void open() {
@@ -108,7 +77,7 @@
 			cout << node.description() << endl;
 		}
 
-		void write(const SMBios::Abstract::Value &value, bool tab) override {
+		void write(const SMBios::Value &value, bool tab) override {
 			if(tab) {
 				cout << "\t";
 			}
@@ -376,9 +345,9 @@
 					writer->write(node);
 					writer->open();
 
-					node.for_each([](std::shared_ptr<Abstract::Value> value){
-						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
-							writer->write(*value);
+					node.for_each([](const Value &value){
+						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+							writer->write(value);
 						}
 						return false;
 					});
@@ -387,9 +356,9 @@
 
 				} else {
 
-					node.for_each([](std::shared_ptr<Abstract::Value> value){
-						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
-							writer->write(*value,false);
+					node.for_each([](const Value &value){
+						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+							writer->write(value,false);
 						}
 						return false;
 					});
@@ -425,5 +394,3 @@
 
 	return 0;
  }
- */
-

@@ -25,7 +25,6 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- /*
  #include <smbios/defs.h>
  #include <smbios/node.h>
  #include <cstring>
@@ -33,6 +32,8 @@
  #include <system_error>
  #include <iostream>
  #include <ctype.h>
+
+ #include <private/decoders.h>
 
  using namespace std;
  using namespace SMBios;
@@ -91,7 +92,8 @@
 		}
 
 		throw system_error(ENOENT,system_category(),nodename.c_str());
-	}
+
+ 	}
 
  }
- */
+

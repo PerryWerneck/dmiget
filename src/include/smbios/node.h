@@ -62,7 +62,7 @@
 		/// @param SMBios dump file (empty for the system's table).
 		/// @param name	Node name (empty for the first one)
 		/// @param index Node index.
-		Node factory(const char *filename, const char *name = "", int index = 0);
+		static Node factory(const char *filename, const char *name = "", int index = 0);
 
 		Node & operator=(const uint8_t type);
 		Node & operator=(const char *name);
@@ -94,6 +94,12 @@
 		std::shared_ptr<Value> operator[](size_t index) const;
 		std::shared_ptr<Value> operator[](const char *name) const;
 
+		/// @brief Find value from path.
+		std::shared_ptr<Value> find(const char *path) const;
+
+		Node operator++(int);
+		Node & operator++();
+
 		static bool for_each(const std::function<bool(const Node &node)> &call);
 		static bool for_each(const std::function<bool(const Node &node, size_t index)> &call);
 		static bool for_each(uint8_t type,const std::function<bool(const Node &node)> &call);
@@ -104,6 +110,8 @@
 
 		Value::Iterator begin();
 		Value::Iterator end();
+
+		class Iterator;
 
 	private:
 
@@ -119,6 +127,10 @@
 		Node(std::shared_ptr<Data> data, const int offset = 0);
 
  	};
+
+ 	inline Node begin() {
+		return Node{};
+ 	}
 
  }
 
