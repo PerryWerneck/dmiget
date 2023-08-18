@@ -42,10 +42,21 @@
  int main(int argc, char **argv) {
 
 	Node node{"system"};
+	if(!node) {
+		cout << "Cant find node" << endl;
+		exit(-1);
+	}
 
+	cout << node.description() << endl << endl;
+
+	auto value = node.begin();
+	cout << value->description() << ": " << value->as_string() << endl;
+
+	/*
 	for(auto value : node) {
 		cout << value->description() << ": " << value->as_string() << endl;
 	}
+	*/
 
 	/*
  	for(Node node;node;node.next()) {

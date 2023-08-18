@@ -52,7 +52,7 @@
 	}
 
 	bool Decoder::Value::empty() const {
-		return type.itens[item].name || offset < 0;
+		return !type.itens[item].name || offset < 0;
 	}
 
 	const char * Decoder::Value::name() const noexcept {

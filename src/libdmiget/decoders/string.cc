@@ -27,14 +27,37 @@
 
  #include <string>
  #include <private/decoders.h>
+ #include <ctype.h>
 
  using namespace std;
 
  namespace SMBios {
 
+	unsigned int Decoder::Worker::as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+		unsigned int rc = 0;
+		string str{as_string(header,ptr,offset)};
+		for(const char *ptr = str.c_str();*ptr && isdigit(*ptr);ptr++) {
+			rc *= 10;
+			rc += ('0' - *ptr);
+		}
+		return rc;
+	}
 
-	/*
-	string Decoder::String::as_string(const Node::Header &header, const uint8_t *ptr) const {
+	uint64_t Decoder::Worker::as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+		uint64_t rc = 0;
+		string str{as_string(header,ptr,offset)};
+		for(const char *ptr = str.c_str();*ptr && isdigit(*ptr);ptr++) {
+			rc *= 10;
+			rc += ('0' - *ptr);
+		}
+		return rc;
+	}
+
+	string Decoder::Worker::as_string(const Node::Header &, const uint8_t *, const size_t) const {
+		return "";
+	}
+
+	string Decoder::String::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
 		if(offset > header.length) {
 			return "";
@@ -55,7 +78,6 @@
 		return string{(const char *) ptr};
 
 	}
-	*/
 
  }
 

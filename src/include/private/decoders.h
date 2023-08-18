@@ -63,7 +63,6 @@
 
 		};
 
-
 		struct Worker {
 			virtual std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
 			virtual unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
@@ -72,8 +71,6 @@
 
 		struct String : public Worker {
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
 		struct Item {
@@ -83,12 +80,14 @@
 			uint8_t offset = 0xFF;
 			const char *description = nullptr;
 
+			/*
 			constexpr Item(const Decoder::Worker &w = Worker{}) : worker{w} {
 			}
 
 			constexpr Item(const char *n,const Decoder::Worker &w,uint8_t o, const char *d)
 				: name{n},worker{w},offset{o},description{d} {
 			}
+			*/
 
 		};
 
