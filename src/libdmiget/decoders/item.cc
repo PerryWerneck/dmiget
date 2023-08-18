@@ -45,7 +45,7 @@
 			std::shared_ptr<Data> data;
 
 		public:
-			Value(const Decoder::Item *d, std::shared_ptr<Data> p, size_t o, size_t i)
+			Value(const Decoder::Item *d, std::shared_ptr<Data> p, int o, size_t i)
 				: SMBios::Value{o,i}, decoder{d}, data{p} {
 			}
 

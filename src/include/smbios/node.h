@@ -102,6 +102,9 @@
 
 		bool for_each(const std::function<bool(const Value &v)> &call);
 
+		Value::Iterator begin();
+		Value::Iterator end();
+
 	private:
 
 		/// @brief Private decoder for this node.

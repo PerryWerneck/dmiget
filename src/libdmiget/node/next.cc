@@ -66,7 +66,9 @@
 
 		while(*this && count--) {
 			next();
-			while(*this && header.type != type);
+			while(*this && header.type != type) {
+				next();
+			}
 		}
 
 		return *this;

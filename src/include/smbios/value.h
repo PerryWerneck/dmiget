@@ -40,13 +40,20 @@
 		private:
 			std::shared_ptr<Value> value;
 
-			Iterator(std::shared_ptr<Value> v) : value{v} {
-			}
+		public:
 
 			Iterator() {
 			}
 
-		public:
+			Iterator(std::shared_ptr<Value> v) : value{v} {
+			}
+
+			Iterator(const Iterator &it) : Iterator{it.value} {
+			}
+
+			Iterator(const Iterator *it) : Iterator{it->value} {
+			}
+
 			using iterator_category = std::forward_iterator_tag;
 			// using difference_type   = std::ptrdiff_t;
 			// using value_type        = std::shared_ptr<Value>;
@@ -56,7 +63,9 @@
 			~Iterator();
 
 			/// @brief Create a new value for current item.
-			std::shared_ptr<Value> operator*() const;
+			std::shared_ptr<Value> operator*() const {
+				return value;
+			}
 
 			std::shared_ptr<Value> operator->() {
 				return value;
@@ -66,7 +75,7 @@
 
 			Iterator operator++(int);
 
-			bool operator==(const Iterator& rhs) const;
+			virtual bool operator==(const Iterator& rhs) const;
 
 			bool operator!=(const Iterator& rhs) const {
 				return !operator==(rhs);

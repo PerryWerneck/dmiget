@@ -43,6 +43,19 @@
 		return value.get() && *value;
 	}
 
+	bool Value::Iterator::operator==(const Iterator& rhs) const {
+
+		if(value.get() && rhs.value.get()) {
+			return *value == *rhs.value;
+		}
+
+		if(value.get() || rhs.value.get()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	Value::Iterator Value::Iterator::operator++(int) {
 
 		if(!*this) {
@@ -58,7 +71,9 @@
 
 	Value::Iterator & Value::Iterator::operator++() {
 		if(*this) {
-			value->next();
+			if(!value->next()) {
+				value.reset();
+			}
 		}
 		return *this;
 	}

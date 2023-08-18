@@ -21,6 +21,8 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <unistd.h>
+
  #include <smbios/node.h>
  #include <iostream>
  #include <iomanip>
@@ -39,9 +41,19 @@
 
  int main(int argc, char **argv) {
 
+	Node node{"system"};
+
+	for(auto value : node) {
+		cout << value->description() << ": " << value->as_string() << endl;
+	}
+
+	/*
  	for(Node node;node;node.next()) {
 		cout << node.name() << endl;
+		auto it = node.begin();
+		cout << "---> " << it->name() << endl << endl;
  	}
+ 	*/
 
 	return 0;
  }

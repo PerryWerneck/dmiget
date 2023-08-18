@@ -25,10 +25,13 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <iostream>
  #include <smbios/defs.h>
  #include <smbios/node.h>
  #include <private/data.h>
  #include <private/decoders.h>
+
+ using namespace std;
 
  namespace SMBios {
 
@@ -166,6 +169,21 @@
 		throw std::system_error(ENOENT,std::system_category());
 
 	}
+
+	Value::Iterator Node::begin() {
+
+		if(*this && decoder && decoder->items && decoder->items[0].name) {
+			return Value::Iterator{decoder->items[0].ValueFactory(data,offset,0)};
+		}
+
+		return end();
+
+	}
+
+	Value::Iterator Node::end() {
+		return Value::Iterator{};
+	}
+
 
  }
 
