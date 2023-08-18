@@ -31,14 +31,6 @@
  using namespace std;
  using namespace SMBios;
 
- /*
- #include <functional>
- #include <cstring>
- #include <exception>
-
- #include <smbios/memsize.h>
- */
-
  static bool verbose = true;
  static bool show_node = true;
  static bool show_value_label = true;

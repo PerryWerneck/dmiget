@@ -75,7 +75,13 @@
 	}
 
 	Node & Node::next(const char *name,size_t count) {
-		return next(Decoder::get(name)->type, count);
+		if(name && *name) {
+			return next(Decoder::get(name)->type, count);
+		}
+
+		while(next() && count--);
+
+		return *this;
 	}
 
  }

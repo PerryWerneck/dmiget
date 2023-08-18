@@ -535,7 +535,7 @@
 			}
 		}
 
-		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure name: "}+name);
+		throw std::system_error(ENOENT,std::system_category(),string{"DMI:///"}+name+"/");
 
 	}
 
