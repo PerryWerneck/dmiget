@@ -63,6 +63,11 @@
 				throw std::system_error(err,std::system_category(),filename);
 			}
 
+#ifdef _WIN32
+			if(!length) {
+				length = 4096;
+			}
+#else
 			if(!statbuf.st_blksize) {
 				statbuf.st_blksize = 4096;
 			}
@@ -70,6 +75,7 @@
 			if(!length) {
 				length = statbuf.st_size;
 			}
+#endif // _WIN32
 
 			ptr = new uint8_t[length+1];
 			memset(ptr,0,length+1);
@@ -78,9 +84,11 @@
 			while(pos < length) {
 
 				size_t blksize = (length-pos);
+#ifndef _WIN32
 				if(blksize > (size_t) statbuf.st_blksize) {
 					blksize = statbuf.st_blksize;
 				}
+#endif // !_WIN32
 
 				ssize_t bytes = read(fd,ptr+pos,blksize);
 
