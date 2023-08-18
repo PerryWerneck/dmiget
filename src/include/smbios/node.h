@@ -107,6 +107,7 @@
 		static bool for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call);
 
 		bool for_each(const std::function<bool(const Value &v)> &call);
+		bool for_each(const std::function<bool(std::shared_ptr<Value> value)> &call);
 
 		Value::Iterator begin();
 		Value::Iterator end();

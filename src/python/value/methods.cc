@@ -31,7 +31,7 @@
  #include <stdexcept>
 
  struct pyValuePrivate {
- 	std::shared_ptr<SMBios::Abstract::Value> value;
+ 	std::shared_ptr<SMBios::Value> value;
  };
 
  void dmiget_value_type_init() {
@@ -94,7 +94,7 @@
 
  }
 
- PyObject * dmiget_set_value(PyObject *self, shared_ptr<SMBios::Abstract::Value> value) {
+ PyObject * dmiget_set_value(PyObject *self, shared_ptr<SMBios::Value> value) {
 	((pyValue *) self)->pvt->value = value;
 	return self;
  }
@@ -117,7 +117,7 @@
 	Py_TYPE(self)->tp_free(self);
  }
 
- static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Abstract::Value &value)> &worker) {
+ static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Value &value)> &worker) {
 
 	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
 	if(!pvt) {
@@ -145,7 +145,7 @@
 
  PyObject * dmiget_value_str(PyObject *self) {
 
-	return call(self, [](SMBios::Abstract::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyUnicode_FromString(value.as_string().c_str());
 	});
 
@@ -153,7 +153,7 @@
 
  PyObject * dmiget_value_name(PyObject *self, void *) {
 
-	return call(self, [](SMBios::Abstract::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyUnicode_FromString(value.name());
 	});
 
@@ -161,7 +161,7 @@
 
  PyObject * dmiget_value_description(PyObject *self, void *) {
 
-	return call(self, [](SMBios::Abstract::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyUnicode_FromString(value.description());
 	});
 
@@ -173,7 +173,7 @@
 		return PyBool_FromLong(1);
 	}
 
-	return call(self, [](SMBios::Abstract::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 		return PyBool_FromLong(value ? 0 : 1);
 	});
 
@@ -181,7 +181,7 @@
 
  PyObject * dmiget_value_next(PyObject *self, PyObject *) {
 
-	return call(self, [](SMBios::Abstract::Value &v) {
+	return call(self, [](SMBios::Value &v) {
 
 		SMBios::Value *value = dynamic_cast<SMBios::Value *>(&v);
 
@@ -223,7 +223,7 @@
 
  PyObject * dmiget_value_int(PyObject *self) {
 
-	return call(self, [](SMBios::Abstract::Value &value) {
+	return call(self, [](SMBios::Value &value) {
 
 		return PyLong_FromUnsignedLong(value.as_uint64());
 

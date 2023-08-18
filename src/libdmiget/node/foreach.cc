@@ -25,11 +25,17 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
+
  #include <smbios/defs.h>
  #include <smbios/node.h>
  #include <private/decoders.h>
  #include <functional>
  #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
@@ -81,19 +87,33 @@
 	}
 
 	bool Node::for_each(const char *name,const std::function<bool(const Node &node)> &call) {
-		return for_each(Decoder::get(name)->type,call);
+		if(name && *name) {
+			return for_each(Decoder::get(name)->type,call);
+		}
+		return for_each(call);
+	}
+
+	bool Node::for_each(const std::function<bool(std::shared_ptr<Value> value)> &call) {
+
+		if(*this) {
+			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
+				if(call(value->clone())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+
 	}
 
 	bool Node::for_each(const std::function<bool(const Value &v)> &call) {
 
-		if(!*this) {
-			return false;
-		}
-
-		for(size_t item = 0; decoder->itens[item].name; item++) {
-			auto value = decoder->factory(*decoder,data,offset,item);
-			if(call(*value)) {
-				return true;
+		if(*this) {
+			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
+				if(call(*value)) {
+					return true;
+				}
 			}
 		}
 

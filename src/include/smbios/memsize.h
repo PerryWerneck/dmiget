@@ -30,8 +30,7 @@
 
  namespace SMBios {
 
-	/*
-	class SMBIOS_API MemSize : public Abstract::Value {
+	class SMBIOS_API MemSize : public Value {
 	private:
 		uint64_t value;
 
@@ -39,8 +38,9 @@
 		MemSize();
 
 		std::string as_string(int precision) const;
-
 		std::string as_string() const override;
+
+		bool empty() const override;
 		const char *name() const noexcept override;
 		const char *description() const noexcept override;
 
@@ -48,16 +48,7 @@
 			return value;
 		}
 
-
-#ifndef _MSC_VER
-		inline std::string to_string() const {
-			return as_string();
-		}
-#endif /// !_MSC_VER
-
-
 	};
-	*/
 
  };
 

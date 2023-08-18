@@ -339,7 +339,7 @@
 					writer->open();
 
 					node.for_each([](const Value &value){
-						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+						if(!*value_name || value == value_name) {
 							writer->write(value);
 						}
 						return false;
@@ -350,7 +350,7 @@
 				} else {
 
 					node.for_each([](const Value &value){
-						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+						if(!*value_name || value == value_name) {
 							writer->write(value,false);
 						}
 						return false;

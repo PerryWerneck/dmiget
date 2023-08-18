@@ -25,6 +25,10 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
+
  #include <private/python.h>
  #include <smbios/node.h>
  #include <smbios/value.h>
@@ -292,8 +296,11 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 
 		PyObject *pynodes = PyList_New(0);
 
-		node.for_each([pynodes](std::shared_ptr<Abstract::Value> value){
-			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value));
+		node.for_each([pynodes](const SMBios::Value &value){
+			if(!value) { // Just for debugging.
+				throw runtime_error("Unexpected value");
+			}
+			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value.clone()));
 			return false;
 		});
 

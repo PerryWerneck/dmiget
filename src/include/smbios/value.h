@@ -94,9 +94,7 @@
 
 		bool operator==(const Value &src) const noexcept;
 
-		bool operator==(const char *name) const noexcept {
-			return strcasecmp(this->name(),name) == 0;
-		}
+		bool operator==(const char *name) const noexcept;
 
 		/// @brief Get value name.
 		virtual const char *name() const noexcept = 0;
@@ -118,6 +116,9 @@
 
 		/// @brief Skip to next value.
 		virtual Value & next();
+
+		/// @brief Create a copy of the object as shared_ptr
+		virtual std::shared_ptr<Value> clone() const;
 
 		virtual operator bool() const {
 			return !empty();
@@ -150,10 +151,6 @@
 
 		constexpr Value(int o, size_t i) : offset{o}, item{i} {
 		}
-
-		/// @brief Create a copy of the object as shared_ptr
-		virtual std::shared_ptr<Value> clone() const;
-
 
 	};
 

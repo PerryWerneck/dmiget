@@ -25,7 +25,6 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- /*
  #include <private/data.h>
  #include <smbios/node.h>
  #include <smbios/value.h>
@@ -38,10 +37,15 @@
 	MemSize::MemSize() : value{0LL} {
 
 		Node::for_each(17,[this](const Node &node){
-			value += node["size"].as_uint64();
+			value += node["size"]->as_uint64();
 			return false;
 		});
 
+
+	}
+
+	bool MemSize::empty() const {
+		return value;
 	}
 
 	const char *MemSize::name() const noexcept {
@@ -90,4 +94,3 @@
 	}
 
  }
- */

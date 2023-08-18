@@ -36,6 +36,13 @@
 		return offset == src.offset && item == src.item;
 	}
 
+	bool Value::operator==(const char *name) const noexcept {
+		if(*this && name && *name) {
+			return strcasecmp(this->name(),name) == 0;
+		}
+		return false;
+	}
+
 	uint64_t Value::as_uint64() const {
 		return as_uint();
 	}
