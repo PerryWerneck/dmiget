@@ -107,19 +107,3 @@
 	}
 
  }
-
- /*
- #include <private/decoders.h>
- #include <smbios/node.h>
- #include <string>
- #include <cstring>
-
- using namespace std;
-
- namespace SMBios {
-
-
-
-
- }
- */

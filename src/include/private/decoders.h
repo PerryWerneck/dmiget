@@ -193,33 +193,6 @@
 			std::string as_string(const uint8_t *ptr, const size_t index) const override;
 		};
 
-		/// @brief Decode firmware revision.
-		struct FirmwareRevision : public Abstract {
-
-			constexpr FirmwareRevision() : Abstract{Value::Unsigned} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-
-		struct ProcessorType : public UInt16 {
-
-			constexpr ProcessorType() = default;
-
-			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-
-		struct TemperatureProbeValue : public Abstract {
-
-			constexpr TemperatureProbeValue() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
-
-		};
 
 	}
 

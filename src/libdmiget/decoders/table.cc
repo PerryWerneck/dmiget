@@ -37,6 +37,11 @@
  #include <smbios/defs.h>
  #include <private/decoders.h>
  #include <private/decoders/memory.h>
+ #include <private/decoders/processor.h>
+ #include <private/decoders/bios.h>
+ #include <private/decoders/system.h>
+ #include <private/decoders/probe.h>
+
  #include <stdexcept>
 
  using namespace std;
@@ -51,8 +56,8 @@
 		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
 		{ "version",		Decoder::String{},				0x05,		"Version"				},
 		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
-//		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
-//		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
+		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
+		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
 		{}
 	};
 
@@ -92,7 +97,7 @@
 
 
 	static const Decoder::Item Processor[] = {
-//		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
+		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
 		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
 		{ "version",		Decoder::String{},					0x10,	"Version"					},
@@ -152,11 +157,11 @@
 		{ "description",	Decoder::String{},						0x04,	"Description"	},
 //		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"	},
 //		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"	},
-//		{ "maximum",		Decoder::TemperatureProbeValue{},		0x06,	"Maximum Value"	},
-//		{ "minimum",		Decoder::TemperatureProbeValue{},		0x08,	"Minimum Value"	},
-//		{ "tolerance",		Decoder::TemperatureProbeValue{},		0x08,	"Tolerance"	},
+		{ "maximum",		Decoder::TemperatureProbeValue{},		0x06,	"Maximum Value"	},
+		{ "minimum",		Decoder::TemperatureProbeValue{},		0x08,	"Minimum Value"	},
+		{ "tolerance",		Decoder::TemperatureProbeValue{},		0x08,	"Tolerance"	},
 //		{ "accuracy",		Decoder::TemperatureProbeAccuracy{},	0x0E,	"Accuracy"	},
-//		{ "value",			Decoder::TemperatureProbeValue{},		0x14,	"Nominal Value"	},
+		{ "value",			Decoder::TemperatureProbeValue{},		0x14,	"Nominal Value"	},
 		{}
 	};
 

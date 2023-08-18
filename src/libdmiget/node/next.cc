@@ -30,6 +30,8 @@
  #include <private/data.h>
  #include <private/decoders.h>
 
+ using namespace std;
+
  namespace SMBios {
 
 	Node & Node::next() {
@@ -78,7 +80,9 @@
 			return next(Decoder::get(name)->type, count);
 		}
 
-		while(next() && count--);
+		while(count--) {
+			next();
+		}
 
 		return *this;
 	}

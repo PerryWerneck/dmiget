@@ -42,7 +42,13 @@
 		<Unit filename="src/include/private/constants.h" />
 		<Unit filename="src/include/private/data.h" />
 		<Unit filename="src/include/private/decoders.h" />
+		<Unit filename="src/include/private/decoders/baseboard.h" />
+		<Unit filename="src/include/private/decoders/bios.h" />
+		<Unit filename="src/include/private/decoders/chassis.h" />
 		<Unit filename="src/include/private/decoders/memory.h" />
+		<Unit filename="src/include/private/decoders/probe.h" />
+		<Unit filename="src/include/private/decoders/processor.h" />
+		<Unit filename="src/include/private/decoders/system.h" />
 		<Unit filename="src/include/private/decoders/tools.h" />
 		<Unit filename="src/include/private/intl.h" />
 		<Unit filename="src/include/private/oemstring.h" />
@@ -52,6 +58,8 @@
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/data.cc" />
+		<Unit filename="src/libdmiget/decoders/bios.cc" />
+		<Unit filename="src/libdmiget/decoders/chassis.cc" />
 		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />
 		<Unit filename="src/libdmiget/decoders/memory.cc" />

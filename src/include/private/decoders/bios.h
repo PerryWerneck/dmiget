@@ -18,46 +18,25 @@
  */
 
  /**
-  * @brief Implements probe decoder.
+  * @brief Declare bios decoders.
   */
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
- #include <private/decoders/probe.h>
- #include <string>
- #include <sstream>
- #include <iomanip>
-
- using namespace std;
+ #include <smbios/defs.h>
+ #include <private/decoders.h>
 
  namespace SMBios {
 
-	std::string Decoder::TemperatureProbeValue::as_string(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+ 	namespace Decoder {
 
-		uint16_t code = WORD(ptr+offset);
+		/// @brief Decode firmware revision.
+		struct FirmwareRevision : public Worker {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
 
-		if (code == 0x8000)
-			return "";
-
-		std::stringstream stream;
-
-		stream << fixed << setprecision(1) << ( ((float) code) / 10) << " ºC";
-
-		return stream.str();
-	}
-
-	uint64_t Decoder::TemperatureProbeValue::as_uint64(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
-
-		uint16_t code = WORD(ptr+offset);
-
-		if(code == 0x8000) {
-			return 0;
-		}
-
-		return code;
-
-	}
+ 	}
 
  }
+
+

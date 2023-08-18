@@ -27,7 +27,7 @@
 
  #include <private/decoders.h>
  #include <private/decoders/tools.h>
- #include <private/decoders/processor.h>
+ #include <private/decoders/bios.h>
  #include <smbios/node.h>
  #include <iostream>
  #include <string>
@@ -37,29 +37,6 @@
 
  namespace SMBios {
 
-	unsigned int Decoder::ProcessorType::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
-		return (unsigned int) ptr[offset];
-	}
-
-	std::string Decoder::ProcessorType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
-
-		unsigned int code{this->as_uint(header,ptr,offset)};
-
-		static const char *type[] = {
-			"Other", // 0x01
-			"Unknown",
-			"Central Processor",
-			"Math Processor",
-			"DSP Processor",
-			"Video Processor" // 0x06
-		};
-
-		if (code >= 0x01 && code <= 0x06)
-			return type[code - 0x01];
-
-		return "Unknown";
-
-	}
 
 
  }
