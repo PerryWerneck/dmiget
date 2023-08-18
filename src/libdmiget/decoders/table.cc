@@ -481,5 +481,53 @@
 
 	};
 
+	const Decoder::Type * Decoder::get(const uint8_t type) {
+
+		if(type >= 128) {
+			static const Decoder::Type type {
+				128,
+				true,
+				"oem",
+				"OEM specific type",
+				EmptyTable
+			};
+			return &type;
+		}
+
+		for(const Decoder::Type &decoder : decoders) {
+			if(decoder.type == type) {
+				return &decoder;
+			}
+		}
+
+		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure type: "}+std::to_string((int) type));
+
+	}
+
+	const Decoder::Type * Decoder::get(const char *name) {
+
+		for(const Decoder::Type &decoder : decoders) {
+			if(!strcasecmp(decoder.name,name)) {
+				return &decoder;
+			}
+		}
+
+		for(const Decoder::Type &decoder : decoders) {
+			if(!strcasecmp(decoder.description,name)) {
+				return &decoder;
+			}
+		}
+
+		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure name: "}+name);
+
+	}
+
+	const Decoder::Type * Decoder::get(std::shared_ptr<Data> data, const int offset) {
+		if(offset < 0) {
+			return nullptr;
+		}
+		return get(*data->get(offset));
+	}
+
  }
 

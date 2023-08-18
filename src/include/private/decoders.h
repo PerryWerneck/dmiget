@@ -38,7 +38,31 @@
 
  	namespace Decoder {
 
-		std::shared_ptr<SMBios::Value> value_factory(const Decoder::Type &type, std::shared_ptr<Data> data, size_t offset, size_t item);
+		class Value : public SMBios::Value {
+		private:
+			const Decoder::Type &type;
+			std::shared_ptr<Data> data;
+			int offset;
+			size_t item;
+
+		protected:
+			std::shared_ptr<SMBios::Value> clone() const override;
+
+		public:
+			Value(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item);
+			virtual ~Value();
+			static std::shared_ptr<SMBios::Value> factory(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item);
+
+			const char *name() const noexcept override;
+			const char *description() const noexcept override;
+			std::string as_string() const override;
+			bool empty() const override;
+			uint64_t as_uint64() const override;
+			unsigned int as_uint() const override;
+			SMBios::Value & next() override;
+
+		};
+
 
 		struct Worker {
 			virtual std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
@@ -59,7 +83,8 @@
 			uint8_t offset = 0xFF;
 			const char *description = nullptr;
 
-			constexpr Item() = default;
+			constexpr Item(const Decoder::Worker &w = Worker{}) : worker{w} {
+			}
 
 			constexpr Item(const char *n,const Decoder::Worker &w,uint8_t o, const char *d)
 				: name{n},worker{w},offset{o},description{d} {
@@ -75,11 +100,12 @@
 			const char *description = nullptr;
 			const Item *itens = nullptr;
 
-			std::shared_ptr<SMBios::Value> (*factory)(const Decoder::Type &type, std::shared_ptr<Data> data, size_t offset, size_t item) = value_factory;
+			std::shared_ptr<SMBios::Value> (*factory)(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item) = Value::factory;
 
 			constexpr Type(uint8_t t, bool m, const char *n, const char *d, const Item *i)
-				: type{t},multiple{m},description{d},itens{i} {
+				: type{t},multiple{m},name{n},description{d},itens{i} {
 			}
+
 		};
 
 		const Decoder::Type * get(const uint8_t type);

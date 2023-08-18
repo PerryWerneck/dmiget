@@ -36,6 +36,76 @@
 
  namespace SMBios {
 
+	Decoder::Value::Value(const Decoder::Type &t, std::shared_ptr<Data> d, int o, size_t i)
+		: type{t}, data{d}, offset{o}, item{i} {
+	}
+
+	Decoder::Value::~Value() {
+	}
+
+	std::shared_ptr<SMBios::Value> Decoder::Value::clone() const {
+		return make_shared<Decoder::Value>(type,data,offset,item);
+	}
+
+	std::shared_ptr<SMBios::Value> Decoder::Value::factory(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item) {
+		return make_shared<Decoder::Value>(type,data,offset,item);
+	}
+
+	bool Decoder::Value::empty() const {
+		return type.itens[item].name || offset < 0;
+	}
+
+	const char * Decoder::Value::name() const noexcept {
+		if(!empty()) {
+			return type.itens[item].name;
+		}
+		return "";
+	}
+
+	const char * Decoder::Value::description() const noexcept {
+		if(!empty()) {
+			return type.itens[item].description;
+		}
+		return "";
+	}
+
+	std::string Decoder::Value::as_string() const {
+		if(empty()) {
+			return "";
+
+		}
+		const uint8_t *ptr = data->get(offset);
+		return type.itens[item].worker.as_string(*((const Node::Header *) ptr), ptr, offset);
+	}
+
+	uint64_t Decoder::Value::as_uint64() const {
+		if(empty()) {
+			return 0;
+
+		}
+		const uint8_t *ptr = data->get(offset);
+		return type.itens[item].worker.as_uint64(*((const Node::Header *) ptr), ptr, offset);
+	}
+
+	unsigned int Decoder::Value::as_uint() const {
+		if(empty()) {
+			return 0;
+
+		}
+		const uint8_t *ptr = data->get(offset);
+		return type.itens[item].worker.as_uint(*((const Node::Header *) ptr), ptr, offset);
+	}
+
+	SMBios::Value & Decoder::Value::next() {
+
+		if(empty()) {
+			return *this;
+		}
+
+		item++;
+		return *this;
+	}
+
 	/*
 	std::shared_ptr<SMBios::Value> Decoder::Item::ValueFactory(std::shared_ptr<Data> data, size_t offset, size_t item) const {
 

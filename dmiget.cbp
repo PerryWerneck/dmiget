@@ -58,6 +58,7 @@
 		<Unit filename="src/libdmiget/decoders/string.cc" />
 		<Unit filename="src/libdmiget/decoders/table.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
+		<Unit filename="src/libdmiget/decoders/value.cc" />
 		<Unit filename="src/libdmiget/node/foreach.cc" />
 		<Unit filename="src/libdmiget/node/iterator.cc" />
 		<Unit filename="src/libdmiget/node/next.cc" />

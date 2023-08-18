@@ -91,6 +91,8 @@
 		header.length = ptr[1];
 		header.handle = WORD(ptr+2);
 
+		cout << "offset=" << offset << " type=" << ((int) header.type) << " length=" << ((int) header.length) << endl;
+
 		if(header.length < 4 || header.type == 127) {
 			offset = -1;
 			return *this;
