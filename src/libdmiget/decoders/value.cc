@@ -75,7 +75,7 @@
 
 		}
 		const uint8_t *ptr = data->get(offset);
-		return type.itens[item].worker.as_string(*((const Node::Header *) ptr), ptr, offset);
+		return type.itens[item].worker.as_string(*((const Node::Header *) ptr), ptr, type.itens[item].offset);
 	}
 
 	uint64_t Decoder::Value::as_uint64() const {
@@ -84,7 +84,7 @@
 
 		}
 		const uint8_t *ptr = data->get(offset);
-		return type.itens[item].worker.as_uint64(*((const Node::Header *) ptr), ptr, offset);
+		return type.itens[item].worker.as_uint64(*((const Node::Header *) ptr), ptr, type.itens[item].offset);
 	}
 
 	unsigned int Decoder::Value::as_uint() const {
@@ -93,7 +93,7 @@
 
 		}
 		const uint8_t *ptr = data->get(offset);
-		return type.itens[item].worker.as_uint(*((const Node::Header *) ptr), ptr, offset);
+		return type.itens[item].worker.as_uint(*((const Node::Header *) ptr), ptr, type.itens[item].offset);
 	}
 
 	SMBios::Value & Decoder::Value::next() {
