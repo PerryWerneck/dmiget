@@ -37,6 +37,10 @@
 
  namespace SMBios {
 
+	std::shared_ptr<Data> Data::factory() {
+		return make_shared<Data>();
+	}
+
 	Data::Data() {
 
 		// References:

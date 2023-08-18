@@ -517,7 +517,13 @@
 			}
 		}
 
+#ifdef _MSC_VER
+		char str[20];
+		snprintf(str,19,"%u",(unsigned int) type);
+		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure type: "}+str);
+#else
 		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure type: "}+std::to_string((int) type));
+#endif // _MSC_VER
 
 	}
 

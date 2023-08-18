@@ -25,22 +25,33 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <windows.h>
+
  #include <private/data.h>
  #include <stdexcept>
  #include <system_error>
-
- #include <unistd.h>
 
  #include <sys/types.h>
  #include <sys/stat.h>
  #include <fcntl.h>
  #include <cstring>
  #include <iostream>
+ #include <cstdio>
 
  using namespace std;
 
  namespace SMBios {
 
+	std::shared_ptr<Data> Data::factory(const char *filename) {
+
+		if(!(filename && *filename)) {
+			return factory();
+		}
+
+		throw std::system_error(ENOTSUP,std::system_category(),filename);
+	}
+
+	/*
 	struct File {
 
 		uint8_t *ptr;
@@ -194,15 +205,8 @@
 
 	}
 
-	std::shared_ptr<Data> Data::factory() {
-		return make_shared<Data>();
-	}
-
 	std::shared_ptr<Data> Data::factory(const char *filename) {
 
-		if(!(filename && *filename)) {
-			return factory();
-		}
 
 		struct stat statbuf;
 		if (stat(filename, &statbuf) != 0) {
@@ -264,5 +268,6 @@
 
 		return rc;
 	}
+ */
 
  }

@@ -21,9 +21,12 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <unistd.h>
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
 
  #include <smbios/node.h>
+ #include <smbios/value.h>
  #include <iostream>
  #include <iomanip>
  #include <private/data.h>
@@ -205,7 +208,7 @@
 				snprintf(buffer,9,"%02x",*ptr);
 				memcpy(line+(10+(col*3)),buffer,2);
 
-				snprintf(buffer,9,"%08lx",offset);
+				snprintf(buffer,9,"%08lx",(unsigned long) offset);
 				memcpy(line,buffer,8);
 
 				line[61+col] = (*ptr >= ' ' && *ptr < 128) ? *ptr : '.';
@@ -329,9 +332,7 @@
 
 		case Complete:
 			// Show standard output.
-
-			for(SMBios::Node node = Node::factory(filename,node_name);node;node.next(node_name)) {
-
+ 			for(SMBios::Node node = Node::factory(node_name);node;node.next(node_name)) {
 				if(show_node) {
 
 					writer->write(node);
@@ -366,7 +367,15 @@
 				url += node.name();
 				url += "/";
 				if(index) {
+#ifdef _MSC_VER
+					{
+						char buffer[20];
+						snprintf(buffer,19,"%u",(unsigned int) index);
+						url += buffer;
+					}
+#else
 					url += std::to_string(index);
+#endif _MSC_VER
 					url += "/";
 				}
 				url += value.name();
@@ -379,7 +388,7 @@
 
 	} catch(const std::exception &e) {
 
-		cerr << e.what() << endl;
+		cout << e.what() << endl;
 		exit(-1);
 
 	}
