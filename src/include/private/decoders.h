@@ -36,29 +36,55 @@
 
  namespace SMBios {
 
-	std::shared_ptr<SMBios::Value> empty_value_factory(std::shared_ptr<Data> data, size_t offset, const Decoder &decoder, size_t item);
-	std::shared_ptr<SMBios::Value> string_value_factory(std::shared_ptr<Data> data, size_t offset, const Decoder &decoder, size_t item);
+ 	namespace Decoder {
 
- 	struct Decoder {
+		std::shared_ptr<SMBios::Value> value_factory(const Decoder::Type &type, std::shared_ptr<Data> data, size_t offset, size_t item);
+
+		struct Worker {
+			virtual std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
+			virtual unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
+			virtual uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
+		};
+
+		struct String : public Worker {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
 
 		struct Item {
 
 			const char *name = nullptr;
-			std::shared_ptr<SMBios::Value> (*factory)(std::shared_ptr<Data> data, size_t offset, const Decoder &decoder, size_t item) = empty_value_factory;
+			const Worker &worker = Worker{};
 			uint8_t offset = 0xFF;
 			const char *description = nullptr;
 
+			constexpr Item() = default;
+
+			constexpr Item(const char *n,const Decoder::Worker &w,uint8_t o, const char *d)
+				: name{n},worker{w},offset{o},description{d} {
+			}
+
 		};
 
-		uint8_t type = 0;
-		bool multiple = false;
-		const char *name = nullptr;
-		const char *description = nullptr;
-		const Item *itens = nullptr;
+		struct Type {
 
-		static const Decoder * get(const uint8_t type);
-		static const Decoder * get(const char *name);
-		static const Decoder * get(std::shared_ptr<Data> data, const int offset);
+			uint8_t type = 0;
+			bool multiple = false;
+			const char *name = nullptr;
+			const char *description = nullptr;
+			const Item *itens = nullptr;
+
+			std::shared_ptr<SMBios::Value> (*factory)(const Decoder::Type &type, std::shared_ptr<Data> data, size_t offset, size_t item) = value_factory;
+
+			constexpr Type(uint8_t t, bool m, const char *n, const char *d, const Item *i)
+				: type{t},multiple{m},description{d},itens{i} {
+			}
+		};
+
+		const Decoder::Type * get(const uint8_t type);
+		const Decoder::Type * get(const char *name);
+		const Decoder::Type * get(std::shared_ptr<Data> data, const int offset);
 
  	};
 

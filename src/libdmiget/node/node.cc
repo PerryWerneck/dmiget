@@ -146,7 +146,7 @@
 
 		for(size_t item = 0; decoder->itens[item].name; item++) {
 			if(item == index) {
-				return decoder->itens[item].factory(data,offset,*decoder,item);
+				return decoder->factory(*decoder,data,offset,item);
 			}
 		}
 
@@ -162,7 +162,7 @@
 
 		for(size_t item = 0; decoder->itens[item].name; item++) {
 			if(!strcasecmp(name,decoder->itens[item].name)) {
-				return decoder->itens[item].factory(data,offset,*decoder,item);
+				return decoder->factory(*decoder,data,offset,item);
 			}
 		}
 
@@ -173,7 +173,7 @@
 	Value::Iterator Node::begin() {
 
 		if(*this && decoder && decoder->itens && decoder->itens[0].name) {
-			return Value::Iterator{decoder->itens[0].factory(data,offset,*decoder,0)};
+			return Value::Iterator{decoder->factory(*decoder,data,offset,0)};
 		}
 
 		return end();

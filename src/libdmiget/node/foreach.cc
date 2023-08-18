@@ -91,11 +91,12 @@
 		}
 
 		for(size_t item = 0; decoder->itens[item].name; item++) {
-			auto value = decoder->itens[item].factory(data,offset,*decoder,item);
+			auto value = decoder->factory(*decoder,data,offset,item);
 			if(call(*value)) {
 				return true;
 			}
 		}
+
 		return false;
 
 	}

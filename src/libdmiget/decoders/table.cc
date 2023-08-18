@@ -30,44 +30,44 @@
 	};
 
 	static const Decoder::Item BiosInformation[] = {
-		{ "vendor",			string_value_factory,				0x04,		"Vendor"				},
-		{ "version",		string_value_factory,				0x05,		"Version"				},
-		{ "date",			string_value_factory,				0x08,		"Release Date"			},
+		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
+		{ "version",		Decoder::String{},				0x05,		"Version"				},
+		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
 //		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
 //		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
 		{}
 	};
 
 	static const Decoder::Item System[] = {
-		{ "manufacturer",	string_value_factory,				0x04,		"Manufacturer"			},
-		{ "model",			string_value_factory,				0x05,		"Product Name"			},
-		{ "version",		string_value_factory,				0x06,		"Version"				},
-		{ "serial",			string_value_factory,				0x07,		"Serial Number"			},
+		{ "manufacturer",	Decoder::String{},				0x04,		"Manufacturer"			},
+		{ "model",			Decoder::String{},				0x05,		"Product Name"			},
+		{ "version",		Decoder::String{},				0x06,		"Version"				},
+		{ "serial",			Decoder::String{},				0x07,		"Serial Number"			},
 //		{ "uuid",			Decoder::SystemUUID{},			0x08,		"uuid"					},
 //		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
-		{ "sku",			string_value_factory,				0x19,		"SKU Number"			},
-		{ "family",			string_value_factory,				0x1A,		"Family"				},
+		{ "sku",			Decoder::String{},				0x19,		"SKU Number"			},
+		{ "family",			Decoder::String{},				0x1A,		"Family"				},
 		{}
 	};
 
 	static const Decoder::Item BaseBoard[] = {
-		{ "manufacturer",	string_value_factory,				0x04,		"Manufacturer"			},
-		{ "model",			string_value_factory,				0x05,		"Product Name"			},
-		{ "version",		string_value_factory,				0x06,		"Version"				},
-		{ "serial",			string_value_factory,				0x07,		"Serial Number"			},
-		{ "atag",			string_value_factory,				0x08,		"Asset Tag"				},
+		{ "manufacturer",	Decoder::String{},				0x04,		"Manufacturer"			},
+		{ "model",			Decoder::String{},				0x05,		"Product Name"			},
+		{ "version",		Decoder::String{},				0x06,		"Version"				},
+		{ "serial",			Decoder::String{},				0x07,		"Serial Number"			},
+		{ "atag",			Decoder::String{},				0x08,		"Asset Tag"				},
 //		{ "features",		Decoder::BaseBoardFeatures{},	0x09,		"Base board features"	},
-		{ "location",		string_value_factory,				0x0A,		"Location In Chassis"	},
+		{ "location",		Decoder::String{},				0x0A,		"Location In Chassis"	},
 		{}
 	};
 
 	static const Decoder::Item Chassis[] = {
-		{ "manufacturer",	string_value_factory,				0x04,	"Manufacturer"				},
+		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
 		// { "type",	Decoder::ChassisType{},				0x05,	"Type"				},
 		// { "lock",	Decoder::ChassisLock{},				0x05,	"Lock"				},
-		{ "version",		string_value_factory,				0x06,	"Version"					},
-		{ "serial",			string_value_factory,				0x07,	"Serial Number"				},
-		{ "atag",			string_value_factory,				0x08,	"Asset Tag"					},
+		{ "version",		Decoder::String{},				0x06,	"Version"					},
+		{ "serial",			Decoder::String{},				0x07,	"Serial Number"				},
+		{ "atag",			Decoder::String{},				0x08,	"Asset Tag"					},
 //		{ "sku",			Decoder::ChassisSKU{},			0x00,	"SKU Number"				},
 		{}
 	};
@@ -75,34 +75,34 @@
 
 	static const Decoder::Item Processor[] = {
 //		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
-		{ "socket",			string_value_factory,					0x04,	"Socket Designation"		},
-		{ "manufacturer",	string_value_factory,					0x07,	"Manufacturer"				},
-		{ "version",		string_value_factory,					0x10,	"Version"					},
-		{ "serial",			string_value_factory,					0x20,	"Serial Number"				},
-		{ "atag",			string_value_factory,					0x21,	"Asset Tag"					},
-		{ "partnumber",		string_value_factory,					0x22,	"Part Number"				},
+		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
+		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
+		{ "version",		Decoder::String{},					0x10,	"Version"					},
+		{ "serial",			Decoder::String{},					0x20,	"Serial Number"				},
+		{ "atag",			Decoder::String{},					0x21,	"Asset Tag"					},
+		{ "partnumber",		Decoder::String{},					0x22,	"Part Number"				},
 		{}
 	};
 
 	static const Decoder::Item Cache[] = {
-		{ "socket",			string_value_factory,					0x04,	"Socket Designation"	},
+		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"	},
 		{}
 	};
 
 	static const Decoder::Item PortConnectors[] = {
-		{ "internal",		string_value_factory,					0x04,	"Internal Reference Designator"	},
-		{ "type",			string_value_factory,					0x05,	"Internal Connector Type"		},
-		{ "external",		string_value_factory,					0x06,	"External Reference Designator"	},
+		{ "internal",		Decoder::String{},					0x04,	"Internal Reference Designator"	},
+		{ "type",			Decoder::String{},					0x05,	"Internal Connector Type"		},
+		{ "external",		Decoder::String{},					0x06,	"External Reference Designator"	},
 		{}
 	};
 
 	static const Decoder::Item Slots[] = {
-		{ "designation",	string_value_factory,					0x04,	"Designation"					},
+		{ "designation",	Decoder::String{},					0x04,	"Designation"					},
 		{}
 	};
 
 	static const Decoder::Item GroupAssociations[] = {
-		{ "name",			string_value_factory,					0x04,	"Name"	},
+		{ "name",			Decoder::String{},					0x04,	"Name"	},
 		{}
 	};
 
@@ -111,27 +111,27 @@
 //		{ "dwidth",			Decoder::MemoryDeviceWidth{},		0x0A,	"Data Width"		},
 //		{ "size",			Decoder::MemorySize{},				0x0C,	"Size"		},
 //		{ "formfactor",		Decoder::MemoryDeviceFormFactor{},	0x0E,	"Form Factor"		},
-		{ "locator",		string_value_factory,					0x10,	"Locator"			},
-		{ "bank",			string_value_factory,					0x11,	"Bank Locator"		},
-		{ "manufacturer",	string_value_factory,					0x17,	"Manufacturer"		},
-		{ "serial",			string_value_factory,					0x18,	"Serial Number"		},
-		{ "atag",			string_value_factory,					0x19,	"Asset Tag"			},
-		{ "partnumber",		string_value_factory,					0x1A,	"Part Number"		},
+		{ "locator",		Decoder::String{},					0x10,	"Locator"			},
+		{ "bank",			Decoder::String{},					0x11,	"Bank Locator"		},
+		{ "manufacturer",	Decoder::String{},					0x17,	"Manufacturer"		},
+		{ "serial",			Decoder::String{},					0x18,	"Serial Number"		},
+		{ "atag",			Decoder::String{},					0x19,	"Asset Tag"			},
+		{ "partnumber",		Decoder::String{},					0x1A,	"Part Number"		},
 
 		{}
 	};
 
 	static const Decoder::Item PortableBattery[] = {
-		{ "location",		string_value_factory,					0x04,	"Location"			},
-		{ "manufacturer",	string_value_factory,					0x05,	"Manufacturer"		},
-		{ "date",			string_value_factory,					0x06,	"Manufacture Date"	},
-		{ "serial",			string_value_factory,					0x07,	"Serial Number"		},
-		{ "name",			string_value_factory,					0x08,	"Name"				},
+		{ "location",		Decoder::String{},					0x04,	"Location"			},
+		{ "manufacturer",	Decoder::String{},					0x05,	"Manufacturer"		},
+		{ "date",			Decoder::String{},					0x06,	"Manufacture Date"	},
+		{ "serial",			Decoder::String{},					0x07,	"Serial Number"		},
+		{ "name",			Decoder::String{},					0x08,	"Name"				},
 		{}
 	};
 
 	static const Decoder::Item TemperatureProbe[] = {
-		{ "description",	string_value_factory,						0x04,	"Description"	},
+		{ "description",	Decoder::String{},						0x04,	"Description"	},
 //		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"	},
 //		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"	},
 //		{ "maximum",		Decoder::TemperatureProbeValue{},		0x06,	"Maximum Value"	},
@@ -168,7 +168,7 @@
 		{}
 	};
 
-	static const Decoder decoders[] = {
+	static const Decoder::Type decoders[] = {
 
 		{
 			0,

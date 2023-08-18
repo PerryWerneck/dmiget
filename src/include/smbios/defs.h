@@ -54,7 +54,11 @@
 	class Node;
 	class Value;
 
-	struct Decoder;
+	namespace Decoder {
+
+		struct Type;
+
+	}
 
  }
 
