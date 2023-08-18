@@ -64,7 +64,9 @@
 
 		static const char * unit_names[] = { "Bytes", "KB", "MB", "GB", "TB" };
 
-		double multiplier{1024.0D};
+		static const double step{1024.0};
+
+		double multiplier{step};
 		double selected{1};
 		double val = (double) this->value;
 
@@ -76,7 +78,7 @@
 				name = unit_names[ix];
 			}
 
-			multiplier *= 1024.0D;
+			multiplier *= step;
 
 		}
 
