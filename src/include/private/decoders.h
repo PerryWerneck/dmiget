@@ -80,15 +80,6 @@
 			uint8_t offset = 0xFF;
 			const char *description = nullptr;
 
-			/*
-			constexpr Item(const Decoder::Worker &w = Worker{}) : worker{w} {
-			}
-
-			constexpr Item(const char *n,const Decoder::Worker &w,uint8_t o, const char *d)
-				: name{n},worker{w},offset{o},description{d} {
-			}
-			*/
-
 		};
 
 		struct Type {
