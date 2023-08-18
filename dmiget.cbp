@@ -65,6 +65,8 @@
 		<Unit filename="src/libdmiget/node/node.cc" />
 		<Unit filename="src/libdmiget/os/linux/data.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />
+		<Unit filename="src/libdmiget/os/macos/data.cc" />
+		<Unit filename="src/libdmiget/os/macos/private.h" />
 		<Unit filename="src/libdmiget/os/windows/data.cc" />
 		<Unit filename="src/libdmiget/os/windows/fromfile.cc" />
 		<Unit filename="src/libdmiget/os/windows/native_win32.h" />

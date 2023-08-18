@@ -17,6 +17,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /**
+  * @brief SMBios types and decoders..
+  */
+
+/*
+ * Based on dmidecode
+ *
+ * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
+ * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
+ *
+ */
+
+ // References:
+ //
+ //		 https://github.com/acidanthera/dmidecode
+ //
+
  #include <smbios/defs.h>
  #include <private/decoders.h>
  #include <stdexcept>
