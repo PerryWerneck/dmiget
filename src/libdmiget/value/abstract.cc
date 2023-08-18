@@ -26,6 +26,43 @@
  #endif // HAVE_CONFIG_H
 
  #include <smbios/value.h>
+ #include <stdexcept>
+
+ using namespace std;
+
+ namespace SMBios {
+
+	bool Value::operator==(const Value &src) const noexcept {
+		return offset == src.offset && item == src.item;
+	}
+
+	bool Value::operator==(const char *name) const noexcept {
+		if(*this && name && *name) {
+			return strcasecmp(this->name(),name) == 0;
+		}
+		return false;
+	}
+
+	uint64_t Value::as_uint64() const {
+		return as_uint();
+	}
+
+	std::shared_ptr<Value> Value::clone() const {
+		throw runtime_error("Value is not a cloneable");
+	}
+
+	unsigned int Value::as_uint() const {
+		throw runtime_error("Value is not a number");
+	}
+
+	Value & Value::next() {
+		throw runtime_error("Value is not iteratable");
+	}
+
+ }
+
+ /*
+ #include <smbios/value.h>
 
  using namespace std;
 
@@ -47,6 +84,10 @@
 		return (unsigned int) as_uint64();
 	}
 
+	Abstract::Value & Abstract::Value::next() {
+		throw runtime_error("Object is not iteratable");
+	}
 
  }
+ */
 

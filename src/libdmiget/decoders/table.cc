@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,27 +17,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- #include <smbios/defs.h>
- #include <smbios/node.h>
- #include <smbios/value.h>
- #include <private/constants.h>
- #include <private/decoders.h>
- #include <cstring>
+ /**
+  * @brief SMBios types and decoders..
+  */
 
- #include <csignal>
- #include <unistd.h>
- #include <string>
+/*
+ * Based on dmidecode
+ *
+ * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
+ * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
+ *
+ */
+
+ // References:
+ //
+ //		 https://github.com/acidanthera/dmidecode
+ //
+
+ #include <smbios/defs.h>
+ #include <private/decoders.h>
+ #include <private/decoders/memory.h>
+ #include <private/decoders/processor.h>
+ #include <private/decoders/bios.h>
+ #include <private/decoders/system.h>
+ #include <private/decoders/probe.h>
+
  #include <stdexcept>
 
  using namespace std;
 
  namespace SMBios {
 
-	static const Value::Info EmptyTable[] = {
+	static const Decoder::Item EmptyTable[] = {
 		{}
 	};
 
-	static const Value::Info BiosInformation[] = {
+	static const Decoder::Item BiosInformation[] = {
 		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
 		{ "version",		Decoder::String{},				0x05,		"Version"				},
 		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
@@ -46,7 +61,7 @@
 		{}
 	};
 
-	static const Value::Info System[] = {
+	static const Decoder::Item System[] = {
 		{ "manufacturer",	Decoder::String{},				0x04,		"Manufacturer"			},
 		{ "model",			Decoder::String{},				0x05,		"Product Name"			},
 		{ "version",		Decoder::String{},				0x06,		"Version"				},
@@ -58,7 +73,7 @@
 		{}
 	};
 
-	static const Value::Info BaseBoard[] = {
+	static const Decoder::Item BaseBoard[] = {
 		{ "manufacturer",	Decoder::String{},				0x04,		"Manufacturer"			},
 		{ "model",			Decoder::String{},				0x05,		"Product Name"			},
 		{ "version",		Decoder::String{},				0x06,		"Version"				},
@@ -69,7 +84,7 @@
 		{}
 	};
 
-	static const Value::Info Chassis[] = {
+	static const Decoder::Item Chassis[] = {
 		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
 		// { "type",	Decoder::ChassisType{},				0x05,	"Type"				},
 		// { "lock",	Decoder::ChassisLock{},				0x05,	"Lock"				},
@@ -81,7 +96,7 @@
 	};
 
 
-	static const Value::Info Processor[] = {
+	static const Decoder::Item Processor[] = {
 		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
 		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
@@ -92,33 +107,32 @@
 		{}
 	};
 
-	static const Value::Info Cache[] = {
+	static const Decoder::Item Cache[] = {
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"	},
 		{}
 	};
 
-	static const Value::Info PortConnectors[] = {
+	static const Decoder::Item PortConnectors[] = {
 		{ "internal",		Decoder::String{},					0x04,	"Internal Reference Designator"	},
 		{ "type",			Decoder::String{},					0x05,	"Internal Connector Type"		},
 		{ "external",		Decoder::String{},					0x06,	"External Reference Designator"	},
 		{}
-
 	};
 
-	static const Value::Info Slots[] = {
+	static const Decoder::Item Slots[] = {
 		{ "designation",	Decoder::String{},					0x04,	"Designation"					},
 		{}
 	};
 
-	static const Value::Info GroupAssociations[] = {
+	static const Decoder::Item GroupAssociations[] = {
 		{ "name",			Decoder::String{},					0x04,	"Name"	},
 		{}
 	};
 
-	static const Value::Info MemoryDevice[] = {
+	static const Decoder::Item MemoryDevice[] = {
 		{ "twidth",			Decoder::MemoryDeviceWidth{},		0x08,	"Total Width"		},
 		{ "dwidth",			Decoder::MemoryDeviceWidth{},		0x0A,	"Data Width"		},
-		{ "size",			Decoder::MemorySize{},				0x0C,	"Size"		},
+		{ "size",			Decoder::MemorySize{},				0x0C,	"Size"				},
 		{ "formfactor",		Decoder::MemoryDeviceFormFactor{},	0x0E,	"Form Factor"		},
 		{ "locator",		Decoder::String{},					0x10,	"Locator"			},
 		{ "bank",			Decoder::String{},					0x11,	"Bank Locator"		},
@@ -130,7 +144,7 @@
 		{}
 	};
 
-	static const Value::Info PortableBattery[] = {
+	static const Decoder::Item PortableBattery[] = {
 		{ "location",		Decoder::String{},					0x04,	"Location"			},
 		{ "manufacturer",	Decoder::String{},					0x05,	"Manufacturer"		},
 		{ "date",			Decoder::String{},					0x06,	"Manufacture Date"	},
@@ -139,7 +153,7 @@
 		{}
 	};
 
-	static const Value::Info TemperatureProbe[] = {
+	static const Decoder::Item TemperatureProbe[] = {
 		{ "description",	Decoder::String{},						0x04,	"Description"	},
 //		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"	},
 //		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"	},
@@ -151,33 +165,33 @@
 		{}
 	};
 
-	static const Value::Info OnboardDevice[] = {
-		{ "reference",	Decoder::StringIndex{},	1,	"Reference Designation"	},
+	static const Decoder::Item OnboardDevice[] = {
+//		{ "reference",	Decoder::StringIndex{},	1,	"Reference Designation"	},
 		{}
 	};
 
-	static const Value::Info PowerSupply[] = {
-		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
-		{ "name",			Decoder::StringIndex{},	2,	"Name"				},
-		{ "manufacturer",	Decoder::StringIndex{},	3,	"Manufacturer"		},
-		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
-		{ "atag",			Decoder::StringIndex{},	5,	"Asset Tag"			},
-		{ "modelpn",		Decoder::StringIndex{},	6,	"Model Part Number"	},
-		{ "revision",		Decoder::StringIndex{},	7,	"Revision"			},
+	static const Decoder::Item PowerSupply[] = {
+//		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
+//		{ "name",			Decoder::StringIndex{},	2,	"Name"				},
+//		{ "manufacturer",	Decoder::StringIndex{},	3,	"Manufacturer"		},
+//		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
+//		{ "atag",			Decoder::StringIndex{},	5,	"Asset Tag"			},
+//		{ "modelpn",		Decoder::StringIndex{},	6,	"Model Part Number"	},
+//		{ "revision",		Decoder::StringIndex{},	7,	"Revision"			},
 		{}
 	};
 
-	static const Value::Info VoltageProbe[] = {
-		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+	static const Decoder::Item VoltageProbe[] = {
+//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
 		{}
 	};
 
-	static const Value::Info CoolingDevice[] = {
-		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+	static const Decoder::Item CoolingDevice[] = {
+//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
 		{}
 	};
 
-	static const Node::Info types[] = {
+	static const Decoder::Type decoders[] = {
 
 		{
 			0,
@@ -490,58 +504,59 @@
 
 	};
 
-	const Node::Info * Node::Info::find(const char *name) {
+	const Decoder::Type * Decoder::get(const uint8_t type) {
 
-		if(!(name && *name)) {
-			throw std::system_error(EINVAL,std::system_category(),"Node type cant be null or empty");
+		if(type >= 128) {
+			static const Decoder::Type type {
+				128,
+				true,
+				"oem",
+				"OEM specific type",
+				EmptyTable
+			};
+			return &type;
 		}
 
-		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
-			if(!strcasecmp(types[ix].name,name)) {
-				return types+ix;
+		for(const Decoder::Type &decoder : decoders) {
+			if(decoder.type == type) {
+				return &decoder;
 			}
 		}
 
-		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
-			if(!strcasecmp(types[ix].description,name)) {
-				return types+ix;
-			}
-		}
-
-		throw runtime_error(string{"Invalid node type '"}+name+"'");
+#ifdef _MSC_VER
+		char str[20];
+		snprintf(str,19,"%u",(unsigned int) type);
+		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure type: "}+str);
+#else
+		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure type: "}+std::to_string((int) type));
+#endif // _MSC_VER
 
 	}
 
-	const Node::Info * Node::Info::find(uint8_t id) {
+	const Decoder::Type * Decoder::get(const char *name) {
 
-		for(size_t ix = 0; ix < (sizeof(types)/sizeof(types[0])); ix++) {
-
-			if(types[ix].id == id) {
-				return types+ix;
+		for(const Decoder::Type &decoder : decoders) {
+			if(!strcasecmp(decoder.name,name)) {
+				return &decoder;
 			}
-
 		}
 
-		if(id >= 128) {
-
-			static const Node::Info oemtype = {
-				0xFF,
-				true,
-				"oem",
-				"OEM-specific"
-			};
-
-			return &oemtype;
+		for(const Decoder::Type &decoder : decoders) {
+			if(!strcasecmp(decoder.description,name)) {
+				return &decoder;
+			}
 		}
 
-		static const Node::Info no_type = {
-			0xFF,
-			true,
-			"unknown",
-			"unknown"
-		};
+		throw std::system_error(ENOENT,std::system_category(),string{"DMI:///"}+name+"/");
 
-		return &no_type;
+	}
+
+	const Decoder::Type * Decoder::get(std::shared_ptr<Data> data, const int offset) {
+		if(offset < 0) {
+			return nullptr;
+		}
+		return get(*data->get(offset));
 	}
 
  }
+

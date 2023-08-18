@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: LGPL-3.0-or-later */
 
 /*
- * Copyright (C) 2023 Perry Werneck <perry.werneck@gmail.com>
+ * Copyright (C) 2021 Perry Werneck <perry.werneck@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,38 +17,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- /**
-  * @brief Declare Memory size object.
-  */
-
  #pragma once
+
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
  #include <smbios/defs.h>
  #include <smbios/value.h>
+ #include <stdexcept>
+ #include <string>
  #include <iostream>
- #include <cstdint>
 
- namespace SMBios {
+ using namespace std;
 
-	class SMBIOS_API MemSize : public Value {
-	private:
-		uint64_t value;
+ namespace DMIget {
 
-	public:
-		MemSize();
 
-		std::string as_string(int precision) const;
-		std::string as_string() const override;
-
-		bool empty() const override;
-		const char *name() const noexcept override;
-		const char *description() const noexcept override;
-
-		inline uint64_t as_uint64() const override {
-			return value;
-		}
-
-	};
-
- };
-
+ }

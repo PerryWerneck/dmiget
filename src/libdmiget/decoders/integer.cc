@@ -35,25 +35,14 @@
 
  namespace SMBios {
 
-	unsigned int Decoder::UInt16::as_uint(const uint8_t *ptr, const size_t offset) const {
+	unsigned int Decoder::UInt16::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
 		return (unsigned int) *((uint16_t *)(ptr+offset));
 	}
 
-	std::string Decoder::UInt16::as_string(const uint8_t *ptr, const size_t offset) const {
-		return std::to_string(as_uint(ptr,offset));
+	std::string Decoder::UInt16::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+		return std::to_string(as_uint(header,ptr,offset));
 	}
 
-	std::string Decoder::MemoryDeviceWidth::as_string(const uint8_t *ptr, const size_t offset) const {
-
-		unsigned int code = UInt16::as_uint(ptr,offset);
-
-		if(code == 0 || code == 0xFFFF) {
-			return "";
-		}
-
-		return (std::to_string(code) + " bits");
-
-	}
 
  }
 

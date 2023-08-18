@@ -25,107 +25,90 @@
  *
  */
 
- #include <smbios/defs.h>
- #include <private/constants.h>
-
  /**
   * @brief Decoders definitions.
   */
 
+ #pragma once
+
+ #include <smbios/defs.h>
+ #include <private/data.h>
+ #include <smbios/value.h>
+ #include <smbios/node.h>
+
  namespace SMBios {
 
-	struct u64 {
-#ifdef BIGENDIAN
-		uint32_t h = 0;
-		uint32_t l = 0;
-#else
-		uint32_t l = 0;
-		uint32_t h = 0;
-#endif
-		void decode_memory_size(unsigned long &capacity, int &i) const;
-		std::string as_memory_size_string(int shift = 1) const;
-		uint64_t as_memory_size_bytes(int shift = 1) const;
+ 	namespace Decoder {
 
-	};
+		class Value : public SMBios::Value {
+		private:
+			const Decoder::Type &type;
+			std::shared_ptr<Data> data;
+			int offset;
+			size_t item;
 
-	namespace Decoder {
+		protected:
+			std::shared_ptr<SMBios::Value> clone() const override;
 
-		/// @brief Decode to string by index.
-		struct StringIndex : public Abstract {
+		public:
+			Value(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item);
+			virtual ~Value();
+			static std::shared_ptr<SMBios::Value> factory(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item);
 
-			constexpr StringIndex() : Abstract{Value::String} {
+			const char *name() const noexcept override;
+			const char *description() const noexcept override;
+			std::string as_string() const override;
+			bool empty() const override;
+			uint64_t as_uint64() const override;
+			unsigned int as_uint() const override;
+			SMBios::Value & next() override;
+
+		};
+
+		struct Worker {
+			virtual std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
+			virtual unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
+			virtual uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const;
+		};
+
+		struct String : public Worker {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct UInt16 : public Worker {
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct Item {
+
+			const char *name = nullptr;
+			const Worker &worker = Worker{};
+			uint8_t offset = 0xFF;
+			const char *description = nullptr;
+
+		};
+
+		struct Type {
+
+			uint8_t type = 0;
+			bool multiple = false;
+			const char *name = nullptr;
+			const char *description = nullptr;
+			const Item *itens = nullptr;
+
+			std::shared_ptr<SMBios::Value> (*factory)(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item) = Value::factory;
+
+			constexpr Type(uint8_t t, bool m, const char *n, const char *d, const Item *i)
+				: type{t},multiple{m},name{n},description{d},itens{i} {
 			}
 
-			std::string as_string(const uint8_t *ptr, const size_t index) const override;
 		};
 
-		struct String : public Abstract {
+		const Decoder::Type * get(const uint8_t type);
+		const Decoder::Type * get(const char *name);
+		const Decoder::Type * get(std::shared_ptr<Data> data, const int offset);
 
-			constexpr String() : Abstract{Value::String} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t index) const override;
-		};
-
-		/// @brief Decode firmware revision.
-		struct FirmwareRevision : public Abstract {
-
-			constexpr FirmwareRevision() : Abstract{Value::Unsigned} {
-			}
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct UInt16 : public Abstract {
-
-			constexpr UInt16() : Abstract{Value::Unsigned} {
-			}
-
-			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-
-		};
-
-		struct ProcessorType : public UInt16 {
-
-			constexpr ProcessorType() = default;
-
-			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct MemoryDeviceWidth : public UInt16 {
-
-			constexpr MemoryDeviceWidth() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct MemoryDeviceFormFactor : public String {
-
-			constexpr MemoryDeviceFormFactor() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct MemorySize : public String {
-
-			constexpr MemorySize() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
-
-		};
-
-		struct TemperatureProbeValue : public Abstract {
-
-			constexpr TemperatureProbeValue() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
-
-		};
-
-	}
+ 	};
 
  }

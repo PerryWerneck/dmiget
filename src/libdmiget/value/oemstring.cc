@@ -25,10 +25,12 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ /*
  #include <private/oemstring.h>
  #include <string>
  #include <cstdint>
  #include <ctype.h>
+ #include <cstring>
 
  using namespace std;
 
@@ -78,4 +80,15 @@
 		return rc;
 	}
 
+	Abstract::Value & OEMString::next() {
+		if(ptr && *ptr) {
+			ptr += strlen(ptr);
+			ptr++;
+			index++;
+			oname = std::to_string(index);
+		}
+		return *this;
+	}
+
  }
+ */

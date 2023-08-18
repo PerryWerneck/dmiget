@@ -37,10 +37,15 @@
 	MemSize::MemSize() : value{0LL} {
 
 		Node::for_each(17,[this](const Node &node){
-			value += node["size"].as_uint64();
+			value += node["size"]->as_uint64();
 			return false;
 		});
 
+
+	}
+
+	bool MemSize::empty() const {
+		return value;
 	}
 
 	const char *MemSize::name() const noexcept {
@@ -59,7 +64,9 @@
 
 		static const char * unit_names[] = { "Bytes", "KB", "MB", "GB", "TB" };
 
-		double multiplier{1024.0D};
+		static const double step{1024.0};
+
+		double multiplier{step};
 		double selected{1};
 		double val = (double) this->value;
 
@@ -71,7 +78,7 @@
 				name = unit_names[ix];
 			}
 
-			multiplier *= 1024.0D;
+			multiplier *= step;
 
 		}
 

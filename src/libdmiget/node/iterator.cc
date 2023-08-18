@@ -25,9 +25,26 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <smbios/node.h>
+
+ namespace SMBios {
+
+	Node Node::operator++(int) {
+		Node tmp{*this};
+		operator++();
+		return tmp;
+	}
+
+	Node & Node::operator++() {
+		next();
+		return *this;
+	}
+
+ }
+
+ /*
  #include <private/data.h>
  #include <smbios/defs.h>
- #include <smbios/node.h>
  #include <stdexcept>
  #include <private/data.h>
  #include <private/constants.h>
@@ -251,4 +268,5 @@
 	}
 
  }
+ */
 

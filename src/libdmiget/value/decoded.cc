@@ -18,13 +18,19 @@
  */
 
  /**
-  * @brief Implements basic value.
+  * @brief Implements decoded value.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <smbios/value.h>
+ #include <stdexcept>
+ #include <private/decoders.h>
+
+
+ /*
  #include <private/data.h>
  #include <smbios/value.h>
  #include <private/constants.h>
@@ -87,7 +93,7 @@
 		return info && info[item].name && *info[item].name;
 	}
 
-	Value & Value::next() {
+	Abstract::Value & Value::next() {
 		if(info && info[item].name) {
 			item++;
 		}
@@ -130,4 +136,5 @@
 	}
 
  }
+ */
 

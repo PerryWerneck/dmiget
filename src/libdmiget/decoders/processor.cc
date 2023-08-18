@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements processor type decoders.
+  * @brief Implement integer decoders.
   */
 
  #ifdef HAVE_CONFIG_H
@@ -26,6 +26,8 @@
  #endif // HAVE_CONFIG_H
 
  #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/processor.h>
  #include <smbios/node.h>
  #include <iostream>
  #include <string>
@@ -35,21 +37,21 @@
 
  namespace SMBios {
 
-	unsigned int Decoder::ProcessorType::as_uint(const uint8_t *ptr, const size_t offset) const {
+	unsigned int Decoder::ProcessorType::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
 		return (unsigned int) ptr[offset];
 	}
 
-	std::string Decoder::ProcessorType::as_string(const uint8_t *ptr, const size_t offset) const {
+	std::string Decoder::ProcessorType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
-		unsigned int code{this->as_uint(ptr,offset)};
+		unsigned int code{this->as_uint(header,ptr,offset)};
 
 		static const char *type[] = {
-			"Other", /* 0x01 */
+			"Other", // 0x01
 			"Unknown",
 			"Central Processor",
 			"Math Processor",
 			"DSP Processor",
-			"Video Processor" /* 0x06 */
+			"Video Processor" // 0x06
 		};
 
 		if (code >= 0x01 && code <= 0x06)
@@ -59,4 +61,6 @@
 
 	}
 
+
  }
+

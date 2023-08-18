@@ -54,6 +54,14 @@
 	},
 
 	{
+		"values",
+		pydmi_get_values,
+		METH_VARARGS,
+		"Get array of values"
+
+	},
+
+	{
 		"memsize",
 		pydmi_get_memsize,
 		METH_VARARGS,

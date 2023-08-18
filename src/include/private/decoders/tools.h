@@ -18,37 +18,32 @@
  */
 
  /**
-  * @brief Declare Memory size object.
+  * @brief Brief description of this source.
   */
 
  #pragma once
 
  #include <smbios/defs.h>
- #include <smbios/value.h>
- #include <iostream>
- #include <cstdint>
+ #include <private/decoders.h>
 
  namespace SMBios {
 
-	class SMBIOS_API MemSize : public Value {
-	private:
-		uint64_t value;
+ 	namespace Decoder {
 
-	public:
-		MemSize();
+		struct u64 {
+#ifdef BIGENDIAN
+			uint32_t h = 0;
+			uint32_t l = 0;
+#else
+			uint32_t l = 0;
+			uint32_t h = 0;
+#endif
+			void decode_memory_size(unsigned long &capacity, int &i) const;
+			std::string as_memory_size_string(int shift = 1) const;
+			uint64_t as_memory_size_bytes(int shift = 1) const;
 
-		std::string as_string(int precision) const;
-		std::string as_string() const override;
+		};
 
-		bool empty() const override;
-		const char *name() const noexcept override;
-		const char *description() const noexcept override;
+ 	}
 
-		inline uint64_t as_uint64() const override {
-			return value;
-		}
-
-	};
-
- };
-
+ }

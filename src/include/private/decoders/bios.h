@@ -18,37 +18,25 @@
  */
 
  /**
-  * @brief Declare Memory size object.
+  * @brief Declare bios decoders.
   */
 
  #pragma once
 
  #include <smbios/defs.h>
- #include <smbios/value.h>
- #include <iostream>
- #include <cstdint>
+ #include <private/decoders.h>
 
  namespace SMBios {
 
-	class SMBIOS_API MemSize : public Value {
-	private:
-		uint64_t value;
+ 	namespace Decoder {
 
-	public:
-		MemSize();
+		/// @brief Decode firmware revision.
+		struct FirmwareRevision : public Worker {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
 
-		std::string as_string(int precision) const;
-		std::string as_string() const override;
+ 	}
 
-		bool empty() const override;
-		const char *name() const noexcept override;
-		const char *description() const noexcept override;
+ }
 
-		inline uint64_t as_uint64() const override {
-			return value;
-		}
-
-	};
-
- };
 

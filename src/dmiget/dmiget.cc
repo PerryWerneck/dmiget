@@ -21,15 +21,15 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <iostream>
- #include <functional>
- #include <cstring>
- #include <exception>
- #include <iomanip>
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
 
- #include <private/data.h>
  #include <smbios/node.h>
- #include <smbios/memsize.h>
+ #include <smbios/value.h>
+ #include <iostream>
+ #include <iomanip>
+ #include <private/data.h>
 
  using namespace std;
  using namespace SMBios;
@@ -52,7 +52,7 @@
 	class Abstract {
 	public:
 		virtual void write(const Node &node) = 0;
-		virtual void write(const SMBios::Abstract::Value &value, bool tab = true) = 0;
+		virtual void write(const SMBios::Value &value, bool tab = true) = 0;
 		virtual void write(const char *url, const char *value) = 0;
 
 		virtual void open() {
@@ -72,7 +72,7 @@
 			cout << node.description() << endl;
 		}
 
-		void write(const SMBios::Abstract::Value &value, bool tab) override {
+		void write(const SMBios::Value &value, bool tab) override {
 			if(tab) {
 				cout << "\t";
 			}
@@ -208,7 +208,7 @@
 				snprintf(buffer,9,"%02x",*ptr);
 				memcpy(line+(10+(col*3)),buffer,2);
 
-				snprintf(buffer,9,"%08lx",offset);
+				snprintf(buffer,9,"%08lx",(unsigned long) offset);
 				memcpy(line,buffer,8);
 
 				line[61+col] = (*ptr >= ' ' && *ptr < 128) ? *ptr : '.';
@@ -332,17 +332,15 @@
 
 		case Complete:
 			// Show standard output.
-
-			for(SMBios::Node node = Node::factory(filename,node_name);node;node.next(node_name)) {
-
+ 			for(SMBios::Node node = Node::factory(node_name);node;node.next(node_name)) {
 				if(show_node) {
 
 					writer->write(node);
 					writer->open();
 
-					node.for_each([](std::shared_ptr<Abstract::Value> value){
-						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
-							writer->write(*value);
+					node.for_each([](const Value &value){
+						if(!*value_name || value == value_name) {
+							writer->write(value);
 						}
 						return false;
 					});
@@ -351,9 +349,9 @@
 
 				} else {
 
-					node.for_each([](std::shared_ptr<Abstract::Value> value){
-						if(!*value_name || strcasecmp(value_name,value->name()) == 0) {
-							writer->write(*value,false);
+					node.for_each([](const Value &value){
+						if(!*value_name || value == value_name) {
+							writer->write(value,false);
 						}
 						return false;
 					});
@@ -369,7 +367,15 @@
 				url += node.name();
 				url += "/";
 				if(index) {
+#ifdef _MSC_VER
+					{
+						char buffer[20];
+						snprintf(buffer,19,"%u",(unsigned int) index);
+						url += buffer;
+					}
+#else
 					url += std::to_string(index);
+#endif // _MSC_VER
 					url += "/";
 				}
 				url += value.name();
@@ -382,11 +388,10 @@
 
 	} catch(const std::exception &e) {
 
-		cerr << e.what() << endl;
+		cout << e.what() << endl;
 		exit(-1);
 
 	}
 
 	return 0;
  }
-

@@ -25,7 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/decoders.h>
+ #include <private/decoders/probe.h>
  #include <string>
  #include <sstream>
  #include <iomanip>
@@ -34,7 +34,7 @@
 
  namespace SMBios {
 
-	std::string Decoder::TemperatureProbeValue::as_string(const uint8_t *ptr, const size_t offset) const {
+	std::string Decoder::TemperatureProbeValue::as_string(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
 
 		uint16_t code = WORD(ptr+offset);
 
@@ -48,7 +48,7 @@
 		return stream.str();
 	}
 
-	uint64_t Decoder::TemperatureProbeValue::as_uint64(const uint8_t *ptr, const size_t offset) const {
+	uint64_t Decoder::TemperatureProbeValue::as_uint64(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
 
 		uint16_t code = WORD(ptr+offset);
 

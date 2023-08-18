@@ -18,37 +18,26 @@
  */
 
  /**
-  * @brief Declare Memory size object.
+  * @brief Implement integer decoders.
   */
 
- #pragma once
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
- #include <smbios/defs.h>
- #include <smbios/value.h>
+ #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/bios.h>
+ #include <smbios/node.h>
  #include <iostream>
- #include <cstdint>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
-	class SMBIOS_API MemSize : public Value {
-	private:
-		uint64_t value;
 
-	public:
-		MemSize();
 
-		std::string as_string(int precision) const;
-		std::string as_string() const override;
-
-		bool empty() const override;
-		const char *name() const noexcept override;
-		const char *description() const noexcept override;
-
-		inline uint64_t as_uint64() const override {
-			return value;
-		}
-
-	};
-
- };
+ }
 

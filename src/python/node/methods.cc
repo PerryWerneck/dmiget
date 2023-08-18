@@ -25,6 +25,10 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
+
  #include <private/python.h>
  #include <smbios/node.h>
  #include <smbios/value.h>
@@ -292,8 +296,8 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 
 		PyObject *pynodes = PyList_New(0);
 
-		node.for_each([pynodes](std::shared_ptr<Abstract::Value> value){
-			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value));
+		node.for_each([pynodes](const SMBios::Value &value){
+			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value.clone()));
 			return false;
 		});
 
@@ -333,6 +337,59 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 			PyObject *pyobject = PyObjectByName("node");
 			dmiget_set_node(pyobject,const_cast<Node &>(node));
 			PyList_Append(pynodes,pyobject);
+			return false;
+		});
+
+		return pynodes;
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in SMBios library");
+
+	}
+
+	return NULL;
+
+ }
+
+ PyObject * pydmi_get_values(PyObject *self, PyObject *args) {
+	try {
+
+		std::string name;
+
+		switch(PyTuple_Size(args)) {
+		case 0:
+			break;
+
+		case 1:
+			{
+				const char *ptr = "";
+
+				if (!PyArg_ParseTuple(args, "s", &ptr))
+					throw runtime_error("Invalid argument");
+
+				name = ptr;
+			}
+			break;
+
+		default:
+			throw runtime_error("Invalid arguments");
+		}
+
+		PyObject *pynodes = PyList_New(0);
+		SMBios::Node::for_each([pynodes,name](const Node &node){
+
+			node.for_each([pynodes,name](const SMBios::Value &value){
+				if(name.empty() || value == name.c_str()) {
+					PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value.clone()));
+				}
+				return false;
+			});
+
 			return false;
 		});
 

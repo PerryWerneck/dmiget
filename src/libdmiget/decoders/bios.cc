@@ -18,51 +18,40 @@
  */
 
  /**
-  * @brief Declare abstract decoder.
+  * @brief Implement integer decoders.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/constants.h>
- #include <ctype.h>
- #include <stdexcept>
+ #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/bios.h>
+ #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
 
  using namespace std;
 
  namespace SMBios {
 
-	std::string Decoder::Abstract::as_string(const uint8_t *, size_t) const {
-		return "";
-	}
+	std::string Decoder::FirmwareRevision::as_string(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
 
-	unsigned int Decoder::Abstract::as_uint(const uint8_t *ptr, size_t offset) const {
+		ptr += offset;
 
-		unsigned int value = 0;
-		std::string str{as_string(ptr,offset)};
-
-		for(const char *p = str.c_str();*p && isdigit(*p);p++) {
-			value *= 10;
-			value += ('0' - *p);
+		if(ptr[0] == 0xFF || ptr[1] == 0xFF) {
+			return "";
 		}
 
-		return value;
+		string rc{std::to_string((unsigned int) ptr[0])};
+		rc += ".";
+		rc += std::to_string((unsigned int) ptr[1]);
 
+		return rc;
 	}
 
-	uint64_t Decoder::Abstract::as_uint64(const uint8_t *ptr, const size_t offset) const {
-
-		uint64_t value = 0;
-		std::string str{as_string(ptr,offset)};
-
-		for(const char *p = str.c_str();*p && isdigit(*p);p++) {
-			value *= 10;
-			value += ('0' - *p);
-		}
-
-		return value;
-
-	}
 
  }
+

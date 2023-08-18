@@ -33,6 +33,8 @@
  #include <iostream>
  #include <ctype.h>
 
+ #include <private/decoders.h>
+
  using namespace std;
  using namespace SMBios;
 
@@ -90,6 +92,8 @@
 		}
 
 		throw system_error(ENOENT,system_category(),nodename.c_str());
-	}
+
+ 	}
 
  }
+
