@@ -29,6 +29,8 @@
   * @brief Decoders definitions.
   */
 
+ #pragma once
+
  #include <smbios/defs.h>
  #include <private/data.h>
  #include <smbios/value.h>
@@ -70,6 +72,11 @@
 		};
 
 		struct String : public Worker {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct UInt16 : public Worker {
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
@@ -167,20 +174,6 @@
  /*
  namespace SMBios {
 
-	struct u64 {
-#ifdef BIGENDIAN
-		uint32_t h = 0;
-		uint32_t l = 0;
-#else
-		uint32_t l = 0;
-		uint32_t h = 0;
-#endif
-		void decode_memory_size(unsigned long &capacity, int &i) const;
-		std::string as_memory_size_string(int shift = 1) const;
-		uint64_t as_memory_size_bytes(int shift = 1) const;
-
-	};
-
 	namespace Decoder {
 
 		/// @brief Decode to string by index.
@@ -209,15 +202,6 @@
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
-		struct UInt16 : public Abstract {
-
-			constexpr UInt16() : Abstract{Value::Unsigned} {
-			}
-
-			unsigned int as_uint(const uint8_t *ptr, const size_t offset) const override;
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-
-		};
 
 		struct ProcessorType : public UInt16 {
 
@@ -227,28 +211,6 @@
 			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
 		};
 
-		struct MemoryDeviceWidth : public UInt16 {
-
-			constexpr MemoryDeviceWidth() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct MemoryDeviceFormFactor : public String {
-
-			constexpr MemoryDeviceFormFactor() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		struct MemorySize : public String {
-
-			constexpr MemorySize() = default;
-
-			std::string as_string(const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const override;
-
-		};
 
 		struct TemperatureProbeValue : public Abstract {
 

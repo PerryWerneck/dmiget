@@ -375,7 +375,7 @@
 					}
 #else
 					url += std::to_string(index);
-#endif _MSC_VER
+#endif // _MSC_VER
 					url += "/";
 				}
 				url += value.name();

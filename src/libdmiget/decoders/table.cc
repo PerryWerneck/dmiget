@@ -36,6 +36,7 @@
 
  #include <smbios/defs.h>
  #include <private/decoders.h>
+ #include <private/decoders/memory.h>
  #include <stdexcept>
 
  using namespace std;
@@ -124,10 +125,10 @@
 	};
 
 	static const Decoder::Item MemoryDevice[] = {
-//		{ "twidth",			Decoder::MemoryDeviceWidth{},		0x08,	"Total Width"		},
-//		{ "dwidth",			Decoder::MemoryDeviceWidth{},		0x0A,	"Data Width"		},
-//		{ "size",			Decoder::MemorySize{},				0x0C,	"Size"		},
-//		{ "formfactor",		Decoder::MemoryDeviceFormFactor{},	0x0E,	"Form Factor"		},
+		{ "twidth",			Decoder::MemoryDeviceWidth{},		0x08,	"Total Width"		},
+		{ "dwidth",			Decoder::MemoryDeviceWidth{},		0x0A,	"Data Width"		},
+		{ "size",			Decoder::MemorySize{},				0x0C,	"Size"				},
+		{ "formfactor",		Decoder::MemoryDeviceFormFactor{},	0x0E,	"Form Factor"		},
 		{ "locator",		Decoder::String{},					0x10,	"Locator"			},
 		{ "bank",			Decoder::String{},					0x11,	"Bank Locator"		},
 		{ "manufacturer",	Decoder::String{},					0x17,	"Manufacturer"		},

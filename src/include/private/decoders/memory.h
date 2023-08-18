@@ -18,31 +18,33 @@
  */
 
  /**
-  * @brief Implement integer decoders.
+  * @brief Declare memory decoders.
   */
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
+ #include <smbios/defs.h>
  #include <private/decoders.h>
- #include <smbios/node.h>
- #include <iostream>
- #include <string>
- #include <cstring>
-
- using namespace std;
 
  namespace SMBios {
 
-	unsigned int Decoder::UInt16::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
-		return (unsigned int) *((uint16_t *)(ptr+offset));
-	}
+ 	namespace Decoder {
 
-	std::string Decoder::UInt16::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
-		return std::to_string(as_uint(header,ptr,offset));
-	}
+		struct MemoryDeviceWidth : public UInt16 {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
 
+		struct MemoryDeviceFormFactor : public String {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct MemorySize : public String {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+ 	}
 
  }
+
 

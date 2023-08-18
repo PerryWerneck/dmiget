@@ -18,31 +18,32 @@
  */
 
  /**
-  * @brief Implement integer decoders.
+  * @brief Brief description of this source.
   */
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
+ #include <smbios/defs.h>
  #include <private/decoders.h>
- #include <smbios/node.h>
- #include <iostream>
- #include <string>
- #include <cstring>
-
- using namespace std;
 
  namespace SMBios {
 
-	unsigned int Decoder::UInt16::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
-		return (unsigned int) *((uint16_t *)(ptr+offset));
-	}
+ 	namespace Decoder {
 
-	std::string Decoder::UInt16::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
-		return std::to_string(as_uint(header,ptr,offset));
-	}
+		struct u64 {
+#ifdef BIGENDIAN
+			uint32_t h = 0;
+			uint32_t l = 0;
+#else
+			uint32_t l = 0;
+			uint32_t h = 0;
+#endif
+			void decode_memory_size(unsigned long &capacity, int &i) const;
+			std::string as_memory_size_string(int shift = 1) const;
+			uint64_t as_memory_size_bytes(int shift = 1) const;
 
+		};
+
+ 	}
 
  }
-
