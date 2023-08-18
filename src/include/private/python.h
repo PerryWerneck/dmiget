@@ -112,6 +112,7 @@
 
  /// @brief Build node array.
  SMBIOS_PRIVATE PyObject * pydmi_get_nodes(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * pydmi_get_values(PyObject *self, PyObject *args);
 
  SMBIOS_PRIVATE PyObject * pydmi_get_memsize(PyObject *self, PyObject *args);
 

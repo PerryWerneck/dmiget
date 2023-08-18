@@ -106,8 +106,8 @@
 		static bool for_each(const char *name,const std::function<bool(const Node &node)> &call);
 		static bool for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call);
 
-		bool for_each(const std::function<bool(const Value &v)> &call);
-		bool for_each(const std::function<bool(std::shared_ptr<Value> value)> &call);
+		bool for_each(const std::function<bool(const Value &v)> &call) const;
+		bool for_each(const std::function<bool(std::shared_ptr<Value> value)> &call) const;
 
 		Value::Iterator begin();
 		Value::Iterator end();

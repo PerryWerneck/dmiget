@@ -93,7 +93,7 @@
 		return for_each(call);
 	}
 
-	bool Node::for_each(const std::function<bool(std::shared_ptr<Value> value)> &call) {
+	bool Node::for_each(const std::function<bool(std::shared_ptr<Value> value)> &call) const {
 
 		if(*this) {
 			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
@@ -107,7 +107,7 @@
 
 	}
 
-	bool Node::for_each(const std::function<bool(const Value &v)> &call) {
+	bool Node::for_each(const std::function<bool(const Value &v)> &call) const {
 
 		if(*this) {
 			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
