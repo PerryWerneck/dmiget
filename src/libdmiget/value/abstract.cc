@@ -61,33 +61,3 @@
 
  }
 
- /*
- #include <smbios/value.h>
-
- using namespace std;
-
- namespace SMBios {
-
-	const char * Abstract::Value::name() const noexcept {
-		return "";
-	}
-
-	const char * Abstract::Value::description() const noexcept {
-		return "";
-	}
-
-	bool Abstract::Value::valid() const {
-		return true;
-	}
-
-	unsigned int Abstract::Value::as_uint() const {
-		return (unsigned int) as_uint64();
-	}
-
-	Abstract::Value & Abstract::Value::next() {
-		throw runtime_error("Object is not iteratable");
-	}
-
- }
- */
-

@@ -54,11 +54,22 @@
 			Iterator(const Iterator *it) : Iterator{it->value} {
 			}
 
+			inline Iterator & operator=(std::shared_ptr<Value> v) {
+				value = v;
+				return *this;
+			}
+
+			inline Iterator & operator=(const Iterator &it) {
+				value = it.value;
+				return *this;
+			}
+
+			inline Iterator & operator=(const Iterator *it) {
+				value = it->value;
+				return *this;
+			}
+
 			using iterator_category = std::forward_iterator_tag;
-			// using difference_type   = std::ptrdiff_t;
-			// using value_type        = std::shared_ptr<Value>;
-			// using pointer           = std::shared_ptr<Value>;
-			// using reference         = std::shared_ptr<Value>;
 
 			~Iterator();
 
@@ -153,91 +164,6 @@
 		}
 
 	};
-
-	/*
-	class SMBIOS_API Value : public Abstract::Value {
-	public:
-		struct Info;
-
-
-		Value(const Value &src);
-
-		Value(const Value *src);
-
-		Value(std::shared_ptr<Data> data, size_t offset, const Value::Info *info, size_t item = 0);
-
-		Value & operator=(const Value & src);
-		Value & operator=(const char *name);
-		Value & operator=(const size_t index);
-
-		virtual ~Value();
-
-		bool valid() const override;
-
-		std::string as_string() const override;
-
-		class SMBIOS_API Iterator {
-		private:
-			Value *value = nullptr;
-
-		public:
-			using iterator_category = std::forward_iterator_tag;
-			using difference_type   = std::ptrdiff_t;
-			using value_type        = Value;
-			using pointer           = Value *;
-			using reference         = Value &;
-
-			Iterator(const Iterator &i) : Iterator{new Value{i.value}} {
-			}
-
-			Iterator(const Iterator *i) : Iterator{new Value{i->value}} {
-			}
-
-			constexpr Iterator(Value *v) : value{v} {
-			}
-
-			~Iterator();
-
-			reference operator*() const {
-				return *value;
-			}
-
-			pointer operator->() {
-				return value;
-			}
-
-			operator bool() const;
-
-			Iterator operator++(int);
-
-			bool operator==(const Iterator& rhs) const;
-
-			bool operator!=(const Iterator& rhs) const;
-
-			Iterator & operator++();
-
-		};
-
-		uint64_t as_uint64() const override;
-		unsigned int as_uint() const override;
-
-		const char *name() const noexcept override;
-		const char *description() const noexcept override;
-
-		Abstract::Value & next() override;
-
-		/// @brief Find value using url formatter as DMI:///node/value
-		static std::shared_ptr<Value> find(const char *url);
-
-	protected:
-		std::shared_ptr<Data> data;
-		size_t offset;
-
-		const Value::Info *info;
-		size_t item;
-
-	};
-	*/
 
  };
 
