@@ -507,14 +507,14 @@
 	const Decoder::Type * Decoder::get(const uint8_t type) {
 
 		if(type >= 128) {
-			static const Decoder::Type type {
+			static const Decoder::Type oemtype {
 				128,
 				true,
 				"oem",
 				"OEM specific type",
 				EmptyTable
 			};
-			return &type;
+			return &oemtype;
 		}
 
 		for(const Decoder::Type &decoder : decoders) {
