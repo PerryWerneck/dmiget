@@ -18,27 +18,46 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implements probe decoder.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <smbios/node.h>
+ #include <private/decoders/probe.h>
+ #include <string>
+ #include <sstream>
+ #include <iomanip>
+
+ using namespace std;
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
+	std::string Decoder::TemperatureProbeValue::as_string(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+
+		uint16_t code = WORD(ptr+offset);
+
+		if (code == 0x8000)
+			return "";
+
+		std::stringstream stream;
+
+		stream << fixed << setprecision(1) << ( ((float) code) / 10) << " ºC";
+
+		return stream.str();
 	}
 
-	Node & Node::operator++() {
-		next();
-		return *this;
+	uint64_t Decoder::TemperatureProbeValue::as_uint64(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+
+		uint16_t code = WORD(ptr+offset);
+
+		if(code == 0x8000) {
+			return 0;
+		}
+
+		return code;
+
 	}
 
  }
-

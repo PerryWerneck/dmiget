@@ -18,27 +18,26 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implement integer decoders.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/bios.h>
  #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
-	}
 
-	Node & Node::operator++() {
-		next();
-		return *this;
-	}
 
  }
 

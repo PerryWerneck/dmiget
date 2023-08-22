@@ -21,6 +21,8 @@
   * @brief SMBIos data methods for linux.
   */
 
+ // Reference: https://github.com/acidanthera/dmidecode
+
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H

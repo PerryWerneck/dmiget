@@ -18,27 +18,27 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Declare probe decoders.
   */
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
- #include <smbios/node.h>
+ #include <smbios/defs.h>
+ #include <private/decoders.h>
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
-	}
+ 	namespace Decoder {
 
-	Node & Node::operator++() {
-		next();
-		return *this;
-	}
+		struct TemperatureProbeValue : public Worker {
+
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+
+		};
+
+ 	}
 
  }
+
 

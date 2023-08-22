@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements value iterator.
+  * @brief Implements node::next() methods.
   */
 
  #ifdef HAVE_CONFIG_H
@@ -26,55 +26,64 @@
  #endif // HAVE_CONFIG_H
 
  #include <smbios/defs.h>
- #include <smbios/value.h>
- #include <private/decoders.h>
+ #include <smbios/node.h>
  #include <private/data.h>
-
- #include <stdexcept>
+ #include <private/decoders.h>
 
  using namespace std;
 
  namespace SMBios {
 
-	Value::Iterator::~Iterator() {
-	}
-
-	Value::Iterator::operator bool() const {
-		return value.get() && *value;
-	}
-
-	bool Value::Iterator::operator==(const Iterator& rhs) const {
-
-		if(value.get() && rhs.value.get()) {
-			return *value == *rhs.value;
-		}
-
-		if(value.get() || rhs.value.get()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	Value::Iterator Value::Iterator::operator++(int) {
+	Node & Node::next() {
 
 		if(!*this) {
 			return *this;
 		}
 
-		Iterator it{value->clone()};
-		operator++();
+		index++;
+		if((data->count() && index >= data->count())) {
+			offset = -1;
+			return *this;
+		}
 
-		return it;
+		// Look for the next handle
+		const uint8_t *buf = data->get(0);
+		const uint8_t *next = buf+offset+header.length;
 
+		while ((unsigned long)(next - buf + 1) < data->size() && (next[0] != 0 || next[1] != 0))
+			next++;
+		next += 2;
+
+		offset = (next - buf);
+
+		if( (offset+4) > ((int) data->size()) ) {
+			return setup(-1);
+		}
+
+		return setup(offset);
 	}
 
-	Value::Iterator & Value::Iterator::operator++() {
-		if(*this) {
-			if(!value->next()) {
-				value.reset();
+	Node & Node::next(uint8_t type, size_t count) {
+
+		while(*this && count--) {
+			next();
+			while(*this && header.type != type) {
+				next();
 			}
 		}
+
+		return *this;
+	}
+
+	Node & Node::next(const char *name,size_t count) {
+		if(name && *name) {
+			return next(Decoder::get(name)->type, count);
+		}
+
+		while(count--) {
+			next();
+		}
+
 		return *this;
 	}
 

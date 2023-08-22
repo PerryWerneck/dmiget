@@ -29,9 +29,12 @@
  #include <Python.h>
 
  #ifdef __cplusplus
+ #include <memory>
+
  using namespace std;
  using namespace SMBios;
  #include <functional>
+ #include <smbios/value.h>
 
  extern "C" {
  #endif // __cplusplus
@@ -68,12 +71,32 @@
  SMBIOS_PRIVATE PyObject * dmiget_value_alloc(PyTypeObject *type, PyObject *, PyObject *);
  SMBIOS_PRIVATE void dmiget_value_dealloc(PyObject * self);
 
+ //
+ // smbios.value object
+ //
+ extern SMBIOS_PRIVATE PyMethodDef dmiget_value_methods[];
+ extern SMBIOS_PRIVATE PyGetSetDef dmiget_value_attributes[];
+ extern SMBIOS_PRIVATE PyTypeObject dmiget_value_python_type;
+
+ SMBIOS_PRIVATE int dmiget_value_bool(PyObject *self);
+ SMBIOS_PRIVATE PyObject * dmiget_value_int(PyObject *self);
+
  SMBIOS_PRIVATE PyObject * dmiget_value_getattr(PyObject *, char *);
  SMBIOS_PRIVATE PyObject * dmiget_value_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_value_name(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_value_description(PyObject *self, void *);
  SMBIOS_PRIVATE PyObject * dmiget_value_next(PyObject *self, PyObject *args);
  SMBIOS_PRIVATE PyObject * dmiget_value_empty(PyObject *self, PyObject *args);
+
+ //
+ // smbios.node object
+ //
+ extern SMBIOS_PRIVATE PyMethodDef dmiget_node_methods[];
+ extern SMBIOS_PRIVATE PyGetSetDef dmiget_node_attributes[];
+ extern SMBIOS_PRIVATE PyTypeObject dmiget_node_python_type;
+
+ SMBIOS_PRIVATE int dmiget_node_bool(PyObject *self);
+ SMBIOS_PRIVATE PyObject * dmiget_node_int(PyObject *self);
 
  SMBIOS_PRIVATE PyObject * dmiget_node_str(PyObject *self);
  SMBIOS_PRIVATE PyObject * dmiget_node_next(PyObject *self, PyObject *args);
@@ -89,6 +112,9 @@
 
  /// @brief Build node array.
  SMBIOS_PRIVATE PyObject * pydmi_get_nodes(PyObject *self, PyObject *args);
+ SMBIOS_PRIVATE PyObject * pydmi_get_values(PyObject *self, PyObject *args);
+
+ SMBIOS_PRIVATE PyObject * pydmi_get_memsize(PyObject *self, PyObject *args);
 
  /// @brief Build Python objet by typename.
  /// @param name The nome of python object to build;
@@ -96,7 +122,7 @@
 
 
  #ifdef __cplusplus
- SMBIOS_PRIVATE void dmiget_set_value(PyObject *self, SMBios::Value &value);
+ SMBIOS_PRIVATE PyObject * dmiget_set_value(PyObject *self, std::shared_ptr<SMBios::Value> value);
 
  }
  #endif // __cplusplus

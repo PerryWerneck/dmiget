@@ -25,23 +25,33 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <windows.h>
+
  #include <private/data.h>
  #include <stdexcept>
  #include <system_error>
-
- #include <unistd.h>
 
  #include <sys/types.h>
  #include <sys/stat.h>
  #include <fcntl.h>
  #include <cstring>
  #include <iostream>
- #include <sys/mman.h>
+ #include <cstdio>
 
  using namespace std;
 
  namespace SMBios {
 
+	std::shared_ptr<Data> Data::factory(const char *filename) {
+
+		if(!(filename && *filename)) {
+			return factory();
+		}
+
+		throw std::system_error(ENOTSUP,std::system_category(),filename);
+	}
+
+	/*
 	struct File {
 
 		uint8_t *ptr;
@@ -64,6 +74,11 @@
 				throw std::system_error(err,std::system_category(),filename);
 			}
 
+#ifdef _WIN32
+			if(!length) {
+				length = 4096;
+			}
+#else
 			if(!statbuf.st_blksize) {
 				statbuf.st_blksize = 4096;
 			}
@@ -71,6 +86,7 @@
 			if(!length) {
 				length = statbuf.st_size;
 			}
+#endif // _WIN32
 
 			ptr = new uint8_t[length+1];
 			memset(ptr,0,length+1);
@@ -79,9 +95,11 @@
 			while(pos < length) {
 
 				size_t blksize = (length-pos);
+#ifndef _WIN32
 				if(blksize > (size_t) statbuf.st_blksize) {
 					blksize = statbuf.st_blksize;
 				}
+#endif // !_WIN32
 
 				ssize_t bytes = read(fd,ptr+pos,blksize);
 
@@ -174,33 +192,21 @@
 
 		}
 
-		//
-		// Load SMBIOS Data
-		//
-		File data{smbios_dmi_table,dmi.length};
+		// Get SMBIOS.
+		File data(smbios_dmi_table,dmi.length);
 
 		if(data.length != dmi.length) {
-			throw runtime_error(string{"Unexpected length in '"}+smbios_dmi_table+"'");
+			throw runtime_error(string{smbios_dmi_table} + ": Unexpected length");
 		}
 
 		this->ptr = new uint8_t[dmi.length+1];
 		this->ptr[dmi.length] = 0;
 		memcpy(this->ptr,data.ptr,dmi.length);
-	}
 
-	Data::~Data() {
-		delete[] ptr;
-	}
-
-	std::shared_ptr<Data> Data::factory() {
-		return make_shared<Data>();
 	}
 
 	std::shared_ptr<Data> Data::factory(const char *filename) {
 
-		if(!(filename && *filename)) {
-			return factory();
-		}
 
 		struct stat statbuf;
 		if (stat(filename, &statbuf) != 0) {
@@ -262,8 +268,6 @@
 
 		return rc;
 	}
-
-	Data::Data() : Data("/sys/firmware/dmi/tables/smbios_entry_point","/sys/firmware/dmi/tables/DMI") {
-	}
+ */
 
  }

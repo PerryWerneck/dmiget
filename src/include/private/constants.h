@@ -24,11 +24,37 @@
  #pragma once
 
  #include <smbios/defs.h>
- #include <private/smbios.h>
+ #include <private/data.h>
  #include <smbios/value.h>
- #include <smbios/node.h>
 
+ /*
  namespace SMBios {
+
+	namespace Decoder {
+
+		/// @brief Abstract decoder.
+		struct Abstract {
+			const Value::Type type;
+
+			constexpr Abstract(const Value::Type t) : type{t} {
+			}
+
+			constexpr Abstract() : type{Value::Undefined} {
+			}
+
+			virtual std::string as_string(const uint8_t *ptr, const size_t offset) const;
+			virtual unsigned int as_uint(const uint8_t *ptr, const size_t offset) const;
+			virtual uint64_t as_uint64(const uint8_t *ptr, const size_t offset) const;
+
+#ifndef _MSC_VER
+			inline std::string to_string(const uint8_t *ptr, const size_t offset) const {
+				return as_string(ptr, offset);
+			}
+#endif /// !_MSC_VER
+
+		};
+
+	}
 
 	struct Node::Info {
 		uint8_t id = 0;
@@ -40,43 +66,9 @@
 		size_t size() const noexcept;
 
 		static const Info * find(uint8_t id);
+		static const Info * find(const char *name);
 	};
 
-	namespace Decoder {
-
-		/// @brief Abstract decoder.
-		struct Abstract {
-			const Value::Type type;
-
-			constexpr Abstract(const Value::Type t) : type{t} {
-			}
-
-			constexpr Abstract() : type{Value::Invalid} {
-			}
-
-			virtual std::string to_string(const uint8_t *ptr, const size_t offset) const;
-
-		};
-
-		/// @brief Decode to string.
-		struct String : public Abstract {
-
-			constexpr String() : Abstract{Value::String} {
-			}
-
-			std::string to_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-		/// @brief Decode firmware revision.
-		struct FirmwareRevision : public Abstract {
-
-			constexpr FirmwareRevision() : Abstract{Value::Integer} {
-			}
-
-			std::string to_string(const uint8_t *ptr, const size_t offset) const override;
-		};
-
-	}
 
 	struct Value::Info {
 
@@ -88,4 +80,5 @@
 	};
 
  }
+ */
 

@@ -18,27 +18,31 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implement integer decoders.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <private/decoders.h>
  #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
+	unsigned int Decoder::UInt16::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+		return (unsigned int) *((uint16_t *)(ptr+offset));
 	}
 
-	Node & Node::operator++() {
-		next();
-		return *this;
+	std::string Decoder::UInt16::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+		return std::to_string(as_uint(header,ptr,offset));
 	}
+
 
  }
 

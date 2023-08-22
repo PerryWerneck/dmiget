@@ -18,27 +18,36 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implements python memsize.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <smbios/node.h>
+ #include <private/python.h>
+ #include <smbios/memsize.h>
 
- namespace SMBios {
+ #include <memory>
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
+ PyObject * pydmi_get_memsize(PyObject *, PyObject *) {
+
+	try {
+
+		PyObject *pyobject = PyObjectByName("value");
+		dmiget_set_value(pyobject,make_shared<SMBios::MemSize>());
+		return pyobject;
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in SMBios library");
+
 	}
 
-	Node & Node::operator++() {
-		next();
-		return *this;
-	}
+	return NULL;
 
  }
-

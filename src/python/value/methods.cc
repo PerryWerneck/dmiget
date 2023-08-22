@@ -18,7 +18,7 @@
  */
 
  /**
-  * @brief Implements python 'value' object.
+  * @brief Implements python 'value' methods
   */
 
  #ifdef HAVE_CONFIG_H
@@ -31,9 +31,7 @@
  #include <stdexcept>
 
  struct pyValuePrivate {
-	SMBios::Value value;
-	pyValuePrivate(SMBios::Value &v) : value{v} {
-	}
+ 	std::shared_ptr<SMBios::Value> value;
  };
 
  void dmiget_value_type_init() {
@@ -41,9 +39,8 @@
 
  int dmiget_value_init(PyObject *self, PyObject *args, PyObject *) {
 
-	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
-	if(pvt) {
-		delete pvt;
+	if(!((pyValue *) self)->pvt) {
+		((pyValue *) self)->pvt = new pyValuePrivate();
 	}
 
 	try {
@@ -59,7 +56,7 @@
 				if (!PyArg_ParseTuple(args, "s", &url))
 					throw runtime_error("Invalid argument");
 
-				((pyValue *) self)->pvt = new pyValuePrivate{*SMBios::Value::find(url)};
+				dmiget_set_value(self,SMBios::Value::find(url));
 
 			}
 			break;
@@ -72,7 +69,7 @@
 				if (!PyArg_ParseTuple(args, "ss", &nodename, &valuename))
 					throw runtime_error("Invalid argument");
 
-				((pyValue *) self)->pvt = new pyValuePrivate{*SMBios::Node{nodename}.find(valuename)};
+				dmiget_set_value(self,SMBios::Node{nodename}.find(valuename));
 
 			}
 			break;
@@ -97,12 +94,9 @@
 
  }
 
- void dmiget_set_value(PyObject *self, SMBios::Value &value) {
-	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
-	if(pvt) {
-		delete pvt;
-	}
-	((pyValue *) self)->pvt = new pyValuePrivate{value};
+ PyObject * dmiget_set_value(PyObject *self, shared_ptr<SMBios::Value> value) {
+	((pyValue *) self)->pvt->value = value;
+	return self;
  }
 
  void dmiget_value_finalize(PyObject *self) {
@@ -133,7 +127,7 @@
 
 	try {
 
-		return worker(pvt->value);
+		return worker(*pvt->value);
 
 	} catch(const std::exception &e) {
 
@@ -152,7 +146,7 @@
  PyObject * dmiget_value_str(PyObject *self) {
 
 	return call(self, [](SMBios::Value &value) {
-		return PyUnicode_FromString(value.to_string().c_str());
+		return PyUnicode_FromString(value.as_string().c_str());
 	});
 
  }
@@ -187,10 +181,51 @@
 
  PyObject * dmiget_value_next(PyObject *self, PyObject *) {
 
+	return call(self, [](SMBios::Value &v) {
+
+		SMBios::Value *value = dynamic_cast<SMBios::Value *>(&v);
+
+		if(!value) {
+			throw runtime_error("Value is not iterable");
+		}
+
+		value->next();
+		return PyBool_FromLong((*value) ? 1 : 0);
+
+	});
+
+ }
+
+ int dmiget_value_bool(PyObject *self) {
+
+	pyValuePrivate * pvt = ((pyValue *) self)->pvt;
+	if(!pvt) {
+		return 0;
+	}
+
+	try {
+
+		return (*pvt->value) ? 1 : 0;
+
+	} catch(const std::exception &e) {
+
+			PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+			PyErr_SetString(PyExc_RuntimeError, "Unexpected error in smbios library");
+
+	}
+
+	return 0;
+
+ }
+
+ PyObject * dmiget_value_int(PyObject *self) {
+
 	return call(self, [](SMBios::Value &value) {
 
-			value.next();
-			return PyBool_FromLong(value ? 1 : 0);
+		return PyLong_FromUnsignedLong(value.as_uint64());
 
 	});
 

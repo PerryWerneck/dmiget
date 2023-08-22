@@ -18,27 +18,46 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Brief Describe 'OEMString' value.
   */
+
+ #pragma once
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <smbios/node.h>
+ /*
+ #include <smbios/defs.h>
+ #include <smbios/value.h>
+ #include <string>
+ #include <cstdint>
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
-	}
+ 	class SMBIOS_API OEMString : public Abstract::Value {
+	private:
+		size_t index = 0;
+		const char *ptr = nullptr;
+		std::string oname;
 
-	Node & Node::operator++() {
-		next();
-		return *this;
-	}
+	public:
+
+		/// @brief Construct an OEM string value.
+		/// @param index Index (for string name).
+		/// @param str Pointer to the beginning of string.
+		OEMString(size_t index, const char *str);
+
+		std::string as_string() const override;
+		const char *name() const noexcept override;
+		const char *description() const noexcept override;
+		bool valid() const override;
+		uint64_t as_uint64() const override;
+		unsigned int as_uint() const override;
+		Abstract::Value & next() override;
+
+ 	};
 
  }
+ */
 

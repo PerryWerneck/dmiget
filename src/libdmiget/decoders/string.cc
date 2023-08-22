@@ -25,21 +25,50 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/constants.h>
- #include <smbios/node.h>
- #include <iostream>
  #include <string>
- #include <cstring>
+ #include <private/decoders.h>
+ #include <ctype.h>
 
  using namespace std;
 
  namespace SMBios {
 
-	string Decoder::String::to_string(const uint8_t *ptr, size_t index) const {
+	unsigned int Decoder::Worker::as_uint(const Node::Header &header, const uint8_t *smbiosdata, const size_t offset) const {
+		unsigned int rc = 0;
+		string str{as_string(header,smbiosdata,offset)};
+		for(const char *ptr = str.c_str();*ptr && isdigit(*ptr);ptr++) {
+			rc *= 10;
+			rc += ('0' - *ptr);
+		}
+		return rc;
+	}
 
-		Node::Header *header{(Node::Header *) ptr};
+	uint64_t Decoder::Worker::as_uint64(const Node::Header &header, const uint8_t *smbiosdata, const size_t offset) const {
+		uint64_t rc = 0;
+		string str{as_string(header,smbiosdata,offset)};
+		for(const char *ptr = str.c_str();*ptr && isdigit(*ptr);ptr++) {
+			rc *= 10;
+			rc += ('0' - *ptr);
+		}
+		return rc;
+	}
 
-		ptr += header->length;
+	string Decoder::Worker::as_string(const Node::Header &, const uint8_t *, const size_t) const {
+		return "";
+	}
+
+	string Decoder::String::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		if(offset > header.length) {
+			return "";
+		}
+
+		uint8_t index = ptr[offset];
+		if (index == 0)
+			return "";
+
+		ptr += header.length;
+
 		while (index > 1 && *ptr) {
 			ptr += strlen((const char *) ptr);
 			ptr++;
@@ -47,6 +76,7 @@
 		}
 
 		return string{(const char *) ptr};
+
 	}
 
  }

@@ -18,19 +18,40 @@
  */
 
  /**
-  * @brief Declare abstract decoder.
+  * @brief Implement integer decoders.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <private/constants.h>
+ #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/bios.h>
+ #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
-	std::string Decoder::Abstract::to_string(const uint8_t *, size_t) const {
-		return "";
+	std::string Decoder::FirmwareRevision::as_string(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+
+		ptr += offset;
+
+		if(ptr[0] == 0xFF || ptr[1] == 0xFF) {
+			return "";
+		}
+
+		string rc{std::to_string((unsigned int) ptr[0])};
+		rc += ".";
+		rc += std::to_string((unsigned int) ptr[1]);
+
+		return rc;
 	}
 
+
  }
+

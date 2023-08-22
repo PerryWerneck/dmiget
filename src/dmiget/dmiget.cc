@@ -21,13 +21,15 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <iostream>
- #include <functional>
- #include <cstring>
- #include <exception>
- #include <iomanip>
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
 
  #include <smbios/node.h>
+ #include <smbios/value.h>
+ #include <iostream>
+ #include <iomanip>
+ #include <private/data.h>
 
  using namespace std;
  using namespace SMBios;
@@ -50,7 +52,7 @@
 	class Abstract {
 	public:
 		virtual void write(const Node &node) = 0;
-		virtual void write(const Value &value, bool tab = true) = 0;
+		virtual void write(const SMBios::Value &value, bool tab = true) = 0;
 		virtual void write(const char *url, const char *value) = 0;
 
 		virtual void open() {
@@ -70,14 +72,14 @@
 			cout << node.description() << endl;
 		}
 
-		void write(const Value &value, bool tab) override {
+		void write(const SMBios::Value &value, bool tab) override {
 			if(tab) {
 				cout << "\t";
 			}
 			if(show_value_label) {
 				cout << value.description() << ": ";
 			}
-			cout << value << endl;
+			cout << value.as_string() << endl;
 		}
 
 		void write(const char *url, const char *value) override {
@@ -107,18 +109,18 @@
 	}
  } workers[] {
 	{
-		'n',"node",
-		"",
-		false,
+		'N',"node",
+		"\t\tShow only nodes of required type",
+		true,
 		[](const char *name) {
 			node_name = name;
 			return false;
 		}
 	},
 	{
-		'v',"value",
-		"",
-		false,
+		'V',"value",
+		"\t\tShow only selected value",
+		true,
 		[](const char *name) {
 			value_name = name;
 			return false;
@@ -126,7 +128,7 @@
 	},
 	{
 		'v',"verbose",
-		"Verbose output (default)",
+		"\tVerbose output (default)",
 		false,
 		[](const char *) {
 			verbose = true;
@@ -135,7 +137,7 @@
 	},
 	{
 		'q',"quiet",
-		"Less verbose output",
+		"\t\tLess verbose output",
 		false,
 		[](const char *) {
 			verbose = false;
@@ -144,7 +146,7 @@
 	},
 	{
 		'u',"urls",
-		"Show URLs and values",
+		"\t\tShow URLs and values",
 		false,
 		[](const char *) {
 			output_format = Urls;
@@ -153,7 +155,7 @@
 	},
 	{
 		'f',"dump-file",
-		"Read from dump file",
+		"\tRead from dump file",
 		true,
 		[](const char *arg) {
 			filename = arg;
@@ -162,7 +164,7 @@
 	},
 	{
 		'\0',"hide-nodes",
-		"Hide node information",
+		"\tHide node information",
 		false,
 		[](const char *) {
 			show_node = false;
@@ -171,7 +173,7 @@
 	},
 	{
 		'\0',"hide-value-labels",
-		"Hide node information",
+		"Hide value labels",
 		false,
 		[](const char *) {
 			show_value_label = false;
@@ -179,8 +181,48 @@
 		}
 	},
 	{
+		'D',"dump-table",
+		"Dump data table",
+		false,
+		[](const char *) {
+
+			char line[80];
+			line[0] = 0;
+
+			auto smbios = SMBios::Data::factory(filename);
+
+			for(size_t offset = 0; offset < smbios->size(); offset++) {
+
+				size_t col = offset%16;
+				if(col == 0) {
+					cout << line << endl;
+					memset(line,' ',80);
+					memset(line,'0',8);
+					line[79] = 0;
+					line[60] = line[77] = '|';
+				}
+
+				char buffer[10];
+
+				const uint8_t *ptr = smbios->get(offset);
+				snprintf(buffer,9,"%02x",*ptr);
+				memcpy(line+(10+(col*3)),buffer,2);
+
+				snprintf(buffer,9,"%08lx",(unsigned long) offset);
+				memcpy(line,buffer,8);
+
+				line[61+col] = (*ptr >= ' ' && *ptr < 128) ? *ptr : '.';
+
+			}
+			cout << line << endl;
+
+
+			return true;
+		}
+	},
+	{
 		'T',"text",
-		"Text mode output (default)",
+		"\t\tText mode output (default)",
 		false,
 		[](const char *) {
 			writer = make_shared<Writer::Text>();
@@ -191,6 +233,8 @@
 
  int main(int argc, char **argv) {
 
+	const char *appname = argv[0];
+
 	try {
 
 		// Check command-line arguments.
@@ -200,7 +244,15 @@
 			bool found = false;
 			const char *argument = *(++argv);
 
-			if(!strncmp(argument,"--",2)) {
+			if(!(strcasecmp(argument,"--help") && strcmp(argument,"-h") && strcmp(argument,"-?") && strcmp(argument,"help") && strcmp(argument,"?"))) {
+
+				cout << "Use " << appname << " [options] [dmi:///node/value]" << endl << endl;
+				for(const Worker &worker : workers) {
+					cout << "--" << worker.long_arg << "\t" << worker.help << endl;
+				}
+				return 0;
+
+			} else if(!strncmp(argument,"--",2)) {
 
 				argument += 2;
 				const char *value = strchr(argument,'=');
@@ -280,37 +332,54 @@
 
 		case Complete:
 			// Show standard output.
-			for(SMBios::Node node{filename,node_name};node;node.next(node_name)) {
+ 			for(SMBios::Node node = Node::factory(node_name);node;node.next(node_name)) {
 				if(show_node) {
+
 					writer->write(node);
 					writer->open();
-					for(auto &value : node) {
-						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+
+					node.for_each([](const Value &value){
+						if(!*value_name || value == value_name) {
 							writer->write(value);
 						}
-					}
+						return false;
+					});
+
 					writer->close();
+
 				} else {
-					for(auto &value : node) {
-						if(!*value_name || strcasecmp(value_name,value.name()) == 0) {
+
+					node.for_each([](const Value &value){
+						if(!*value_name || value == value_name) {
 							writer->write(value,false);
 						}
-					}
+						return false;
+					});
+
 				}
 			}
 			break;
 
 		case Urls:
+
 			SMBios::Node::for_each([](const SMBios::Node &node, const size_t index, const Value &value) {
 				string url{"dmi:///"};
 				url += node.name();
 				url += "/";
 				if(index) {
+#ifdef _MSC_VER
+					{
+						char buffer[20];
+						snprintf(buffer,19,"%u",(unsigned int) index);
+						url += buffer;
+					}
+#else
 					url += std::to_string(index);
-					url += "/'";
+#endif // _MSC_VER
+					url += "/";
 				}
 				url += value.name();
-				writer->write(url.c_str(),value.to_string().c_str());
+				writer->write(url.c_str(),value.as_string().c_str());
 				return false;
 			});
 			break;
@@ -319,11 +388,10 @@
 
 	} catch(const std::exception &e) {
 
-		cerr << e.what() << endl;
+		cout << e.what() << endl;
 		exit(-1);
 
 	}
 
 	return 0;
  }
-

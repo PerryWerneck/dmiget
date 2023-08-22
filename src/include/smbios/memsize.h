@@ -18,33 +18,37 @@
  */
 
  /**
-  * @brief Implements firmware revision decoder.
+  * @brief Declare Memory size object.
   */
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
- #include <private/constants.h>
- #include <string>
-
- using namespace std;
+ #include <smbios/defs.h>
+ #include <smbios/value.h>
+ #include <iostream>
+ #include <cstdint>
 
  namespace SMBios {
 
-	std::string Decoder::FirmwareRevision::to_string(const uint8_t *ptr, size_t offset) const {
+	class SMBIOS_API MemSize : public Value {
+	private:
+		uint64_t value;
 
-		ptr += offset;
+	public:
+		MemSize();
 
-		if(ptr[0] == 0xFF || ptr[1] == 0xFF) {
-			return "";
+		std::string as_string(int precision) const;
+		std::string as_string() const override;
+
+		bool empty() const override;
+		const char *name() const noexcept override;
+		const char *description() const noexcept override;
+
+		inline uint64_t as_uint64() const override {
+			return value;
 		}
 
-		string rc{std::to_string((unsigned int) ptr[0])};
-		rc += ".";
-		rc += std::to_string((unsigned int) ptr[1]);
+	};
 
-		return rc;
-	}
+ };
 
- }

@@ -18,27 +18,32 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Brief description of this source.
   */
 
- #ifdef HAVE_CONFIG_H
-	#include <config.h>
- #endif // HAVE_CONFIG_H
+ #pragma once
 
- #include <smbios/node.h>
+ #include <smbios/defs.h>
+ #include <private/decoders.h>
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
-	}
+ 	namespace Decoder {
 
-	Node & Node::operator++() {
-		next();
-		return *this;
-	}
+		struct u64 {
+#ifdef BIGENDIAN
+			uint32_t h = 0;
+			uint32_t l = 0;
+#else
+			uint32_t l = 0;
+			uint32_t h = 0;
+#endif
+			void decode_memory_size(unsigned long &capacity, int &i) const;
+			std::string as_memory_size_string(int shift = 1) const;
+			uint64_t as_memory_size_bytes(int shift = 1) const;
+
+		};
+
+ 	}
 
  }
-

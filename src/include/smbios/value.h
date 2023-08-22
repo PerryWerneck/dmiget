@@ -27,56 +27,58 @@
  #include <iostream>
  #include <iterator>
  #include <memory>
+ #include <cstring>
 
  namespace SMBios {
 
+	/// @brief SMBios value.
 	class SMBIOS_API Value {
 	public:
-		struct Info;
 
-		enum Type {
-			Invalid,
-			String,
-			Integer
-		};
-
-		Value(const Value &src);
-
-		Value(const Value *src);
-
-		Value(std::shared_ptr<Data> data, size_t offset, const Value::Info *info, size_t item = 0);
-
-		Value & operator=(const Value & src);
-		Value & operator=(const char *name);
-		Value & operator=(const size_t index);
-
+		/// @brief Iterator for node contents.
 		class SMBIOS_API Iterator {
 		private:
-			Value *value = nullptr;
+			std::shared_ptr<Value> value;
 
 		public:
+
+			Iterator() {
+			}
+
+			Iterator(std::shared_ptr<Value> v) : value{v} {
+			}
+
+			Iterator(const Iterator &it) : Iterator{it.value} {
+			}
+
+			Iterator(const Iterator *it) : Iterator{it->value} {
+			}
+
+			inline Iterator & operator=(std::shared_ptr<Value> v) {
+				value = v;
+				return *this;
+			}
+
+			inline Iterator & operator=(const Iterator &it) {
+				value = it.value;
+				return *this;
+			}
+
+			inline Iterator & operator=(const Iterator *it) {
+				value = it->value;
+				return *this;
+			}
+
 			using iterator_category = std::forward_iterator_tag;
-			using difference_type   = std::ptrdiff_t;
-			using value_type        = Value;
-			using pointer           = Value *;
-			using reference         = Value &;
-
-			Iterator(const Iterator &i) : Iterator{new Value{i.value}} {
-			}
-
-			Iterator(const Iterator *i) : Iterator{new Value{i->value}} {
-			}
-
-			constexpr Iterator(Value *v) : value{v} {
-			}
 
 			~Iterator();
 
-			reference operator*() const {
-				return *value;
+			/// @brief Create a new value for current item.
+			std::shared_ptr<Value> operator*() const {
+				return value;
 			}
 
-			pointer operator->() {
+			std::shared_ptr<Value> operator->() {
 				return value;
 			}
 
@@ -84,32 +86,82 @@
 
 			Iterator operator++(int);
 
-			bool operator==(const Iterator& rhs) const;
+			virtual bool operator==(const Iterator& rhs) const;
 
-			bool operator!=(const Iterator& rhs) const;
+			bool operator!=(const Iterator& rhs) const {
+				return !operator==(rhs);
+			}
 
 			Iterator & operator++();
 
 		};
 
-		const char *name() const noexcept;
-		const char *description() const noexcept;
-
-		operator bool() const;
-
-		std::string to_string() const;
-
-		Value & next();
-
 		/// @brief Find value using url formatter as DMI:///node/value
 		static std::shared_ptr<Value> find(const char *url);
 
-	protected:
-		std::shared_ptr<Data> data;
-		size_t offset;
+		// Pure abstract object, cant copy it.
+		Value(const Value &src) = delete;
+		Value(const Value *src) = delete;
 
-		const Value::Info *info;
-		size_t item;
+		bool operator==(const Value &src) const noexcept;
+
+		bool operator==(const char *name) const noexcept;
+
+		/// @brief Get value name.
+		virtual const char *name() const noexcept = 0;
+
+		/// @brief Get value description.
+		virtual const char *description() const noexcept = 0;
+
+		/// @brief Get value as string.
+		virtual std::string as_string() const = 0;
+
+		/// @brief Does the value has contents?
+		virtual bool empty() const = 0;
+
+		/// @brief Get value as an uint64.
+		virtual uint64_t as_uint64() const;
+
+		/// @brief Get value as an unsigned int.
+		virtual unsigned int as_uint() const;
+
+		/// @brief Skip to next value.
+		virtual Value & next();
+
+		/// @brief Create a copy of the object as shared_ptr
+		virtual std::shared_ptr<Value> clone() const;
+
+		virtual operator bool() const {
+			return !empty();
+		}
+
+		inline operator uint64_t() const {
+			return as_uint64();
+		}
+
+		inline operator unsigned int() const {
+			return as_uint();
+		}
+
+		inline operator std::string() const {
+			return as_string();
+		}
+
+
+#ifndef _MSC_VER
+		inline std::string to_string() const {
+			return as_string();
+		}
+#endif /// !_MSC_VER
+
+	protected:
+		int offset = -1;
+		size_t item = (size_t) -1;
+
+		constexpr Value() = default;
+
+		constexpr Value(int o, size_t i) : offset{o}, item{i} {
+		}
 
 	};
 
@@ -118,15 +170,18 @@
  namespace std {
 
 	inline string to_string(const SMBios::Value &value) {
-			return value.to_string();
+		return value.as_string();
 	}
 
 	inline ostream& operator<< (ostream& os, const SMBios::Value &value) {
-			return os << value.to_string();
+			return os << value.as_string();
 	}
 
 	inline ostream& operator<< (ostream& os, const SMBios::Value *value) {
-			return os << value->to_string();
+			return os << value->as_string();
 	}
 
+	inline ostream& operator<< (ostream& os, const shared_ptr<SMBios::Value> value) {
+			return os << value->as_string();
+	}
  }

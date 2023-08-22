@@ -18,27 +18,49 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implement integer decoders.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/processor.h>
  #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
+	unsigned int Decoder::ProcessorType::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+		return (unsigned int) ptr[offset];
 	}
 
-	Node & Node::operator++() {
-		next();
-		return *this;
+	std::string Decoder::ProcessorType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		unsigned int code{this->as_uint(header,ptr,offset)};
+
+		static const char *type[] = {
+			"Other", // 0x01
+			"Unknown",
+			"Central Processor",
+			"Math Processor",
+			"DSP Processor",
+			"Video Processor" // 0x06
+		};
+
+		if (code >= 0x01 && code <= 0x06)
+			return type[code - 0x01];
+
+		return "Unknown";
+
 	}
+
 
  }
 

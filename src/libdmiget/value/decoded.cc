@@ -18,27 +18,14 @@
  */
 
  /**
-  * @brief Implements node iterator.
+  * @brief Implements decoded value.
   */
 
  #ifdef HAVE_CONFIG_H
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
- #include <smbios/node.h>
-
- namespace SMBios {
-
-	Node Node::operator++(int) {
-		Node tmp{*this};
-		operator++();
-		return tmp;
-	}
-
-	Node & Node::operator++() {
-		next();
-		return *this;
-	}
-
- }
+ #include <smbios/value.h>
+ #include <stdexcept>
+ #include <private/decoders.h>
 

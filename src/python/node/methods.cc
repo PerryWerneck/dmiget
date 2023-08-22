@@ -25,8 +25,13 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #ifdef HAVE_UNISTD_H
+	#include <unistd.h>
+ #endif // HAVE_UNISTD_H
+
  #include <private/python.h>
  #include <smbios/node.h>
+ #include <smbios/value.h>
  #include <stdexcept>
  #include <vector>
 
@@ -36,11 +41,15 @@
 
 	SMBios::Node node;
 
+	pyNodePrivate() {
+	}
+
 	pyNodePrivate(const char *name) : node{name} {
 	}
 
 	pyNodePrivate(SMBios::Node &n) : node{n} {
 	}
+
  };
 
  void dmiget_node_type_init() {
@@ -49,13 +58,13 @@
 
  int dmiget_node_init(PyObject *self, PyObject *args, PyObject *) {
 
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(pvt) {
-		delete pvt;	// Just in case
-		((pyNode *) self)->pvt = NULL;
-	}
-
 	try {
+
+		pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+		if(pvt) {
+			delete pvt;	// Just in case
+			((pyNode *) self)->pvt = NULL;
+		}
 
 		switch(PyTuple_Size(args)) {
 		case 0:	// Create an empty node.
@@ -64,10 +73,16 @@
 		case 1:
 			{
 				const char *name = "";
+
 				if (!PyArg_ParseTuple(args, "s", &name))
 					throw runtime_error("Invalid argument");
 
-				((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
+				if(name && *name) {
+					((pyNode *) self)->pvt = pvt = new pyNodePrivate{name};
+				} else {
+					((pyNode *) self)->pvt = pvt = new pyNodePrivate{};
+				}
+
 			}
 			return 0;
 
@@ -114,12 +129,12 @@
 
  static PyObject * call(PyObject *self, const std::function<PyObject * (SMBios::Node &node)> &worker) {
 
-	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
-	if(!pvt) {
-		((pyNode *) self)->pvt = pvt = new pyNodePrivate{""};
-	}
-
 	try {
+
+		pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+		if(!pvt) {
+			((pyNode *) self)->pvt = pvt = new pyNodePrivate{};
+		}
 
 		return worker(pvt->node);
 
@@ -260,7 +275,7 @@
 		}
 
 		PyObject *object = PyObjectByName("value");
-		dmiget_set_value(object,*node.find(name));
+		dmiget_set_value(object,node.find(name));
 
 		return object;
  	});
@@ -281,11 +296,10 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 
 		PyObject *pynodes = PyList_New(0);
 
-		for(auto &value : node) {
-			PyObject *pyobject = PyObjectByName("value");
-			dmiget_set_value(pyobject,value);
-			PyList_Append(pynodes,pyobject);
-		}
+		node.for_each([pynodes](const SMBios::Value &value){
+			PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value.clone()));
+			return false;
+		});
 
 		return pynodes;
 
@@ -318,14 +332,13 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 			throw runtime_error("Invalid arguments");
 		}
 
-		SMBios::Node node{name.c_str()};
-
 		PyObject *pynodes = PyList_New(0);
-		do {
+		SMBios::Node::for_each(name.c_str(),[pynodes](const Node &node){
 			PyObject *pyobject = PyObjectByName("node");
-			dmiget_set_node(pyobject,node);
+			dmiget_set_node(pyobject,const_cast<Node &>(node));
 			PyList_Append(pynodes,pyobject);
-		} while(node.next(name.c_str()));
+			return false;
+		});
 
 		return pynodes;
 
@@ -340,5 +353,97 @@ void dmiget_set_node(PyObject *self, SMBios::Node &node) {
 	}
 
 	return NULL;
+
+ }
+
+ PyObject * pydmi_get_values(PyObject *self, PyObject *args) {
+	try {
+
+		std::string name;
+
+		switch(PyTuple_Size(args)) {
+		case 0:
+			break;
+
+		case 1:
+			{
+				const char *ptr = "";
+
+				if (!PyArg_ParseTuple(args, "s", &ptr))
+					throw runtime_error("Invalid argument");
+
+				name = ptr;
+			}
+			break;
+
+		default:
+			throw runtime_error("Invalid arguments");
+		}
+
+		PyObject *pynodes = PyList_New(0);
+		SMBios::Node::for_each([pynodes,name](const Node &node){
+
+			node.for_each([pynodes,name](const SMBios::Value &value){
+				if(name.empty() || value == name.c_str()) {
+					PyList_Append(pynodes,dmiget_set_value(PyObjectByName("value"),value.clone()));
+				}
+				return false;
+			});
+
+			return false;
+		});
+
+		return pynodes;
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in SMBios library");
+
+	}
+
+	return NULL;
+
+ }
+
+ int dmiget_node_bool(PyObject *self) {
+
+	pyNodePrivate * pvt = ((pyNode *) self)->pvt;
+	if(!pvt) {
+		return 0;
+	}
+
+	try {
+
+		return (pvt->node ? 1 : 0);
+
+	} catch(const std::exception &e) {
+
+		PyErr_SetString(PyExc_RuntimeError, e.what());
+
+	} catch(...) {
+
+		PyErr_SetString(PyExc_RuntimeError, "Unexpected error in smbios library");
+
+	}
+
+	return 0;
+
+ }
+
+ PyObject * dmiget_node_int(PyObject *self) {
+
+	return call(self, [](SMBios::Node &node) {
+
+		if(node) {
+			return PyLong_FromLong(node.type());
+		}
+
+		return PyLong_FromLong(-1);
+
+	});
 
  }
