@@ -80,6 +80,11 @@
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
+		struct UInt8 : public Worker {
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
 		/// @brief Get an uint64_t value, format string in bytes.
 		struct LengthInBytes : public Worker {
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;

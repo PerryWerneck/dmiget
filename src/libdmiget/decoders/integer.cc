@@ -85,5 +85,19 @@
 
 	}
 
+	unsigned int Decoder::UInt8::as_uint(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+		if(offset > header.length) {
+			return 0;
+		}
+		return (unsigned int) data[offset];
+	}
+
+	std::string Decoder::UInt8::as_string(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+		if(offset > header.length) {
+			return "";
+		}
+		return std::to_string(as_uint(header,data,offset));
+	}
+
  }
 

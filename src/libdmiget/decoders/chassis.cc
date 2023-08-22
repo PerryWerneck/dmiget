@@ -27,7 +27,7 @@
 
  #include <private/decoders.h>
  #include <private/decoders/tools.h>
- #include <private/decoders/bios.h>
+ #include <private/decoders/chassis.h>
  #include <smbios/node.h>
  #include <iostream>
  #include <string>
@@ -37,7 +37,51 @@
 
  namespace SMBios {
 
+	std::string Decoder::ChassisState::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
+		static const char *state[] = {
+			"Other", /* 0x01 */
+			"Unknown",
+			"Safe",
+			"Warning",
+			"Critical",
+			"Non-recoverable" /* 0x06 */
+		};
+
+		auto code = as_uint(header,ptr,offset);
+
+		if (code >= 0x01 && code <= 0x06)
+			return state[code - 0x01];
+
+		return "";
+	}
+
+	unsigned int Decoder::ChassisLock::as_uint(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+		if(offset > header.length) {
+			return 0;
+		}
+		return (unsigned int) (data[offset] >> 7);
+	}
+
+	std::string Decoder::ChassisLock::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		static const char *state[] = {
+			"Not Present",	// 0x00
+			"Present",		// 0x01
+		};
+
+		if(offset > header.length) {
+			return "";
+		}
+
+		auto code = as_uint(header,ptr,offset);
+
+		if (code <= 0x01)
+			return state[code];
+
+		return "";
+
+	}
 
  }
 

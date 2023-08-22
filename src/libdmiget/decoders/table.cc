@@ -41,6 +41,7 @@
  #include <private/decoders/bios.h>
  #include <private/decoders/system.h>
  #include <private/decoders/probe.h>
+ #include <private/decoders/chassis.h>
 
  #include <stdexcept>
 
@@ -60,8 +61,7 @@
 		{ "address",		Decoder::BiosAddress{},			0x00,		"Address"				},
 		{ "runsize",		Decoder::BiosRuntimeSize{},		0x00,		"Runtime Size"			},
 		{ "romsize",		Decoder::BiosRomSize{},			0x00,		"ROM Size"				},
-//		{ "haracteristics",	Decoder::BiosCharacteristics{},	0x0A,		"Characteristics"		},
-
+//		{ "characteristics",	Decoder::BiosCharacteristics{},	0x0A,		"Characteristics"		},
 
 		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
 		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
@@ -91,17 +91,20 @@
 		{}
 	};
 
-	static const Decoder::Item Chassis[] = {
+	static const Decoder::Item Chassis[] = {	// 3
 		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
-		// { "type",	Decoder::ChassisType{},				0x05,	"Type"				},
-		// { "lock",	Decoder::ChassisLock{},				0x05,	"Lock"				},
+		// { "type",	Decoder::ChassisType{},				0x05,	"Type"						},
+		{ "lock",			Decoder::ChassisLock{},			0x05,	"Lock"						},
 		{ "version",		Decoder::String{},				0x06,	"Version"					},
 		{ "serial",			Decoder::String{},				0x07,	"Serial Number"				},
 		{ "atag",			Decoder::String{},				0x08,	"Asset Tag"					},
+		{ "bootstate",		Decoder::ChassisState{},		0x09,	"Boot-up state"				},
+		{ "power",			Decoder::ChassisState{},		0x0A,	"Power Supply State"		},
+		{ "thermal",		Decoder::ChassisState{},		0x0B,	"Thermal State"				},
+//		{ "security",		Decoder::ChassisSecurity{},		0x0C,	"Security Status"			},
 //		{ "sku",			Decoder::ChassisSKU{},			0x00,	"SKU Number"				},
 		{}
 	};
-
 
 	static const Decoder::Item Processor[] = {
 		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
@@ -172,8 +175,8 @@
 		{}
 	};
 
-	static const Decoder::Item OnboardDevice[] = {
-//		{ "reference",	Decoder::StringIndex{},	1,	"Reference Designation"	},
+	static const Decoder::Item OnboardDevice[] = { // 41
+		{ "reference",		Decoder::String{},						0x04,	"Reference Designation"	},
 		{}
 	};
 

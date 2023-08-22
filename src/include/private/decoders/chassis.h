@@ -30,9 +30,14 @@
 
  	namespace Decoder {
 
-		/// @brief Decode firmware revision.
-		struct FirmwareRevision : public Worker {
+		struct ChassisState : public UInt8 {
 
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct ChassisLock : public UInt8 {
+
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
