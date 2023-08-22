@@ -1,0 +1,7 @@
+[build-system]
+requires = ["setuptools>=59.6"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+"Homepage" = "https://github.com/PerryWerneck/dmiget"
+"Bug Tracker" = "https://github.com/PerryWerneck/dmiget/issues"
