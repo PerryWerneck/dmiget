@@ -178,23 +178,23 @@
 	};
 
 	static const Decoder::Item PowerSupply[] = {
-//		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
-//		{ "name",			Decoder::StringIndex{},	2,	"Name"				},
-//		{ "manufacturer",	Decoder::StringIndex{},	3,	"Manufacturer"		},
-//		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
-//		{ "atag",			Decoder::StringIndex{},	5,	"Asset Tag"			},
-//		{ "modelpn",		Decoder::StringIndex{},	6,	"Model Part Number"	},
-//		{ "revision",		Decoder::StringIndex{},	7,	"Revision"			},
+		{ "location",		Decoder::String{},	0x05,	"Location"			},
+		{ "name",			Decoder::String{},	0x06,	"Name"				},
+		{ "manufacturer",	Decoder::String{},	0x07,	"Manufacturer"		},
+		{ "serial",			Decoder::String{},	0x08,	"Serial Number"		},
+		{ "atag",			Decoder::String{},	0x09,	"Asset Tag"			},
+		{ "modelpn",		Decoder::String{},	0x0a,	"Model Part Number"	},
+		{ "revision",		Decoder::String{},	0x0B,	"Revision"			},
 		{}
 	};
 
 	static const Decoder::Item VoltageProbe[] = {
-//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{ "description",	Decoder::String{},	0x04,	"Description"	},
 		{}
 	};
 
 	static const Decoder::Item CoolingDevice[] = {
-//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{ "description",	Decoder::String{},	0x0e,	"Description"	},
 		{}
 	};
 
