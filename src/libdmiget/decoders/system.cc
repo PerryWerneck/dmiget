@@ -18,32 +18,45 @@
  */
 
  /**
-  * @brief Declare system decoders.
+  * @brief Brief description of this source.
   */
 
- #pragma once
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
- #include <smbios/defs.h>
  #include <private/decoders.h>
+ #include <private/decoders/system.h>
+ #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
- 	namespace Decoder {
+	std::string Decoder::SystemWakeUpType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
-		/*
-		struct SystemUUID : public String {
-			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		static const char *type[] = {
+			"Reserved", // 0x00
+			"Other",
+			"Unknown",
+			"APM Timer",
+			"Modem Ring",
+			"LAN Remote",
+			"Power Switch",
+			"PCI PME#",
+			"AC Power Restored" // 0x08
 		};
-		*/
 
-		struct SystemWakeUpType : public UInt8 {
+		uint8_t code = as_uint(header,ptr,offset);
+		if (code <= 0x08)
+			return type[code];
 
-			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-		};
+		return std::to_string(code);
 
-
- 	}
+	}
 
  }
-
 

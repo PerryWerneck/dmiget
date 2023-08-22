@@ -65,6 +65,7 @@
 		<Unit filename="src/libdmiget/decoders/probes.cc" />
 		<Unit filename="src/libdmiget/decoders/processor.cc" />
 		<Unit filename="src/libdmiget/decoders/string.cc" />
+		<Unit filename="src/libdmiget/decoders/system.cc" />
 		<Unit filename="src/libdmiget/decoders/table.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/decoders/value.cc" />

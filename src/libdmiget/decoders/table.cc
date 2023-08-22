@@ -74,7 +74,7 @@
 		{ "version",		Decoder::String{},				0x06,		"Version"				},
 		{ "serial",			Decoder::String{},				0x07,		"Serial Number"			},
 //		{ "uuid",			Decoder::SystemUUID{},			0x08,		"uuid"					},
-//		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
+		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
 		{ "sku",			Decoder::String{},				0x19,		"SKU Number"			},
 		{ "family",			Decoder::String{},				0x1A,		"Family"				},
 		{}
