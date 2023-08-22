@@ -32,6 +32,8 @@
  #include <iostream>
  #include <string>
  #include <cstring>
+ #include <sstream>
+ #include <iomanip>
 
  using namespace std;
 
@@ -52,6 +54,68 @@
 		return rc;
 	}
 
+	unsigned int Decoder::BiosAddress::as_uint(const Node::Header &, const uint8_t *data, const size_t) const {
+
+		if(WORD(data + 0x06) == 0) {
+			return 0;
+		}
+
+		return WORD(data + 0x06);
+	}
+
+
+	std::string Decoder::BiosAddress::as_string(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+
+		if(WORD(data + 0x06) == 0) {
+			return "";
+		}
+
+		stringstream stream;
+		stream << "0x" << uppercase << hex << as_uint(header,data,offset) << "0" << dec;
+
+		return stream.str();
+
+	}
+
+	uint64_t Decoder::BiosRuntimeSize::as_uint64(const Node::Header &, const uint8_t *data, const size_t) const {
+
+		if(WORD(data + 0x06) == 0) {
+			return 0;
+		}
+
+		uint32_t code = ((0x10000 - WORD(data + 0x06)) << 4);
+
+		if (code & 0x000003FF) {
+			return code;
+		}
+
+		code >>= 10;
+
+		return ((uint64_t) code ) * ((uint64_t) 1024);
+
+	}
+
+	uint64_t Decoder::BiosRomSize::as_uint64(const Node::Header &header, const uint8_t *data, const size_t) const {
+
+		if (data[0x09] != 0xFF) {
+			u64 s;
+			s.l = (data[0x09] + 1) << 6;
+			return s.as_memory_size_bytes();
+		}
+
+		uint16_t code2 = (header.length < 0x1A ? 16 : WORD(data + 0x18));
+
+		switch(code2 >> 14) {
+		case 0:
+			return ((uint64_t) code2 & 0x3FFF) * 1048576LL;
+
+		case 1:
+			return ((uint64_t) code2 & 0x3FFF) * 1073741824LL;
+		default:
+			return 0;
+		}
+
+	}
 
  }
 

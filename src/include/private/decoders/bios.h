@@ -35,6 +35,19 @@
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
+		struct BiosAddress : public Worker {
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct BiosRuntimeSize : public LengthInBytes {
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct BiosRomSize : public LengthInBytes {
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
  	}
 
  }

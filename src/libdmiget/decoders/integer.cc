@@ -30,19 +30,60 @@
  #include <iostream>
  #include <string>
  #include <cstring>
+ #include <sstream>
+ #include <iomanip>
 
  using namespace std;
 
  namespace SMBios {
 
-	unsigned int Decoder::UInt16::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
-		return (unsigned int) *((uint16_t *)(ptr+offset));
+	unsigned int Decoder::UInt16::as_uint(const Node::Header &, const uint8_t *data, const size_t offset) const {
+		return (unsigned int) *((uint16_t *)(data+offset));
 	}
 
-	std::string Decoder::UInt16::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
-		return std::to_string(as_uint(header,ptr,offset));
+	std::string Decoder::UInt16::as_string(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+		return std::to_string(as_uint(header,data,offset));
 	}
 
+	std::string Decoder::LengthInBytes::as_string(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+
+		uint64_t value{as_uint64(header,data,offset)};
+		if(!value) {
+			return "";
+		}
+
+		static const struct {
+			uint64_t value;
+			const char *name;
+		} units[8] = {
+			{ 1LL,						"bytes"		},
+			{ 1024LL,					"kB"		},
+			{ 1048576LL,				"MB"		},
+			{ 1073741824LL,				"GB"		},
+			{ 1099511627776LL,			"TB"		},
+			{ 1125899906842624LL,		"PB"		},
+			{ 1152921504606846976LL,	"EB"		}
+		};
+
+		size_t selected = 0;
+		for(size_t ix = 0; ix < (sizeof(units)/sizeof(units[0]));ix++) {
+			if(value > units[ix].value) {
+				selected = ix;
+			} else {
+				break;
+			}
+		}
+
+		double converted = (double) value;
+		converted /= ((double) units[selected].value);
+
+		std::stringstream stream;
+
+		stream << fixed << setprecision(0) << converted << " " << units[selected].name;
+
+		return stream.str();
+
+	}
 
  }
 

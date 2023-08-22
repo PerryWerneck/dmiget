@@ -60,7 +60,6 @@
 		<Unit filename="src/libdmiget/data.cc" />
 		<Unit filename="src/libdmiget/decoders/bios.cc" />
 		<Unit filename="src/libdmiget/decoders/chassis.cc" />
-		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />
 		<Unit filename="src/libdmiget/decoders/memory.cc" />
 		<Unit filename="src/libdmiget/decoders/probes.cc" />

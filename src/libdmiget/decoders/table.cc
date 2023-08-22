@@ -56,6 +56,13 @@
 		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
 		{ "version",		Decoder::String{},				0x05,		"Version"				},
 		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
+
+		{ "address",		Decoder::BiosAddress{},			0x00,		"Address"				},
+		{ "runsize",		Decoder::BiosRuntimeSize{},		0x00,		"Runtime Size"			},
+		{ "romsize",		Decoder::BiosRomSize{},			0x00,		"ROM Size"				},
+//		{ "haracteristics",	Decoder::BiosCharacteristics{},	0x0A,		"Characteristics"		},
+
+
 		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
 		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
 		{}
