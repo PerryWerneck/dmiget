@@ -17,6 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ * Based on dmidecode
+ *
+ * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
+ * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
+ *
+ */
+
  /**
   * @brief Declare probe decoders.
   */
