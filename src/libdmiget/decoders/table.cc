@@ -42,6 +42,7 @@
  #include <private/decoders/system.h>
  #include <private/decoders/probe.h>
  #include <private/decoders/chassis.h>
+ #include <private/decoders/baseboard.h>
 
  #include <stdexcept>
 
@@ -88,6 +89,9 @@
 		{ "atag",			Decoder::String{},				0x08,		"Asset Tag"				},
 //		{ "features",		Decoder::BaseBoardFeatures{},	0x09,		"Base board features"	},
 		{ "location",		Decoder::String{},				0x0A,		"Location In Chassis"	},
+//		{ "chandle",		Decoder::Uint16{},				0x0B,		"Chassis Handle"		},
+		{ "type",			Decoder::BaseBoardType{},		0x0D,		"Type"					},
+
 		{}
 	};
 
