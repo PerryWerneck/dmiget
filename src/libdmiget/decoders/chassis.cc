@@ -150,5 +150,24 @@
 
 	}
 
+	std::string Decoder::ChassisSecurityStatus::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		auto code = as_uint(header,ptr,offset);
+
+		static const char *status[] = {
+			"Other", // 0x01
+			"Unknown",
+			"None",
+			"External Interface Locked Out",
+			"External Interface Enabled" // 0x05
+		};
+
+		if (code >= 0x01 && code <= 0x05)
+			return status[code - 0x01];
+
+		return "";
+
+	}
+
  }
 

@@ -59,6 +59,7 @@
 	}
 
 	Node Node::factory(const char *filename, const char *name, int index) {
+
 		auto data = Data::factory(filename);
 		Node node{data};
 

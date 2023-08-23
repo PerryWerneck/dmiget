@@ -96,17 +96,17 @@
 	};
 
 	static const Decoder::Item Chassis[] = {	// 3
-		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
-		{ "type",			Decoder::ChassisType{},			0x05,	"Type"						},
-		{ "lock",			Decoder::ChassisLock{},			0x05,	"Lock"						},
-		{ "version",		Decoder::String{},				0x06,	"Version"					},
-		{ "serial",			Decoder::String{},				0x07,	"Serial Number"				},
-		{ "atag",			Decoder::String{},				0x08,	"Asset Tag"					},
-		{ "bootstate",		Decoder::ChassisState{},		0x09,	"Boot-up state"				},
-		{ "power",			Decoder::ChassisState{},		0x0A,	"Power Supply State"		},
-		{ "thermal",		Decoder::ChassisState{},		0x0B,	"Thermal State"				},
-//		{ "security",		Decoder::ChassisSecurity{},		0x0C,	"Security Status"			},
-//		{ "sku",			Decoder::ChassisSKU{},			0x00,	"SKU Number"				},
+		{ "manufacturer",	Decoder::String{},					0x04,	"Manufacturer"				},
+		{ "type",			Decoder::ChassisType{},				0x05,	"Type"						},
+		{ "lock",			Decoder::ChassisLock{},				0x05,	"Lock"						},
+		{ "version",		Decoder::String{},					0x06,	"Version"					},
+		{ "serial",			Decoder::String{},					0x07,	"Serial Number"				},
+		{ "atag",			Decoder::String{},					0x08,	"Asset Tag"					},
+		{ "bootstate",		Decoder::ChassisState{},			0x09,	"Boot-up state"				},
+		{ "power",			Decoder::ChassisState{},			0x0A,	"Power Supply State"		},
+		{ "thermal",		Decoder::ChassisState{},			0x0B,	"Thermal State"				},
+		{ "security",		Decoder::ChassisSecurityStatus{},	0x0C,	"Security Status"			},
+//		{ "sku",			Decoder::ChassisSKU{},				0x00,	"SKU Number"				},
 		{}
 	};
 
