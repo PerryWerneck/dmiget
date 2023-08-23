@@ -61,6 +61,19 @@
 
 	}
 
+	std::string Decoder::ProcessorFrequency::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		uint16_t code = as_uint(header,ptr,offset);
+
+		if(!code) {
+			return "";
+		}
+
+		string response = std::to_string(code);
+
+		return response + " MHz";
+
+	}
 
  }
 

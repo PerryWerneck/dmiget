@@ -111,13 +111,21 @@
 	};
 
 	static const Decoder::Item Processor[] = {
-		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
+		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
+//		{ "family",			Decoder::ProcessorFamily{},			0x00,	"Family"					},
 		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
 		{ "version",		Decoder::String{},					0x10,	"Version"					},
+//		{ "voltage",		Decoder::ProcessorVoltage{},		0x11,	"Voltage"					},
+		{ "clock",			Decoder::ProcessorFrequency{},		0x12,	"External Clock"			},
+		{ "maxspeed",		Decoder::ProcessorFrequency{},		0x14,	"Max Speed"					},
+		{ "currentspeed",	Decoder::ProcessorFrequency{},		0x16,	"Current Speed"				},
 		{ "serial",			Decoder::String{},					0x20,	"Serial Number"				},
 		{ "atag",			Decoder::String{},					0x21,	"Asset Tag"					},
 		{ "partnumber",		Decoder::String{},					0x22,	"Part Number"				},
+//		{ "corecound",		Decoder::ProcessorCoreCount{},		0x00,	"Core Count"				},
+//		{ "coreenabled",	Decoder::ProcessorCoreEnabled{},	0x00,	"Core Enabled"				},
+//		{ "thread count",	Decoder::ProcessorThreadCount{},	0x00,	"Thread Count"				},
 		{}
 	};
 

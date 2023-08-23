@@ -35,6 +35,9 @@
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
+		struct ProcessorFrequency : public UInt16 {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
 
 
  	}
