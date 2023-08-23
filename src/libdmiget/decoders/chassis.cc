@@ -17,8 +17,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ * Based on dmidecode
+ *
+ * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
+ * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
+ *
+ */
+
  /**
-  * @brief Implement integer decoders.
+  * @brief Implement chassis decoders.
   */
 
  #ifdef HAVE_CONFIG_H
@@ -52,6 +60,65 @@
 
 		if (code >= 0x01 && code <= 0x06)
 			return state[code - 0x01];
+
+		return "";
+	}
+
+	unsigned int Decoder::ChassisType::as_uint(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+
+		if(offset > header.length) {
+			return 0;
+		}
+
+		return (data[offset] & 0x7F); // bits 6:0 are chassis type, 7th bit is the lock bit
+
+	}
+
+	std::string Decoder::ChassisType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		static const char *type[] = {
+			"Other", // 0x01
+			"Unknown",
+			"Desktop",
+			"Low Profile Desktop",
+			"Pizza Box",
+			"Mini Tower",
+			"Tower",
+			"Portable",
+			"Laptop",
+			"Notebook",
+			"Hand Held",
+			"Docking Station",
+			"All In One",
+			"Sub Notebook",
+			"Space-saving",
+			"Lunch Box",
+			"Main Server Chassis", // CIM_Chassis.ChassisPackageType says "Main System Chassis"
+			"Expansion Chassis",
+			"Sub Chassis",
+			"Bus Expansion Chassis",
+			"Peripheral Chassis",
+			"RAID Chassis",
+			"Rack Mount Chassis",
+			"Sealed-case PC",
+			"Multi-system",
+			"CompactPCI",
+			"AdvancedTCA",
+			"Blade",
+			"Blade Enclosing",
+			"Tablet",
+			"Convertible",
+			"Detachable",
+			"IoT Gateway",
+			"Embedded PC",
+			"Mini PC",
+			"Stick PC" // 0x24
+		};
+
+		auto code = as_uint(header, ptr, offset);
+
+		if (code >= 0x01 && code <= 0x24)
+			return type[code - 0x01];
 
 		return "";
 	}

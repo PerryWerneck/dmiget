@@ -58,6 +58,7 @@
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/data.cc" />
+		<Unit filename="src/libdmiget/decoders/baseboard.cc" />
 		<Unit filename="src/libdmiget/decoders/bios.cc" />
 		<Unit filename="src/libdmiget/decoders/chassis.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />

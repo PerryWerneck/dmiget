@@ -97,7 +97,7 @@
 
 	static const Decoder::Item Chassis[] = {	// 3
 		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
-		// { "type",	Decoder::ChassisType{},				0x05,	"Type"						},
+		{ "type",			Decoder::ChassisType{},			0x05,	"Type"						},
 		{ "lock",			Decoder::ChassisLock{},			0x05,	"Lock"						},
 		{ "version",		Decoder::String{},				0x06,	"Version"					},
 		{ "serial",			Decoder::String{},				0x07,	"Serial Number"				},
