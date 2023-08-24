@@ -51,8 +51,6 @@ with open(r'configure.ac', 'r') as fp:
         if line.find('AC_INIT') != -1:
             package_version = line.split('[')[2].split(']')[0].strip()
             break;
-            
-package_version += '.0'
 
 extra_compile_args.append('-DPACKAGE_VERSION=\"' + package_version + '\"')
             
