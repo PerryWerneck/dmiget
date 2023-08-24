@@ -193,23 +193,28 @@
 	};
 
 	static const Decoder::Item PowerSupply[] = {
-		{ "location",		Decoder::String{},	0x05,	"Location"			},
-		{ "name",			Decoder::String{},	0x06,	"Name"				},
-		{ "manufacturer",	Decoder::String{},	0x07,	"Manufacturer"		},
-		{ "serial",			Decoder::String{},	0x08,	"Serial Number"		},
-		{ "atag",			Decoder::String{},	0x09,	"Asset Tag"			},
-		{ "modelpn",		Decoder::String{},	0x0a,	"Model Part Number"	},
-		{ "revision",		Decoder::String{},	0x0B,	"Revision"			},
+		{ "location",		Decoder::String{},					0x05,	"Location"			},
+		{ "name",			Decoder::String{},					0x06,	"Name"				},
+		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"		},
+		{ "serial",			Decoder::String{},					0x08,	"Serial Number"		},
+		{ "atag",			Decoder::String{},					0x09,	"Asset Tag"			},
+		{ "modelpn",		Decoder::String{},					0x0a,	"Model Part Number"	},
+		{ "revision",		Decoder::String{},					0x0B,	"Revision"			},
+		{}
+	};
+
+	static const Decoder::Item MemoryController[] = {
+		{ "voltage",		Decoder::ProcessorVoltage{},		0x0D,	"Memory Module Voltage"			},
 		{}
 	};
 
 	static const Decoder::Item VoltageProbe[] = {
-		{ "description",	Decoder::String{},	0x04,	"Description"	},
+		{ "description",	Decoder::String{},					0x04,	"Description"	},
 		{}
 	};
 
 	static const Decoder::Item CoolingDevice[] = {
-		{ "description",	Decoder::String{},	0x0e,	"Description"	},
+		{ "description",	Decoder::String{},					0x0e,	"Description"	},
 		{}
 	};
 
@@ -255,7 +260,7 @@
 			false,
 			"MemoryController",
 			"Memory Controller",
-			EmptyTable
+			MemoryController
 		},
 		{
 			6,
