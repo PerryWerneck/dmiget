@@ -106,6 +106,21 @@
 		{ "power",			Decoder::ChassisState{},			0x0A,	"Power Supply State"		},
 		{ "thermal",		Decoder::ChassisState{},			0x0B,	"Thermal State"				},
 		{ "security",		Decoder::ChassisSecurityStatus{},	0x0C,	"Security Status"			},
+		{ "oeminfo",		Decoder::ChassisOEMInformation{},	0x0D,	"OEM Information"			},
+
+			/*
+			pr_attr("OEM Information", "0x%08X",
+				DWORD(data + 0x0D));
+			if (h->length < 0x13) break;
+			dmi_chassis_height(data[0x11]);
+			dmi_chassis_power_cords(data[0x12]);
+			if (h->length < 0x15) break;
+			if (h->length < 0x15 + data[0x13] * data[0x14]) break;
+			dmi_chassis_elements(data[0x13], data[0x14], data + 0x15);
+			if (h->length < 0x16 + data[0x13] * data[0x14]) break;
+			*/
+
+
 //		{ "sku",			Decoder::ChassisSKU{},				0x00,	"SKU Number"				},
 		{}
 	};

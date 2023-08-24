@@ -169,5 +169,25 @@
 
 	}
 
+	unsigned int Decoder::ChassisOEMInformation::as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		if(header.length < 0x11) {
+			return 0;
+		}
+
+		return Hex16::as_uint(header,ptr,offset);
+	}
+
+	std::string Decoder::ChassisOEMInformation::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		if(header.length < 0x11) {
+			return "";
+		}
+
+		return Hex16::as_string(header,ptr,offset);
+	}
+
+
+
  }
 

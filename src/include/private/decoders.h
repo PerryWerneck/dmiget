@@ -80,6 +80,11 @@
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
+		/// 0x + 8 hexadecimal digits.
+		struct Hex16 : public UInt16 {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
 		struct UInt8 : public Worker {
 			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;

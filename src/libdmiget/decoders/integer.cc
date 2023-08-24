@@ -45,6 +45,12 @@
 		return std::to_string(as_uint(header,data,offset));
 	}
 
+	std::string Decoder::Hex16::as_string(const Node::Header &header, const uint8_t *data, const size_t offset) const {
+		std::stringstream stream;
+		stream << "0x" << std::setfill('0') << std::setw(8) << hex << as_uint(header,data,offset);
+		return stream.str();
+	}
+
 	std::string Decoder::LengthInBytes::as_string(const Node::Header &header, const uint8_t *data, const size_t offset) const {
 
 		uint64_t value{as_uint64(header,data,offset)};
