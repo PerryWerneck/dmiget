@@ -187,7 +187,32 @@
 		return Hex16::as_string(header,ptr,offset);
 	}
 
+	unsigned int Decoder::ChassisHeight::as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
+		if (header.length < 0x13) {
+			return 0;
+		}
+
+		return (unsigned int) ptr[offset];
+	}
+
+	std::string Decoder::ChassisHeight::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		if (header.length < 0x13) {
+			return "";
+		}
+
+		unsigned int code = as_uint(header,ptr,offset);
+
+		if(!code) {
+			return "Unspecified";
+		}
+
+		std::string str{std::to_string(code)};
+		str += " U";
+
+		return str;
+	}
 
  }
 
