@@ -116,7 +116,7 @@
 //		{ "family",			Decoder::ProcessorFamily{},			0x00,	"Family"					},
 		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
 		{ "version",		Decoder::String{},					0x10,	"Version"					},
-//		{ "voltage",		Decoder::ProcessorVoltage{},		0x11,	"Voltage"					},
+		{ "voltage",		Decoder::ProcessorVoltage{},		0x11,	"Voltage"					},
 		{ "clock",			Decoder::ProcessorFrequency{},		0x12,	"External Clock"			},
 		{ "maxspeed",		Decoder::ProcessorFrequency{},		0x14,	"Max Speed"					},
 		{ "currentspeed",	Decoder::ProcessorFrequency{},		0x16,	"Current Speed"				},

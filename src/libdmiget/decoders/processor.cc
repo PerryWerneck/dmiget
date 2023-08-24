@@ -32,6 +32,8 @@
  #include <iostream>
  #include <string>
  #include <cstring>
+ #include <sstream>
+ #include <iomanip>
 
  using namespace std;
 
@@ -72,6 +74,71 @@
 		string response = std::to_string(code);
 
 		return response + " MHz";
+
+	}
+
+	unsigned int Decoder::ProcessorVoltage::as_uint(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+
+		unsigned int code = ptr[offset];
+
+		if (code & 0x80) {
+			return code & 0x7f;
+		} else if ((code & 0x07) == 0x00) {
+			return 0;
+		}
+
+		static unsigned int voltage[] = {
+			50, // 5.0
+			33, // 3.3
+			29  // 2.9
+		};
+
+		for (int i = 0; i <= 2; i++) {
+			if (code & (1 << i)) {
+				return voltage[i];
+			}
+		}
+
+		return 0;
+
+	}
+
+	std::string Decoder::ProcessorVoltage::as_string(const Node::Header &, const uint8_t *ptr, const size_t offset) const {
+
+		static const char *voltage[] = {
+			"5.0 V", // 0
+			"3.3 V",
+			"2.9 V" // 2
+		};
+
+		stringstream stream;
+
+		unsigned int code = ptr[offset];
+
+		if (code & 0x80) {
+
+			stream << fixed << setprecision(1) << ((float)(code & 0x7f) / 10) << " V";
+
+		} else if ((code & 0x07) == 0x00) {
+
+			stream << "Unknown";
+
+		} else {
+
+			bool spc = false;
+			for (int i = 0; i <= 2; i++) {
+				if (code & (1 << i)) {
+					if(spc) {
+						stream << " ";
+					}
+					stream << voltage[i];
+					spc = true;
+				}
+			}
+
+		}
+
+		return stream.str();
 
 	}
 
