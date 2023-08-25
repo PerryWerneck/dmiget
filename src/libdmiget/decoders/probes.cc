@@ -60,4 +60,56 @@
 
 	}
 
+	std::string Decoder::TemperatureProbeLocation::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		unsigned int code = as_uint(header,ptr,offset);
+
+		static const char *location[] = {
+			"Other", // 0x01
+			"Unknown",
+			"Processor",
+			"Disk",
+			"Peripheral Bay",
+			"System Management Module",
+			"Motherboard",
+			"Memory Module",
+			"Processor Module",
+			"Power Unit",
+			"Add-in Card",
+			"Front Panel Board",
+			"Back Panel Board",
+			"Power System Board",
+			"Drive Back Plane" // 0x0F
+		};
+
+		if (code >= 0x01 && code <= 0x0F)
+			return location[code - 0x01];
+
+		return code == 0 ? "" : "Unknown";
+
+	}
+
+	std::string Decoder::ProbeStatus::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
+
+		unsigned int code = as_uint(header,ptr,offset);
+
+		static const char *status[] = {
+			"Other", // 0x01
+			"Unknown",
+			"OK",
+			"Non-critical",
+			"Critical",
+			"Non-recoverable" // 0x06
+		};
+
+		if (code >= 0x01 && code <= 0x06)
+			return status[code - 0x01];
+
+		return code == 0 ? "" : "Unknown";
+	}
+
+	unsigned int Decoder::TemperatureProbeStatus::as_uint(const Node::Header &, const uint8_t *data, const size_t offset) const {
+		return (data[offset] >> 5);
+	}
+
  }

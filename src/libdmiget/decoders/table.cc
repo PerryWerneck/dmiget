@@ -181,12 +181,12 @@
 
 	static const Decoder::Item TemperatureProbe[] = {
 		{ "description",	Decoder::String{},						0x04,	"Description"	},
-//		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"	},
-//		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"	},
+		{ "location",		Decoder::TemperatureProbeLocation{},	0x05,	"Location"		},
+		{ "status",			Decoder::TemperatureProbeStatus{},		0x05,	"Status"		},
 		{ "maximum",		Decoder::TemperatureProbeValue{},		0x06,	"Maximum Value"	},
 		{ "minimum",		Decoder::TemperatureProbeValue{},		0x08,	"Minimum Value"	},
-		{ "tolerance",		Decoder::TemperatureProbeValue{},		0x08,	"Tolerance"	},
-//		{ "accuracy",		Decoder::TemperatureProbeAccuracy{},	0x0E,	"Accuracy"	},
+		{ "tolerance",		Decoder::TemperatureProbeValue{},		0x08,	"Tolerance"		},
+//		{ "accuracy",		Decoder::TemperatureProbeAccuracy{},	0x0E,	"Accuracy"		},
 		{ "value",			Decoder::TemperatureProbeValue{},		0x14,	"Nominal Value"	},
 		{}
 	};
