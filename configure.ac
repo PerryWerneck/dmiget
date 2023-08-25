@@ -6,7 +6,7 @@ AC_PREREQ(2.59)
 
 dnl Initialise automake with the package name, version and
 dnl bug-reporting address.
-AC_INIT([dmiget], [1.1], [perry.werneck@gmail.com], [libudjat], [https://github.com/PerryWerneck/dmiget.git])
+AC_INIT([dmiget], [1.2], [perry.werneck@gmail.com], [libudjat], [https://github.com/PerryWerneck/dmiget.git])
 
 dnl Place auxilliary scripts here.
 AC_CONFIG_AUX_DIR([scripts])
