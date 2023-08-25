@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - python
+    tags:
+      - '*'
 jobs:
   python:
     runs-on: ubuntu-latest
