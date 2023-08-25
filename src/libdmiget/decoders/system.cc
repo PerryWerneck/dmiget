@@ -17,36 +17,46 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * Based on dmidecode
- *
- * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
- * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
- *
- */
-
  /**
-  * @brief Declare probe decoders.
+  * @brief Brief description of this source.
   */
 
- #pragma once
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
- #include <smbios/defs.h>
  #include <private/decoders.h>
+ #include <private/decoders/system.h>
+ #include <smbios/node.h>
+ #include <iostream>
+ #include <string>
+ #include <cstring>
+
+ using namespace std;
 
  namespace SMBios {
 
- 	namespace Decoder {
+	std::string Decoder::SystemWakeUpType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
-		struct TemperatureProbeValue : public Worker {
-
-			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-
+		static const char *type[] = {
+			"Reserved", // 0x00
+			"Other",
+			"Unknown",
+			"APM Timer",
+			"Modem Ring",
+			"LAN Remote",
+			"Power Switch",
+			"PCI PME#",
+			"AC Power Restored" // 0x08
 		};
 
- 	}
+		uint8_t code = as_uint(header,ptr,offset);
+		if (code <= 0x08)
+			return type[code];
+
+		return std::to_string(code);
+
+	}
 
  }
-
 

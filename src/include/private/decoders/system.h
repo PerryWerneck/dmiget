@@ -17,6 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ * Based on dmidecode
+ *
+ * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
+ * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
+ *
+ */
+
  /**
   * @brief Declare system decoders.
   */
@@ -29,6 +37,17 @@
  namespace SMBios {
 
  	namespace Decoder {
+
+		/*
+		struct SystemUUID : public String {
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+		*/
+
+		struct SystemWakeUpType : public UInt8 {
+
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
 
 
  	}

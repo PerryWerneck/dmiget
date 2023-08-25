@@ -41,6 +41,8 @@
  #include <private/decoders/bios.h>
  #include <private/decoders/system.h>
  #include <private/decoders/probe.h>
+ #include <private/decoders/chassis.h>
+ #include <private/decoders/baseboard.h>
 
  #include <stdexcept>
 
@@ -56,6 +58,12 @@
 		{ "vendor",			Decoder::String{},				0x04,		"Vendor"				},
 		{ "version",		Decoder::String{},				0x05,		"Version"				},
 		{ "date",			Decoder::String{},				0x08,		"Release Date"			},
+
+		{ "address",		Decoder::BiosAddress{},			0x00,		"Address"				},
+		{ "runsize",		Decoder::BiosRuntimeSize{},		0x00,		"Runtime Size"			},
+		{ "romsize",		Decoder::BiosRomSize{},			0x00,		"ROM Size"				},
+//		{ "characteristics",	Decoder::BiosCharacteristics{},	0x0A,		"Characteristics"		},
+
 		{ "biosrev",		Decoder::FirmwareRevision{},	0x14,		"BIOS Revision"			},
 		{ "firmwarerev",	Decoder::FirmwareRevision{},	0x16,		"Firmware Revision" 	},
 		{}
@@ -67,7 +75,7 @@
 		{ "version",		Decoder::String{},				0x06,		"Version"				},
 		{ "serial",			Decoder::String{},				0x07,		"Serial Number"			},
 //		{ "uuid",			Decoder::SystemUUID{},			0x08,		"uuid"					},
-//		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
+		{ "wakeup",			Decoder::SystemWakeUpType{},	0x18,		"Wake-up Type"			},
 		{ "sku",			Decoder::String{},				0x19,		"SKU Number"			},
 		{ "family",			Decoder::String{},				0x1A,		"Family"				},
 		{}
@@ -81,29 +89,47 @@
 		{ "atag",			Decoder::String{},				0x08,		"Asset Tag"				},
 //		{ "features",		Decoder::BaseBoardFeatures{},	0x09,		"Base board features"	},
 		{ "location",		Decoder::String{},				0x0A,		"Location In Chassis"	},
+//		{ "chandle",		Decoder::Uint16{},				0x0B,		"Chassis Handle"		},
+		{ "type",			Decoder::BaseBoardType{},		0x0D,		"Type"					},
+
 		{}
 	};
 
-	static const Decoder::Item Chassis[] = {
-		{ "manufacturer",	Decoder::String{},				0x04,	"Manufacturer"				},
-		// { "type",	Decoder::ChassisType{},				0x05,	"Type"				},
-		// { "lock",	Decoder::ChassisLock{},				0x05,	"Lock"				},
-		{ "version",		Decoder::String{},				0x06,	"Version"					},
-		{ "serial",			Decoder::String{},				0x07,	"Serial Number"				},
-		{ "atag",			Decoder::String{},				0x08,	"Asset Tag"					},
-//		{ "sku",			Decoder::ChassisSKU{},			0x00,	"SKU Number"				},
+	static const Decoder::Item Chassis[] = {	// 3
+		{ "manufacturer",	Decoder::String{},					0x04,	"Manufacturer"				},
+		{ "type",			Decoder::ChassisType{},				0x05,	"Type"						},
+		{ "lock",			Decoder::ChassisLock{},				0x05,	"Lock"						},
+		{ "version",		Decoder::String{},					0x06,	"Version"					},
+		{ "serial",			Decoder::String{},					0x07,	"Serial Number"				},
+		{ "atag",			Decoder::String{},					0x08,	"Asset Tag"					},
+		{ "bootstate",		Decoder::ChassisState{},			0x09,	"Boot-up state"				},
+		{ "power",			Decoder::ChassisState{},			0x0A,	"Power Supply State"		},
+		{ "thermal",		Decoder::ChassisState{},			0x0B,	"Thermal State"				},
+		{ "security",		Decoder::ChassisSecurityStatus{},	0x0C,	"Security Status"			},
+		{ "oeminfo",		Decoder::ChassisOEMInformation{},	0x0D,	"OEM Information"			},
+		{ "height",			Decoder::ChassisHeight{},			0x11,	"Height"					},
+//		{ "cords",			Decoder::ChassisPowerCords{},		0x12,	"Number Of Power Cords"		},
+//		{ "elements",		Decoder::ChassisElements{},			0x00,	"Contained Elements"		},
+//		{ "sku",			Decoder::ChassisSKU{},				0x00,	"SKU Number"				},
 		{}
 	};
-
 
 	static const Decoder::Item Processor[] = {
-		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"		},
+		{ "type",			Decoder::ProcessorType{},			0x05,	"Type"						},
+//		{ "family",			Decoder::ProcessorFamily{},			0x00,	"Family"					},
 		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"				},
 		{ "version",		Decoder::String{},					0x10,	"Version"					},
+		{ "voltage",		Decoder::ProcessorVoltage{},		0x11,	"Voltage"					},
+		{ "clock",			Decoder::ProcessorFrequency{},		0x12,	"External Clock"			},
+		{ "maxspeed",		Decoder::ProcessorFrequency{},		0x14,	"Max Speed"					},
+		{ "currentspeed",	Decoder::ProcessorFrequency{},		0x16,	"Current Speed"				},
 		{ "serial",			Decoder::String{},					0x20,	"Serial Number"				},
 		{ "atag",			Decoder::String{},					0x21,	"Asset Tag"					},
 		{ "partnumber",		Decoder::String{},					0x22,	"Part Number"				},
+//		{ "corecound",		Decoder::ProcessorCoreCount{},		0x00,	"Core Count"				},
+//		{ "coreenabled",	Decoder::ProcessorCoreEnabled{},	0x00,	"Core Enabled"				},
+//		{ "thread count",	Decoder::ProcessorThreadCount{},	0x00,	"Thread Count"				},
 		{}
 	};
 
@@ -165,29 +191,34 @@
 		{}
 	};
 
-	static const Decoder::Item OnboardDevice[] = {
-//		{ "reference",	Decoder::StringIndex{},	1,	"Reference Designation"	},
+	static const Decoder::Item OnboardDevice[] = { // 41
+		{ "reference",		Decoder::String{},						0x04,	"Reference Designation"	},
 		{}
 	};
 
 	static const Decoder::Item PowerSupply[] = {
-//		{ "location",		Decoder::StringIndex{},	1,	"Location"			},
-//		{ "name",			Decoder::StringIndex{},	2,	"Name"				},
-//		{ "manufacturer",	Decoder::StringIndex{},	3,	"Manufacturer"		},
-//		{ "serial",			Decoder::StringIndex{},	4,	"Serial Number"		},
-//		{ "atag",			Decoder::StringIndex{},	5,	"Asset Tag"			},
-//		{ "modelpn",		Decoder::StringIndex{},	6,	"Model Part Number"	},
-//		{ "revision",		Decoder::StringIndex{},	7,	"Revision"			},
+		{ "location",		Decoder::String{},					0x05,	"Location"			},
+		{ "name",			Decoder::String{},					0x06,	"Name"				},
+		{ "manufacturer",	Decoder::String{},					0x07,	"Manufacturer"		},
+		{ "serial",			Decoder::String{},					0x08,	"Serial Number"		},
+		{ "atag",			Decoder::String{},					0x09,	"Asset Tag"			},
+		{ "modelpn",		Decoder::String{},					0x0a,	"Model Part Number"	},
+		{ "revision",		Decoder::String{},					0x0B,	"Revision"			},
+		{}
+	};
+
+	static const Decoder::Item MemoryController[] = {
+		{ "voltage",		Decoder::ProcessorVoltage{},		0x0D,	"Memory Module Voltage"			},
 		{}
 	};
 
 	static const Decoder::Item VoltageProbe[] = {
-//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{ "description",	Decoder::String{},					0x04,	"Description"	},
 		{}
 	};
 
 	static const Decoder::Item CoolingDevice[] = {
-//		{ "description",	Decoder::StringIndex{},	1,	"Description"	},
+		{ "description",	Decoder::String{},					0x0e,	"Description"	},
 		{}
 	};
 
@@ -233,7 +264,7 @@
 			false,
 			"MemoryController",
 			"Memory Controller",
-			EmptyTable
+			MemoryController
 		},
 		{
 			6,

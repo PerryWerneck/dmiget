@@ -58,14 +58,15 @@
 		<Unit filename="src/include/smbios/node.h" />
 		<Unit filename="src/include/smbios/value.h" />
 		<Unit filename="src/libdmiget/data.cc" />
+		<Unit filename="src/libdmiget/decoders/baseboard.cc" />
 		<Unit filename="src/libdmiget/decoders/bios.cc" />
 		<Unit filename="src/libdmiget/decoders/chassis.cc" />
-		<Unit filename="src/libdmiget/decoders/firmwarerevision.cc" />
 		<Unit filename="src/libdmiget/decoders/integer.cc" />
 		<Unit filename="src/libdmiget/decoders/memory.cc" />
 		<Unit filename="src/libdmiget/decoders/probes.cc" />
 		<Unit filename="src/libdmiget/decoders/processor.cc" />
 		<Unit filename="src/libdmiget/decoders/string.cc" />
+		<Unit filename="src/libdmiget/decoders/system.cc" />
 		<Unit filename="src/libdmiget/decoders/table.cc" />
 		<Unit filename="src/libdmiget/decoders/tools.cc" />
 		<Unit filename="src/libdmiget/decoders/value.cc" />

@@ -17,6 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ * Based on dmidecode
+ *
+ * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
+ * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
+ *
+ */
+
  /**
   * @brief Declare bios decoders.
   */
@@ -33,6 +41,19 @@
 		/// @brief Decode firmware revision.
 		struct FirmwareRevision : public Worker {
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct BiosAddress : public Worker {
+			unsigned int as_uint(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct BiosRuntimeSize : public LengthInBytes {
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+		};
+
+		struct BiosRomSize : public LengthInBytes {
+			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
 		};
 
  	}

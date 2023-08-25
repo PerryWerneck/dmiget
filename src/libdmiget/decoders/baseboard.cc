@@ -17,36 +17,50 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
- * Based on dmidecode
- *
- * Copyright (C) 2000-2002 Alan Cox <alan@redhat.com>
- * Copyright (C) 2002-2020 Jean Delvare <jdelvare@suse.de>
- *
- */
-
  /**
-  * @brief Declare probe decoders.
+  * @brief Implement integer decoders.
   */
 
- #pragma once
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
 
- #include <smbios/defs.h>
+ #include <string>
  #include <private/decoders.h>
+ #include <private/decoders/tools.h>
+ #include <private/decoders/baseboard.h>
+
+ using namespace std;
 
  namespace SMBios {
 
- 	namespace Decoder {
+	std::string Decoder::BaseBoardType::as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const {
 
-		struct TemperatureProbeValue : public Worker {
-
-			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-			uint64_t as_uint64(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
-
+		static const char *type[] = {
+			"Unknown", // 0x01
+			"Other",
+			"Server Blade",
+			"Connectivity Switch",
+			"System Management Module",
+			"Processor Module",
+			"I/O Module",
+			"Memory Module",
+			"Daughter Board",
+			"Motherboard",
+			"Processor+Memory Module",
+			"Processor+I/O Module",
+			"Interconnect Board" // 0x0D
 		};
 
- 	}
+		auto code = as_uint(header,ptr,offset);
+
+		if (code >= 0x01 && code <= 0x0D)
+			return type[code - 0x01];
+
+		return std::to_string(code);
+
+	}
+
 
  }
-
 
