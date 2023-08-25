@@ -45,12 +45,12 @@ for filename in glob.glob("src/python/node/*.cc"):
 	src_files.append(filename)
 
 package_version='0.1'
-with open(r'configure.ac', 'r') as fp:
-    lines = fp.readlines()
-    for line in lines:
-        if line.find('AC_INIT') != -1:
-            package_version = line.split('[')[2].split(']')[0].strip()
-            break;
+#with open(r'configure.ac', 'r') as fp:
+#    lines = fp.readlines()
+#    for line in lines:
+#        if line.find('AC_INIT') != -1:
+#            package_version = line.split('[')[2].split(']')[0].strip()
+#            break;
             
 package_version += '.0'
 

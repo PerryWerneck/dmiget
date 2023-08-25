@@ -1,5 +1,5 @@
 ---
-name: Publish
+name: TestPyPi
 on:
   push:
     branches:
@@ -16,9 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build installer
-        run: |
-          python setup.py sdist
-          ls -l dist/*
+        run: python setup.py sdist
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
