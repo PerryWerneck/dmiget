@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Publish Python package
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/smbios
+      name: pypi
+      url: https://pypi.org/p/smbios
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing  
     steps:
@@ -21,5 +21,4 @@ jobs:
         run: python setup.py sdist
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
+
