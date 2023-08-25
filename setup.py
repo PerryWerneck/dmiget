@@ -84,8 +84,52 @@ setup ( name = 'smbios',
 	author = 'Perry Werneck',
 	author_email = 'perry.werneck@gmail.com',
 	url = 'https://github.com/PerryWerneck/dmiget',
+	long_description_content_type = 'text/markdown',
 	long_description = '''
-This is an extension allowing smibios/dmi read for python applications.
+## About
+
+This library allow python applications an easy way to read data from system's SMBios without the need of dmidecode. 
+
+## Installation
+
+### PyPI
+
+```shell
+pip install smbios
+```
+
+### Linux packages
+
+You can get linux packages (RPM, Deb, arch) from Suse's Open Build service
+
+## Usage
+
+```python
+import smbios
+value = smbios.Value('chassis','serial')
+print(value)
+```
+
+```python
+import smbios
+value = smbios.Value('dmi:///chassis/serial')
+print(value)
+```
+
+```python
+import smbios
+value = smbios.memsize()
+print(value)
+print(int(value))
+```
+
+```python
+import smbios
+for node in smbios.nodes():
+	print(node)
+	for value in node.values():
+		print('	{}: {}'.format(value.description,value))
+```
 ''',
 	ext_modules = [ smbios ])
 
