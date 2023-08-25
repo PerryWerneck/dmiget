@@ -25,6 +25,7 @@
 	#include <config.h>
  #endif // HAVE_CONFIG_H
 
+ #include <string>
  #include <private/decoders.h>
  #include <private/decoders/tools.h>
  #include <private/decoders/baseboard.h>
