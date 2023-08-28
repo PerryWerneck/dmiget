@@ -100,7 +100,7 @@ pip install smbios
 
 ### Linux packages
 
-You can get linux packages (RPM, Deb, arch) from Suse's Open Build service
+You can get linux packages (RPM, Deb, arch) from Suse's [Open Build Service](https://software.opensuse.org/download.html?project=home%3APerryWerneck%3Audjat&package=dmiget)
 
 ## Usage
 
