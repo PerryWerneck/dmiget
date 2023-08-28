@@ -78,7 +78,10 @@
 
 	public:
 
-		Data();
+		/// @brief Construct and empty data block.
+		constexpr Data() {
+		}
+
 		Data(const char *smbios_entry_point, const char *table);
 		~Data();
 
