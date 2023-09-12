@@ -38,63 +38,67 @@
  namespace SMBios {
 
 	std::shared_ptr<Data> Data::factory() {
-		return make_shared<Data>();
-	}
 
-	Data::Data() {
+		auto smbios_data = make_shared<Data>();
 
 		// References:
 		// https://chen-jiao.github.io/articles/2016/11/09/How-to-access-SMBIOS-in-Windows.html
-
 		// Use GetSystemFirmwareTable
-		{
-			DWORD smbiosdatasize = GetSystemFirmwareTable('RSMB',0,NULL,0);
 
-			if(smbiosdatasize) {
+		DWORD smbiosdatasize = GetSystemFirmwareTable('RSMB',0,NULL,0);
 
-				uint8_t *buffer = new uint8_t[smbiosdatasize+1];
+		if(smbiosdatasize) {
 
-				try {
+			uint8_t *buffer = new uint8_t[smbiosdatasize+1];
 
-					DWORD bytesread = GetSystemFirmwareTable('RSMB',0,buffer,smbiosdatasize);
+			try {
 
-					if(bytesread == smbiosdatasize) {
+				DWORD bytesread = GetSystemFirmwareTable('RSMB',0,buffer,smbiosdatasize);
 
-						#pragma pack(1)
-						struct RawSMBIOSData {
-							BYTE    Used20CallingMethod;
-							BYTE    SMBIOSMajorVersion;
-							BYTE    SMBIOSMinorVersion;
-							BYTE    DmiRevision;
-							DWORD   Length;
-							BYTE    SMBIOSTableData[];
-						};
-						#pragma pack()
+				if(bytesread == smbiosdatasize) {
 
-						RawSMBIOSData * data = (RawSMBIOSData *) buffer;
+					#pragma pack(1)
+					struct RawSMBIOSData {
+						BYTE    Used20CallingMethod;
+						BYTE    SMBIOSMajorVersion;
+						BYTE    SMBIOSMinorVersion;
+						BYTE    DmiRevision;
+						DWORD   Length;
+						BYTE    SMBIOSTableData[];
+					};
+					#pragma pack()
 
-						this->dmi.version = (((uint16_t) data->SMBIOSMajorVersion) << 8) | ((uint16_t) data->SMBIOSMinorVersion);
-						this->dmi.length = data->Length;
-						this->ptr = new uint8_t[this->dmi.length+1];
-						this->ptr[this->dmi.length] = 0;
-						memcpy(this->ptr,data->SMBIOSTableData,this->dmi.length);
+					RawSMBIOSData * data = (RawSMBIOSData *) buffer;
 
-					} else {
-						cerr << "Invalid response on GetSystemFirmwareTable()" << endl;
-					}
+					smbios_data->dmi.version = (((uint16_t) data->SMBIOSMajorVersion) << 8) | ((uint16_t) data->SMBIOSMinorVersion);
+					smbios_data->dmi.length = data->Length;
+					smbios_data->ptr = new uint8_t[smbios_data->dmi.length+1];
+					smbios_data->ptr[smbios_data->dmi.length] = 0;
+					memcpy(smbios_data->ptr,data->SMBIOSTableData,smbios_data->dmi.length);
 
-				} catch(...) {
-
-					delete[] buffer;
-					throw;
-
+				} else {
+					cerr << "Invalid response on GetSystemFirmwareTable()" << endl;
 				}
 
+			} catch(...) {
+
 				delete[] buffer;
+				throw;
+
 			}
+
+			delete[] buffer;
 		}
 
+		return smbios_data;
 	}
+
+	/*
+	Data::Data() {
+
+
+	}
+	*/
 
 	Data::~Data() {
 		delete[] ptr;

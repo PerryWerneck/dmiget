@@ -1,5 +1,5 @@
 ---
-name: TestPyPi
+name: Pypi
 on:
   push:
     branches:

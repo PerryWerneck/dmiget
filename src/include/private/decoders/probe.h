@@ -38,6 +38,12 @@
 
  	namespace Decoder {
 
+		struct ProbeStatus : public UInt8 {
+
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+
+		};
+
 		struct TemperatureProbeValue : public Worker {
 
 			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
@@ -45,6 +51,17 @@
 
 		};
 
+		struct TemperatureProbeLocation : public UInt8 {
+
+			std::string as_string(const Node::Header &header, const uint8_t *ptr, const size_t offset) const override;
+
+		};
+
+		struct TemperatureProbeStatus : public ProbeStatus {
+
+			unsigned int as_uint(const Node::Header &header, const uint8_t *data, const size_t offset) const override;
+
+		};
  	}
 
  }

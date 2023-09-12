@@ -74,8 +74,9 @@
 		<Unit filename="src/libdmiget/node/iterator.cc" />
 		<Unit filename="src/libdmiget/node/next.cc" />
 		<Unit filename="src/libdmiget/node/node.cc" />
-		<Unit filename="src/libdmiget/os/linux/data.cc" />
+		<Unit filename="src/libdmiget/os/linux/factory.cc" />
 		<Unit filename="src/libdmiget/os/linux/private.h" />
+		<Unit filename="src/libdmiget/os/linux/sysfs.cc" />
 		<Unit filename="src/libdmiget/os/macos/data.cc" />
 		<Unit filename="src/libdmiget/os/macos/private.h" />
 		<Unit filename="src/libdmiget/os/windows/data.cc" />
