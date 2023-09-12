@@ -1,0 +1,8 @@
+include configure.ac
+include src/include/private/*.h
+include src/include/private/decoders/*.h
+include src/include/smbios/*.h
+include src/libdmiget/os/linux/*.h
+include src/libdmiget/os/macos/*.h
+include src/libdmiget/os/windows/*.h
+
