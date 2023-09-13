@@ -26,7 +26,9 @@
  #endif // HAVE_CONFIG_H
 
  #include <smbios/value.h>
+ #include <smbios/node.h>
  #include <stdexcept>
+ #include <smbios/smbios.h>
 
  using namespace std;
 
@@ -60,4 +62,49 @@
 	}
 
  }
+
+ SMBIOS_API char * dmi_get_value_from_url(const char *url) {
+
+	char *rc = NULL;
+
+	try {
+
+		if(url && *url) {
+
+			rc = strdup(SMBios::Value::find(url)->as_string().c_str());
+
+		}
+
+	} catch(...) {
+
+		return NULL;
+
+	}
+
+	return rc;
+
+ }
+
+ SMBIOS_API char * dmi_get_value(const char *node, const char *name) {
+
+	char *rc = NULL;
+
+	try {
+
+		if(node && name && *node && *name) {
+
+			rc = strdup(SMBios::Node{node}[name]->as_string().c_str());
+
+		}
+
+	} catch(...) {
+
+		return NULL;
+
+	}
+
+	return rc;
+
+ }
+
 

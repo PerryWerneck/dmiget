@@ -17,48 +17,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ /**
+  * @brief Declare 'C' API.
+  */
+
  #pragma once
-
- #if defined(_WIN32)
-
-	#define SMBIOS_API		__declspec (dllexport)
-	#define SMBIOS_PRIVATE
-
- #else
-
-	#define SMBIOS_API		__attribute__((visibility("default")))
-	#define SMBIOS_PRIVATE	__attribute__((visibility("hidden")))
-
- #endif
-
- #ifdef _MSC_VER
-
-	#include <string.h>
-	#define strncasecmp  _strnicmp
-	#define ftruncate    _chsize
-	#define strtoull     _strtoui64
-	#define strtoll      _strtoi64
-
-	__inline int strcasecmp (const char *s1, const char *s2) {
-		size_t size1 = strlen(s1);
-		size_t size2 = strlen(s2);
-		return _strnicmp(s1, s2, size2 > size1 ? size2 : size1);
-	}
-
- #endif // _MSC_VER
+ #include <smbios/defs.h>
 
  #ifdef __cplusplus
- namespace SMBios {
+	extern "C" {
+ #endif // __cplusplus
 
-	class Data;
-	class Node;
-	class Value;
+ /// @brief Get value from SMBios URL
+ /// @param url the URL in the format dmi:///[NODE]/[VALUE]
+ /// @return NULL on failure, the value on success (release it using free())
+ SMBIOS_API char * dmi_get_value_from_url(const char *url);
 
-	namespace Decoder {
+ /// @brief Get value from SMBios using node & value names
+ /// @param node The node name
+ /// @param value The value name.
+ /// @return NULL on failure, the value on success (release it using free())
+ SMBIOS_API char * dmi_get_value(const char *node, const char *name);
 
-		struct Type;
-
+ #ifdef __cplusplus
 	}
-
- }
  #endif // __cplusplus
