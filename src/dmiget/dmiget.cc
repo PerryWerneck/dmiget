@@ -332,7 +332,7 @@
 
 		case Complete:
 			// Show standard output.
- 			for(SMBios::Node node = Node::factory(node_name);node;node.next(node_name)) {
+ 			for(SMBios::Node node = Node::factory(filename, node_name);node;node.next(node_name)) {
 				if(show_node) {
 
 					writer->write(node);

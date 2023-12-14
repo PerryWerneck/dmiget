@@ -531,6 +531,15 @@
 			"TPMDevice",
 			"TPM Device",
 			EmptyTable
+		},
+		{
+			// VMWare type 126 'Inactive' ?!?!?!?!
+			// https://github.com/vmware/esx-boot/blob/master/uefi/edk2/MdePkg/Include/IndustryStandard/SmBios.h
+			126,
+			false,
+			"Inactive",
+			"Inactive",
+			EmptyTable
 		}
 
 	};
