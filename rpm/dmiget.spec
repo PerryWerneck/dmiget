@@ -16,6 +16,8 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
+%{?!python_module:%define python_module() python3-%{**}}
+
 Summary:		Get DMI information using URL format
 Name:			dmiget
 Version:		1.0
@@ -34,10 +36,10 @@ BuildRequires:	libtool
 BuildRequires:	binutils
 BuildRequires:	coreutils
 BuildRequires:	gcc-c++ >= 5
+
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	%{python_module devel}
 BuildRequires:	%{python_module setuptools}
-
 
 %description
 Tool to get information from DMI table using an url-like format.

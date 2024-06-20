@@ -133,6 +133,11 @@
 		{}
 	};
 
+	static const Decoder::Item ProcessorAditional[] = {
+		{ "handle",			Decoder::Hex16{},					0x04,	"Referenced Handle"	},
+		{}
+	};
+
 	static const Decoder::Item Cache[] = {
 		{ "socket",			Decoder::String{},					0x04,	"Socket Designation"	},
 		{}
@@ -531,6 +536,22 @@
 			"TPMDevice",
 			"TPM Device",
 			EmptyTable
+		},
+		{
+			44,
+			false,
+			"ProcessorAditional",
+			"Processor Additional Information",
+			ProcessorAditional
+		},
+		{
+			// VMWare type 126 'Inactive' ?!?!?!?!
+			// https://github.com/vmware/esx-boot/blob/master/uefi/edk2/MdePkg/Include/IndustryStandard/SmBios.h
+			126,
+			false,
+			"Inactive",
+			"Inactive",
+			EmptyTable
 		}
 
 	};
@@ -554,6 +575,16 @@
 			}
 		}
 
+		static const Decoder::Type invtype {
+			0,
+			true,
+			"inv",
+			"Invalid SMBios type",
+			EmptyTable
+		};
+		return &invtype;
+
+		/*
 #ifdef _MSC_VER
 		char str[20];
 		snprintf(str,19,"%u",(unsigned int) type);
@@ -561,6 +592,7 @@
 #else
 		throw std::system_error(ENOENT,std::system_category(),string{"Invalid SMBIos structure type: "}+std::to_string((int) type));
 #endif // _MSC_VER
+		*/
 
 	}
 
