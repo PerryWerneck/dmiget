@@ -98,6 +98,7 @@
 		}
 
 		decoder = Decoder::get(header.type);
+
 		return *this;
 	}
 
