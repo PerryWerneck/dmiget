@@ -43,6 +43,7 @@
  #include <private/decoders/probe.h>
  #include <private/decoders/chassis.h>
  #include <private/decoders/baseboard.h>
+ #include <private/decoders/tpm.h>
 
  #include <stdexcept>
 
@@ -51,6 +52,16 @@
  namespace SMBios {
 
 	static const Decoder::Item EmptyTable[] = {
+		{}
+	};
+
+	static const Decoder::Item TPMDevice[] = {
+		{ "vendor",			Decoder::TPMVendorID{},			0x04,		"Vendor ID"				},
+		{ "specversion",	Decoder::TPMSpecification{},	0x08,		"Specification Version"	},
+		{ "revision",		Decoder::TPMRevision{},			0x0a,		"Firmware Revision"		},
+		{ "description",	Decoder::String{},				0x12,		"Description"			},
+//		{ "characteristics", Decoder::{},					0x13,		"Characteristics"		},
+		{ "oem",			Decoder::UInt16{},				0x1b,		"OEM-defined"			},
 		{}
 	};
 
@@ -535,7 +546,7 @@
 			false,
 			"TPMDevice",
 			"TPM Device",
-			EmptyTable
+			TPMDevice
 		},
 		{
 			44,
