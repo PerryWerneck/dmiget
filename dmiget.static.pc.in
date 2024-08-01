@@ -9,7 +9,7 @@ version_minor=@PACKAGE_MINOR_VERSION@
 Name: @PACKAGE_NAME@
 Description: @PACKAGE_NAME@ static library
 Version: @PACKAGE_VERSION@
-Libs: -ldmiget.static
+Libs: -l:libdmiget.a
 Libs.private: @LIBS@
 Cflags: -I@includedir@/@PACKAGE_NAME@
 
