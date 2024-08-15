@@ -8,7 +8,7 @@
 
 ## Installation
 
-### Pre build packages
+### Packages
 
 You can download installation package for supported linux distributions in [Open Build Service](https://software.opensuse.org/download.html?project=home%3APerryWerneck%3Audjat&package=dmiget)
 
