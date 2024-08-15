@@ -315,12 +315,12 @@ install-devel: \
 
 	@mkdir -p $(DESTDIR)$(libdir)/pkgconfig
 	@$(INSTALL_DATA) \
-		dmiget.pc \
+		dynamic.pc \
 		$(DESTDIR)$(libdir)/pkgconfig/dmiget.pc
 		
 	@$(INSTALL_DATA) \
-		dmiget.static.pc \
-		$(DESTDIR)$(libdir)/pkgconfig/dmiget.static.pc
+		static.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/dmiget-static.pc
 
 	@$(INSTALL_DATA) \
 		$(BINRLS)/libdmiget.a \

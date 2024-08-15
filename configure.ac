@@ -248,8 +248,8 @@ dnl ---------------------------------------------------------------------------
 
 dnl AC_CONFIG_FILES(doxygen/doxyfile)
 AC_CONFIG_FILES(Makefile)
-AC_CONFIG_FILES(dmiget.pc)
-AC_CONFIG_FILES(dmiget.static.pc)
+AC_CONFIG_FILES(dynamic.pc)
+AC_CONFIG_FILES(static.pc)
 AC_SUBST(BUILD_TARGETS)
 
 dnl ---------------------------------------------------------------------------
