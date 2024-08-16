@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "smbios"
+readme = ""
 authors = [
     {name = "Perry Werneck", email = "perry.werneck@gmail.com"},
 ]

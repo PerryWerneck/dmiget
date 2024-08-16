@@ -198,7 +198,7 @@ $(OBJRLS)/%.o: \
 
 all: \
 	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET)) \
-	$(BINRLS)/libdmiget.static.a
+	$(BINRLS)/libdmiget.a
 
 Release: \
 	$(foreach TARGET, $(BUILD_TARGETS), $(BINRLS)/$(TARGET))
@@ -229,7 +229,7 @@ $(BINRLS)/$(PYTHON_MODULE)@LIBEXT@: \
 		$(LIBS) \
 		@PYTHON_LIBS@
 
-$(BINRLS)/libdmiget.static.a: \
+$(BINRLS)/libdmiget.a: \
 	$(foreach SRC, $(basename $(LIBRARY_SOURCES)), $(OBJRLS)/$(SRC).o)
 
 	@$(MKDIR) $(@D)
@@ -304,7 +304,7 @@ install-windows-lib: \
 		$(DESTDIR)$(datarootdir)/$(PACKAGE_NAME)/def
 
 install-devel: \
-	$(BINRLS)/libdmiget.static.a
+	$(BINRLS)/libdmiget.a
 
 	@$(MKDIR) \
 		$(DESTDIR)$(includedir)/$(PACKAGE_NAME)/smbios
@@ -315,16 +315,16 @@ install-devel: \
 
 	@mkdir -p $(DESTDIR)$(libdir)/pkgconfig
 	@$(INSTALL_DATA) \
-		dmiget.pc \
+		dynamic.pc \
 		$(DESTDIR)$(libdir)/pkgconfig/dmiget.pc
 		
 	@$(INSTALL_DATA) \
-		dmiget.static.pc \
-		$(DESTDIR)$(libdir)/pkgconfig/dmiget.static.pc
+		static.pc \
+		$(DESTDIR)$(libdir)/pkgconfig/dmiget-static.pc
 
 	@$(INSTALL_DATA) \
-		$(BINRLS)/libdmiget.static.a \
-		$(DESTDIR)$(libdir)/libdmiget.static.a
+		$(BINRLS)/libdmiget.a \
+		$(DESTDIR)$(libdir)/libdmiget.a
 
 #---[ Uninstall Targets ]----------------------------------------------------------------
 
