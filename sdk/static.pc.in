@@ -3,13 +3,13 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-version_major=@PACKAGE_MAJOR_VERSION@
-version_minor=@PACKAGE_MINOR_VERSION@
+version_major=@PACKAGE_VERSION_MAJOR@
+version_minor=@PACKAGE_VERSION_MINOR@
 
 Name: @PACKAGE_NAME@
-Description: @PACKAGE_NAME@ development
+Description: @PACKAGE_NAME@ static library
 Version: @PACKAGE_VERSION@
-Libs: -ldmiget
+Libs: -l:libdmiget.a
 Libs.private: @LIBS@
 Cflags: -I@includedir@/@PACKAGE_NAME@
 
