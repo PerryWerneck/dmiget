@@ -165,7 +165,7 @@ endif
 # Targets
 #
 dynamic = shared_library(
-  'vmdetect', 
+  'dmiget', 
   config_src + lib_src,
 	install: true,
 	version : libversion,
@@ -175,7 +175,7 @@ dynamic = shared_library(
 )
 
 static = static_library(
-  'vmdetect', 
+  'dmiget', 
   config_src + lib_src,
 	install: true,
 	dependencies: lib_deps,
@@ -201,7 +201,7 @@ py.extension_module(
 )
 
 executable(
-	'vmdetect',
+	'dmiget',
 	config_src + [ 'src/dmiget/dmiget.cc' ],
   install: true,
 	link_with : dynamic,
