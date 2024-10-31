@@ -12,22 +12,36 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v3
-      - uses: msys2/setup-msys2@v2
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+      - name: Setup MSys
+        uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
           update: true
           install: dos2unix xz mingw-w64-x86_64-gcc pkgconf mingw-w64-x86_64-gettext mingw-w64-x86_64-meson gettext-devel
-      - name: CI-Build
+      - name: Run Build
         run: |
           dos2unix PKGBUILD.mingw
           makepkg BUILDDIR=/tmp/pkg -p PKGBUILD.mingw
   
   check-msvc:
+    # https://dvdhrm.github.io/2021/04/21/meson-msvc-github-actions/
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: CI-Build
-        run: |
-          meson setup --reconfigure --wipe .build
-          ninja -C .build
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install Python Dependencies
+        run: pip install meson ninja
+      - name: Prepare MSVC
+        uses: bus1/cabuild/action/msdevshell@v1
+        with:
+          architecture: x64
+      - name: Prepare Build
+        run: meson setup build
+      - name: Run Build
+        run: meson compile -v -C build
