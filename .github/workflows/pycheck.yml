@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
+      - name: Install Python Dependencies
+        run: pip install meson ninja
       - name: Build package
         run: |
           pip wheel .
