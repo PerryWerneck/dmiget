@@ -1,15 +1,16 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
-libdir=@libdir@
-includedir=@includedir@
+includedir=${prefix}/@includedir@
+libdir=${prefix}/@libdir@
 
 version_major=@PACKAGE_VERSION_MAJOR@
 version_minor=@PACKAGE_VERSION_MINOR@
+version_micro=@PACKAGE_VERSION_MICRO@
 
 Name: @PACKAGE_NAME@
-Description: @PACKAGE_NAME@ static library
+Description: @PACKAGE_DESCRIPTION@
 Version: @PACKAGE_VERSION@
-Libs: -l:libdmiget.a
-Libs.private: @LIBS@
+Requires: @REQUIRES@
+Libs: @STATICLIBS@
 Cflags: -I@includedir@/@PACKAGE_NAME@
 
