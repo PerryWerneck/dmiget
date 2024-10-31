@@ -44,4 +44,4 @@ jobs:
       - name: Prepare Build
         run: meson setup build
       - name: Run Build
-        run: meson compile -v -C build
+        run: meson compile -v -C build dmiget:executable
