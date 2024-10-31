@@ -185,10 +185,8 @@ static = static_library(
 #
 # Check for python
 #
-pydep = dependency('python3',required:false)
-if pydep.found()
-  py = import('python').find_installation()
-  py.extension_module(
+if dependency('python3',required:false).found()
+  import('python').find_installation().extension_module(
     'smbios',
     config_src + [ 
       'src/python/init.c',
@@ -200,6 +198,7 @@ if pydep.found()
       'src/python/value/methods.cc',
       'src/python/value/type.c'
     ],
+    install_tag: 'python',
     install: true,
     link_with : static,
     include_directories: includes_dir
