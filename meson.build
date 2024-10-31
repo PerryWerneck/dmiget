@@ -94,22 +94,6 @@ else
   sdk_conf.set('STATICLIBS','-l:libdmiget.a')
 endif
 
-configure_file(
-  input : 'sdk/dynamic.pc.in',
-  output : meson.project_name() + '.pc',
-  install: true,
-  install_dir: get_option('libdir') + '/pkgconfig',
-  configuration : sdk_conf
-)
-
-configure_file(
-  input : 'sdk/static.pc.in',
-  output : meson.project_name() + '-static.pc',
-  install: true,
-  install_dir: get_option('libdir') + '/pkgconfig',
-  configuration : sdk_conf
-)
-
 includes_dir = include_directories('src/include')
 
 #
@@ -166,6 +150,25 @@ endif
 #
 if cxx.get_id() == 'msvc'
 
+  static = static_library(
+    'lib'+ meson.project_name(), 
+    config_src + lib_src,
+    install: true,
+    dependencies: lib_deps,
+    include_directories: includes_dir
+  )
+
+  executable(
+    meson.project_name(),
+    config_src + [ 'src/dmiget/dmiget.cc' ],
+    install: true,
+    link_with : static,
+    install_dir: get_option('sbindir'),
+    include_directories: includes_dir
+  )
+
+else
+
   dynamic = shared_library(
     meson.project_name(), 
     config_src + lib_src,
@@ -185,7 +188,7 @@ if cxx.get_id() == 'msvc'
   )
 
   executable(
-    'dmiget',
+    meson.project_name(),
     config_src + [ 'src/dmiget/dmiget.cc' ],
     install: true,
     link_with : dynamic,
@@ -193,23 +196,20 @@ if cxx.get_id() == 'msvc'
     include_directories: includes_dir
   )
 
-else
-
-  static = static_library(
-    'lib'+ meson.project_name(), 
-    config_src + lib_src,
+  configure_file(
+    input : 'sdk/dynamic.pc.in',
+    output : meson.project_name() + '.pc',
     install: true,
-    dependencies: lib_deps,
-    include_directories: includes_dir
+    install_dir: get_option('libdir') + '/pkgconfig',
+    configuration : sdk_conf
   )
 
-  executable(
-    'dmiget',
-    config_src + [ 'src/dmiget/dmiget.cc' ],
+  configure_file(
+    input : 'sdk/static.pc.in',
+    output : meson.project_name() + '-static.pc',
     install: true,
-    link_with : static,
-    install_dir: get_option('sbindir'),
-    include_directories: includes_dir
+    install_dir: get_option('libdir') + '/pkgconfig',
+    configuration : sdk_conf
   )
 
 endif
