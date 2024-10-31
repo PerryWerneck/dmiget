@@ -221,7 +221,7 @@ install_headers(
   'src/include/smbios/node.h', 
   'src/include/smbios/smbios.h', 
   'src/include/smbios/value.h',
-  subdir: 'smbios'  
+  subdir: 'dmiget/smbios'  
 )
 
 
