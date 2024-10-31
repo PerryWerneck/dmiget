@@ -1,8 +1,9 @@
 name: publish
 on:
   push:
-    branches: [ "develop" ]
-
+    branches: [ "publisher" ]
+    tags:
+      - '*'
 jobs:
   mingw64:
     runs-on: windows-latest
