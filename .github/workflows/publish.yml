@@ -4,21 +4,20 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  python:
+  pytest:
     runs-on: ubuntu-latest
-    name: Publish python module
+    name: Publish to pytest
     environment:
       name: pypi
-      url: https://pypi.org/p/smbios
+      url: https://test.pypi.org/p/smbios
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing      
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
       - name: Install Python Dependencies
-        run: pip install meson ninja build twine
+        run: pip install meson ninja build
       - name: Build package
         run: python3 -m build
-      - name: Publish package distributions to PyPI
+      - name: Publishing package
         uses: pypa/gh-action-pypi-publish@release/v1
-        
