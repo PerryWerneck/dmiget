@@ -12,5 +12,5 @@ Description: @PACKAGE_DESCRIPTION@
 Version: @PACKAGE_VERSION@
 Requires: @REQUIRES@
 Libs: @STATICLIBS@
-Cflags: -I@includedir@/@PACKAGE_NAME@
+Cflags: -I${includedir}/@PACKAGE_NAME@
 

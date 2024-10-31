@@ -11,5 +11,5 @@ Name: @PACKAGE_NAME@
 Description: @PACKAGE_DESCRIPTION@
 Version: @PACKAGE_VERSION@
 Libs: @DYNLIBS@
-Cflags: -I@includedir@/@PACKAGE_NAME@
+Cflags: -I${includedir}/@PACKAGE_NAME@
 
