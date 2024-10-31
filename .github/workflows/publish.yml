@@ -6,10 +6,10 @@ on:
 jobs:
   pytest:
     runs-on: ubuntu-latest
-    name: Publish to pytest
+    name: Publish to pypi
     environment:
       name: pypi
-      url: https://test.pypi.org/p/smbios
+      url: https://pypi.org/p/smbios
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing      
     steps:
