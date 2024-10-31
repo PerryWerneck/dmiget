@@ -7,6 +7,7 @@ project(
 )
 
 project_description = 'Library and application to read data from SMBIOS/DMI'
+library_name = meson.project_name()
 
 #
 # Versioning
@@ -25,6 +26,11 @@ pkg_micro_version = version_array[2].to_int()
 cxx = meson.get_compiler('cpp')
 cc = meson.get_compiler('c')
 enable_debug = get_option('debug') or get_option('buildtype').contains('debug')
+
+if cxx.get_id() == 'msvc'
+  # Avoiding error 'LNK1149: output filename matches input filename'
+  library_name = 'lib' + meson.project_name()
+endif
 
 compiler_flags_common = [
   '-fvisibility=hidden',
@@ -165,7 +171,7 @@ endif
 # Targets
 #
 dynamic = shared_library(
-  'dmiget', 
+  meson.project_name(), 
   config_src + lib_src,
 	install: true,
 	gnu_symbol_visibility: 'hidden',
@@ -175,7 +181,7 @@ dynamic = shared_library(
 )
 
 static = static_library(
-  'dmiget', 
+  library_name, 
   config_src + lib_src,
 	install: true,
 	dependencies: lib_deps,
