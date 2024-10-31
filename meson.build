@@ -182,23 +182,29 @@ static = static_library(
 	include_directories: includes_dir
 )
 
-py = import('python').find_installation()
-py.extension_module(
-  'smbios',
-  config_src + [ 
-    'src/python/init.c',
-    'src/python/memsize.cc',
-    'src/python/moduleinfo.cc',
-    'src/python/node/methods.cc',
-    'src/python/node/type.c',
-    'src/python/tools.cc',
-    'src/python/value/methods.cc',
-    'src/python/value/type.c'
-  ],
-  install: true,
-  link_with : static,
-  include_directories: includes_dir
-)
+#
+# Check for python
+#
+pydep = dependency('python3',required:false)
+if pydep.found()
+  py = import('python').find_installation()
+  py.extension_module(
+    'smbios',
+    config_src + [ 
+      'src/python/init.c',
+      'src/python/memsize.cc',
+      'src/python/moduleinfo.cc',
+      'src/python/node/methods.cc',
+      'src/python/node/type.c',
+      'src/python/tools.cc',
+      'src/python/value/methods.cc',
+      'src/python/value/type.c'
+    ],
+    install: true,
+    link_with : static,
+    include_directories: includes_dir
+  )
+endif
 
 executable(
 	'dmiget',
