@@ -19,7 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 _realname="dmiget"
-pkgver="1.2.2"
+pkgver="1.2.6"
 
 pkgname=${MINGW_PACKAGE_PREFIX}-${_realname}
 source=()

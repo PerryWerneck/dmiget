@@ -8,7 +8,7 @@ install = ['--tags=python']
 
 [project]
 name = 'smbios'
-version = '1.2.2'
+version = '1.2.6'
 description = 'Identify virtual machine'
 readme = 'README.md'
 requires-python = '>=3.8'
