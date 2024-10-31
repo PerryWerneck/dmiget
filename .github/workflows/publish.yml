@@ -56,7 +56,7 @@ jobs:
       - name: Prepare Build
         run: meson setup build
       - name: Build
-        run: meson compile -v -C build dmiget:executable dmiget:static_library
+        run: meson compile -v -C build
       - name: Install
         run: meson install --no-rebuild --destdir=package -C build
       - name: Pack
