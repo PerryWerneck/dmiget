@@ -215,6 +215,13 @@ executable(
 	include_directories: includes_dir
 )
 
-install_subdir(meson.current_source_dir() + 'src/include/smbios', install_dir : get_option('includedir'))
+install_headers(
+  'src/include/smbios/defs.h', 
+  'src/include/smbios/memsize.h', 
+  'src/include/smbios/node.h', 
+  'src/include/smbios/smbios.h', 
+  'src/include/smbios/value.h',
+  subdir: 'smbios'  
+)
 
 
