@@ -1,0 +1,16 @@
+name: publish
+on:
+  push:
+    branches: [ "develop" ]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    name: Check linux python build
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v3
+      - name: Install Python Dependencies
+        run: pip install meson ninja build twine
+      - name: Build package
+        run: python3 -m build
