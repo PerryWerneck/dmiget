@@ -211,6 +211,7 @@ executable(
 	config_src + [ 'src/dmiget/dmiget.cc' ],
   install: true,
 	link_with : dynamic,
+  install_dir: get_option('sbindir'),
 	include_directories: includes_dir
 )
 
