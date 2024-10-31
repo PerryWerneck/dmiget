@@ -7,7 +7,6 @@ project(
 )
 
 project_description = 'Library and application to read data from SMBIOS/DMI'
-library_name = meson.project_name()
 
 #
 # Versioning
@@ -26,11 +25,6 @@ pkg_micro_version = version_array[2].to_int()
 cxx = meson.get_compiler('cpp')
 cc = meson.get_compiler('c')
 enable_debug = get_option('debug') or get_option('buildtype').contains('debug')
-
-if cxx.get_id() == 'msvc'
-  # Avoiding error 'LNK1149: output filename matches input filename'
-  library_name = 'lib' + meson.project_name()
-endif
 
 compiler_flags_common = [
   '-fvisibility=hidden',
@@ -170,23 +164,55 @@ endif
 #
 # Targets
 #
-dynamic = shared_library(
-  meson.project_name(), 
-  config_src + lib_src,
-	install: true,
-	gnu_symbol_visibility: 'hidden',
-	dependencies: lib_deps,
-  soversion: pkg_major_version,
-	include_directories: includes_dir
-)
+if cxx.get_id() == 'msvc'
 
-static = static_library(
-  library_name, 
-  config_src + lib_src,
-	install: true,
-	dependencies: lib_deps,
-	include_directories: includes_dir
-)
+  dynamic = shared_library(
+    meson.project_name(), 
+    config_src + lib_src,
+    install: true,
+    gnu_symbol_visibility: 'hidden',
+    dependencies: lib_deps,
+    soversion: pkg_major_version,
+    include_directories: includes_dir
+  )
+
+  static = static_library(
+    meson.project_name(), 
+    config_src + lib_src,
+    install: true,
+    dependencies: lib_deps,
+    include_directories: includes_dir
+  )
+
+  executable(
+    'dmiget',
+    config_src + [ 'src/dmiget/dmiget.cc' ],
+    install: true,
+    link_with : dynamic,
+    install_dir: get_option('sbindir'),
+    include_directories: includes_dir
+  )
+
+else
+
+  static = static_library(
+    'lib'+ meson.project_name(), 
+    config_src + lib_src,
+    install: true,
+    dependencies: lib_deps,
+    include_directories: includes_dir
+  )
+
+  executable(
+    'dmiget',
+    config_src + [ 'src/dmiget/dmiget.cc' ],
+    install: true,
+    link_with : static,
+    install_dir: get_option('sbindir'),
+    include_directories: includes_dir
+  )
+
+endif
 
 #
 # Check for python
@@ -212,15 +238,6 @@ if py.found()
     include_directories: includes_dir
   )
 endif
-
-executable(
-	'dmiget',
-	config_src + [ 'src/dmiget/dmiget.cc' ],
-  install: true,
-	link_with : dynamic,
-  install_dir: get_option('sbindir'),
-	include_directories: includes_dir
-)
 
 install_headers(
   'src/include/smbios/defs.h', 
