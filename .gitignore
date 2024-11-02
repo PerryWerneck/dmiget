@@ -54,7 +54,6 @@ vgcore.*
 ABOUT-NLS
 intl
 m4
-po
 
 # CodeBlocks
 *.layout
