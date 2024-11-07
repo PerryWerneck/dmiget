@@ -100,12 +100,14 @@ if host_machine.system() == 'windows'
   pkg.generate(
     name: meson.project_name(),
     description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
     libraries: [ '-ldmiget.dll' ]
   )
 
   pkg.generate(
     name: meson.project_name() + '-static',
     description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
     libraries: [ '-ldmiget' ]
   )
 
@@ -114,12 +116,14 @@ else
   pkg.generate(
     name: meson.project_name(),
     description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
     libraries: [ '-ldmiget' ]
   )
 
   pkg.generate(
     name: meson.project_name() + '-static',
     description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
     libraries: [ '-l:libdmiget.a' ]
   )
 
