@@ -42,7 +42,7 @@ prepare() {
   cd ${startdir}
   meson \
     setup \
-      --prefix ${MINGW_PREFIX} \
+      --prefix=/c/${MINGW_PREFIX} \
       --reconfigure \
       --wipe \
       "$srcdir/$pkgname"
