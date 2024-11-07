@@ -26,7 +26,7 @@
 
 Summary:		Get DMI information using URL format
 Name:			mingw64-dmiget
-Version:		1.0
+Version: 1.2.6
 Release:		0
 License:		LGPL-3.0
 Source:			dmiget-%{version}.tar.xz

@@ -21,7 +21,7 @@
 
 Summary:		Python module to get data from smbios
 Name:			python-smbios
-Version:		1.0
+Version: 1.2.6
 Release:		0
 License:		GPL-2.0
 Source:			dmiget-%{version}.tar.xz
