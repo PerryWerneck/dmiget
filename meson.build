@@ -69,6 +69,7 @@ add_project_arguments(cc.get_supported_arguments(compiler_flags_common), languag
 #
 # Configuration
 #
+
 app_conf = configuration_data()
 app_conf.set_quoted('PACKAGE_NAME', meson.project_name())
 app_conf.set_quoted('PACKAGE_VERSION', meson.project_version())
@@ -90,28 +91,61 @@ config_src = [
 
 #
 # SDK
+# https://mesonbuild.com/Pkgconfig-module.html
 #
-sdk_conf = configuration_data()
-sdk_conf.set('PACKAGE_NAME', meson.project_name())
-sdk_conf.set('PACKAGE_VERSION', meson.project_version())
-sdk_conf.set('PACKAGE_DESCRIPTION', project_description)
-sdk_conf.set('PACKAGE_VERSION_MAJOR', pkg_major_version)
-sdk_conf.set('PACKAGE_VERSION_MINOR', pkg_minor_version)
-sdk_conf.set('PACKAGE_VERSION_MICRO', pkg_micro_version)
-sdk_conf.set('prefix',get_option('prefix'))
-sdk_conf.set('exec_prefix',get_option('prefix'))
-sdk_conf.set('includedir',get_option('includedir'))
-sdk_conf.set('libdir',get_option('libdir'))
+pkg = import('pkgconfig')
 
 if host_machine.system() == 'windows'
-  sdk_conf.set('REQUIRES','')
-  sdk_conf.set('DYNLIBS','-ldmiget.dll')
-  sdk_conf.set('STATICLIBS','-ldmiget')
+
+  pkg.generate(
+    name: meson.project_name(),
+    description: project_description,
+    libraries: [ '-ldmiget.dll' ]
+  )
+
+  pkg.generate(
+    name: meson.project_name() + '-static',
+    description: project_description,
+    libraries: [ '-ldmiget' ]
+  )
+
 else
-  sdk_conf.set('REQUIRES','')
-  sdk_conf.set('DYNLIBS','-ldmiget')
-  sdk_conf.set('STATICLIBS','-l:libdmiget.a')
+
+  pkg.generate(
+    name: meson.project_name(),
+    description: project_description,
+    libraries: [ '-ldmiget' ]
+  )
+
+  pkg.generate(
+    name: meson.project_name() + '-static',
+    description: project_description,
+    libraries: [ '-l:libdmiget.a' ]
+  )
+
 endif
+
+#sdk_conf = configuration_data()
+#sdk_conf.set('PACKAGE_NAME', meson.project_name())
+#sdk_conf.set('PACKAGE_VERSION', meson.project_version())
+#sdk_conf.set('PACKAGE_DESCRIPTION', project_description)
+#sdk_conf.set('PACKAGE_VERSION_MAJOR', pkg_major_version)
+#sdk_conf.set('PACKAGE_VERSION_MINOR', pkg_minor_version)
+#sdk_conf.set('PACKAGE_VERSION_MICRO', pkg_micro_version)
+#sdk_conf.set('prefix',get_option('prefix'))
+#sdk_conf.set('exec_prefix',get_option('prefix'))
+#sdk_conf.set('includedir',get_option('includedir'))
+#sdk_conf.set('libdir',get_option('libdir'))
+
+#if host_machine.system() == 'windows'
+#  sdk_conf.set('REQUIRES','')
+#  sdk_conf.set('DYNLIBS','-ldmiget.dll')
+#  sdk_conf.set('STATICLIBS','-ldmiget')
+#else
+#  sdk_conf.set('REQUIRES','')
+#  sdk_conf.set('DYNLIBS','-ldmiget')
+#  sdk_conf.set('STATICLIBS','-l:libdmiget.a')
+#endif
 
 includes_dir = include_directories('src/include')
 
@@ -214,22 +248,22 @@ else
     install_dir: get_option('sbindir'),
     include_directories: includes_dir
   )
+  
+#  configure_file(
+#    input : 'sdk/dynamic.pc.in',
+#    output : meson.project_name() + '.pc',
+#    install: true,
+#    install_dir: get_option('libdir') + '/pkgconfig',
+#    configuration : sdk_conf
+#  )
 
-  configure_file(
-    input : 'sdk/dynamic.pc.in',
-    output : meson.project_name() + '.pc',
-    install: true,
-    install_dir: get_option('libdir') + '/pkgconfig',
-    configuration : sdk_conf
-  )
-
-  configure_file(
-    input : 'sdk/static.pc.in',
-    output : meson.project_name() + '-static.pc',
-    install: true,
-    install_dir: get_option('libdir') + '/pkgconfig',
-    configuration : sdk_conf
-  )
+#  configure_file(
+#    input : 'sdk/static.pc.in',
+#    output : meson.project_name() + '-static.pc',
+#    install: true,
+#    install_dir: get_option('libdir') + '/pkgconfig',
+#    configuration : sdk_conf
+#  )
 
 endif
 
