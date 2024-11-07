@@ -67,7 +67,5 @@ dist
 *.txt
 *.egg-info
 
-
-
-
 .vscode
+*.whl
