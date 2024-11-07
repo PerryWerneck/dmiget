@@ -125,28 +125,6 @@ else
 
 endif
 
-#sdk_conf = configuration_data()
-#sdk_conf.set('PACKAGE_NAME', meson.project_name())
-#sdk_conf.set('PACKAGE_VERSION', meson.project_version())
-#sdk_conf.set('PACKAGE_DESCRIPTION', project_description)
-#sdk_conf.set('PACKAGE_VERSION_MAJOR', pkg_major_version)
-#sdk_conf.set('PACKAGE_VERSION_MINOR', pkg_minor_version)
-#sdk_conf.set('PACKAGE_VERSION_MICRO', pkg_micro_version)
-#sdk_conf.set('prefix',get_option('prefix'))
-#sdk_conf.set('exec_prefix',get_option('prefix'))
-#sdk_conf.set('includedir',get_option('includedir'))
-#sdk_conf.set('libdir',get_option('libdir'))
-
-#if host_machine.system() == 'windows'
-#  sdk_conf.set('REQUIRES','')
-#  sdk_conf.set('DYNLIBS','-ldmiget.dll')
-#  sdk_conf.set('STATICLIBS','-ldmiget')
-#else
-#  sdk_conf.set('REQUIRES','')
-#  sdk_conf.set('DYNLIBS','-ldmiget')
-#  sdk_conf.set('STATICLIBS','-l:libdmiget.a')
-#endif
-
 includes_dir = include_directories('src/include')
 
 #
