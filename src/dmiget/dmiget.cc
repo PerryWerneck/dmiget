@@ -202,13 +202,13 @@
 					line[60] = line[77] = '|';
 				}
 
-				char buffer[10];
+				char buffer[20];
 
 				const uint8_t *ptr = smbios->get(offset);
-				snprintf(buffer,9,"%02x",*ptr);
+				snprintf(buffer,19,"%02x",*ptr);
 				memcpy(line+(10+(col*3)),buffer,2);
 
-				snprintf(buffer,9,"%08lx",(unsigned long) offset);
+				snprintf(buffer,19,"%08lx",(unsigned long) offset);
 				memcpy(line,buffer,8);
 
 				line[61+col] = (*ptr >= ' ' && *ptr < 128) ? *ptr : '.';
