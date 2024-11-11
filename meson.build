@@ -78,6 +78,9 @@ app_conf.set('PACKAGE_VERSION_MAJOR', pkg_major_version)
 app_conf.set('PACKAGE_VERSION_MINOR', pkg_minor_version)
 app_conf.set('PACKAGE_VERSION_MICRO', pkg_micro_version)
 
+app_conf.set('PRODUCT_NAME', meson.project_name())
+app_conf.set('PRODUCT_VERSION', meson.project_version())
+
 if cxx.compiles('#include <unistd.h>', name : 'unistd.h')
   app_conf.set('HAVE_UNISTD_H', 1)
 endif
@@ -90,51 +93,13 @@ config_src = [
 ]
 
 #
-# SDK
-# https://mesonbuild.com/Pkgconfig-module.html
-#
-pkg = import('pkgconfig')
-
-if host_machine.system() == 'windows'
-
-  pkg.generate(
-    name: meson.project_name(),
-    description: project_description,
-    extra_cflags: [ '-I${includedir}/dmiget' ],
-    libraries: [ '-ldmiget.dll' ]
-  )
-
-  pkg.generate(
-    name: meson.project_name() + '-static',
-    description: project_description,
-    extra_cflags: [ '-I${includedir}/dmiget' ],
-    libraries: [ '-ldmiget' ]
-  )
-
-else
-
-  pkg.generate(
-    name: meson.project_name(),
-    description: project_description,
-    extra_cflags: [ '-I${includedir}/dmiget' ],
-    libraries: [ '-ldmiget' ]
-  )
-
-  pkg.generate(
-    name: meson.project_name() + '-static',
-    description: project_description,
-    extra_cflags: [ '-I${includedir}/dmiget' ],
-    libraries: [ '-l:libdmiget.a' ]
-  )
-
-endif
-
-includes_dir = include_directories('src/include')
-
-#
 # Dependencies
 #
 lib_deps = [
+]
+
+app_src = [ 
+  'src/dmiget/dmiget.cc' 
 ]
 
 lib_src = [
@@ -164,14 +129,67 @@ lib_src = [
   'src/libdmiget/value/url.cc',
 ]
 
+includes_dir = include_directories('src/include')
+
+#
+# SDK
+# https://mesonbuild.com/Pkgconfig-module.html
+#
+pkg = import('pkgconfig')
+
 if host_machine.system() == 'windows'
+
+  # https://mesonbuild.com/Windows-module.html
+  windows = import('windows')
+  resources = windows.compile_resources(
+    configure_file(
+      input : 'src/libdmiget/os/windows/resources.rc.in',
+      output : 'resources.rc',
+      configuration : app_conf
+    )
+  )
+
+  lib_src += resources
+  app_src += resources
+
+  pkg.generate(
+    name: meson.project_name(),
+    description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
+    libraries: [ '-ldmiget.dll' ]
+  )
+
+  pkg.generate(
+    name: meson.project_name() + '-static',
+    description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
+    libraries: [ '-ldmiget' ]
+  )
+
   lib_src += [
     'src/libdmiget/os/windows/data.cc',
     'src/libdmiget/os/windows/fromfile.cc',
   ]
+
 	lib_deps += [
 	]
+
 else
+
+  pkg.generate(
+    name: meson.project_name(),
+    description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
+    libraries: [ '-ldmiget' ]
+  )
+
+  pkg.generate(
+    name: meson.project_name() + '-static',
+    description: project_description,
+    extra_cflags: [ '-I${includedir}/dmiget' ],
+    libraries: [ '-l:libdmiget.a' ]
+  )
+
   lib_src += [
     'src/libdmiget/os/linux/factory.cc',
     'src/libdmiget/os/linux/sysfs.cc',
@@ -224,54 +242,40 @@ else
 
   executable(
     meson.project_name(),
-    config_src + [ 'src/dmiget/dmiget.cc' ],
+    config_src + app_src,
     install: true,
     link_with : dynamic,
     install_dir: get_option('sbindir'),
     include_directories: includes_dir
   )
   
-#  configure_file(
-#    input : 'sdk/dynamic.pc.in',
-#    output : meson.project_name() + '.pc',
-#    install: true,
-#    install_dir: get_option('libdir') + '/pkgconfig',
-#    configuration : sdk_conf
-#  )
-
-#  configure_file(
-#    input : 'sdk/static.pc.in',
-#    output : meson.project_name() + '-static.pc',
-#    install: true,
-#    install_dir: get_option('libdir') + '/pkgconfig',
-#    configuration : sdk_conf
-#  )
-
 endif
 
 #
 # Check for python
 #
-py = dependency('python3',required:false)
-if py.found()
-  import('python').find_installation().extension_module(
-    'smbios',
-    config_src + [ 
-      'src/python/init.c',
-      'src/python/memsize.cc',
-      'src/python/moduleinfo.cc',
-      'src/python/node/methods.cc',
-      'src/python/node/type.c',
-      'src/python/tools.cc',
-      'src/python/value/methods.cc',
-      'src/python/value/type.c'
-    ],
-    install_tag: 'python',
-    install: true,
-	  dependencies: lib_deps + [ py ],
-    link_with : static,
-    include_directories: includes_dir
-  )
+if not meson.is_cross_build()
+  py = dependency('python3',required:false)
+  if py.found()
+    import('python').find_installation().extension_module(
+      'smbios',
+      config_src + [ 
+        'src/python/init.c',
+        'src/python/memsize.cc',
+        'src/python/moduleinfo.cc',
+        'src/python/node/methods.cc',
+        'src/python/node/type.c',
+        'src/python/tools.cc',
+        'src/python/value/methods.cc',
+        'src/python/value/type.c'
+      ],
+      install_tag: 'python',
+      install: true,
+      dependencies: lib_deps + [ py ],
+      link_with : static,
+      include_directories: includes_dir
+    )
+  endif
 endif
 
 install_headers(
