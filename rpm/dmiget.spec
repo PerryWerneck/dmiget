@@ -16,11 +16,9 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-%{?!python_module:%define python_module() python3-%{**}}
-
 Summary:		Get DMI information using URL format
 Name:			dmiget
-Version: 1.2.6
+Version:		1.0
 Release:		0
 License:		LGPL-3.0
 Source:			%{name}-%{version}.tar.xz
@@ -30,27 +28,32 @@ URL:			https://github.com/PerryWerneck/dmiget.git
 Group:			Development/Libraries/C and C++
 BuildRoot:		/var/tmp/%{name}-%{version}
 
-BuildRequires:	autoconf >= 2.61
-BuildRequires:	automake
-BuildRequires:	libtool
 BuildRequires:	binutils
 BuildRequires:	coreutils
-BuildRequires:	gcc-c++ >= 5
 
-BuildRequires:	pkgconfig(python3)
-BuildRequires:	%{python_module devel}
-BuildRequires:	%{python_module setuptools}
+%if "%{_vendor}" == "debbuild"
+BuildRequires:  meson-deb-macros
+BuildRequires:  python3-dev
+%else
+BuildRequires:	gcc-c++ >= 5
+%endif
+
+BuildRequires:  meson >= 0.61.4
 
 %description
 Tool to get information from DMI table using an url-like format.
 
 %define MAJOR_VERSION %(echo %{version} | cut -d. -f1)
 %define MINOR_VERSION %(echo %{version} | cut -d. -f2 | cut -d+ -f1)
-%define _libvrs %{MAJOR_VERSION}_%{MINOR_VERSION}
+%define _libvrs %{MAJOR_VERSION}
 
 %package -n lib%{name}%{_libvrs}
 Summary:    Core library for %{name}
 Group:      Development/Libraries/C and C++
+
+%if "%{_vendor}" == "debbuild"
+Provides:   lib%{name}%{_libvrs} = %{version}
+%endif
 
 %description -n lib%{name}%{_libvrs}
 C++ library to get DMI information using an URL-like format.
@@ -60,24 +63,24 @@ Summary:    C++ development files for lib%{name}
 Requires:   lib%{name}%{_libvrs} = %{version}
 Group:      Development/Libraries/C and C++
 
+%if "%{_vendor}" == "debbuild"
+Provides:  libdmiget-dev
+%endif
+
 %description devel
 Header files for the %{name} library.
 
 #---[ Build & Install ]-----------------------------------------------------------------------------------------------
 
 %prep
-%setup
-
-NOCONFIGURE=1 \
-	./autogen.sh
-
-%configure 
+%autosetup
+%meson
 
 %build
-make all
+%meson_build
 
 %install
-%makeinstall
+%meson_install
 
 %files
 %defattr(-,root,root)
@@ -87,7 +90,7 @@ make all
 %defattr(-,root,root)
 %doc README.md
 %license LICENSE
-%{_libdir}/lib*.so.*
+%{_libdir}/lib*.so.%{MAJOR_VERSION}
 
 %files devel
 %defattr(-,root,root)

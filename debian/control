@@ -1,0 +1,28 @@
+Source: dmiget
+Section: unknown
+Priority: optional
+Maintainer: Perry Werneck <perry.werneck@gmail.com>
+Build-Depends: debhelper (>= 7), meson, pkg-config, python3-dev
+
+Package: dmiget
+Architecture: any
+Section: libs
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Provides: dmiget (= ${binary:Version}), libdmiget (= ${binary:Version})
+Description: Tool & library to get DMI/SMBIOS info.
+ Get DMI information using URL format.
+
+Package: dmiget-dev
+Architecture: any
+Provides: dmiget-dev (= ${binary:Version}), libdmiget-dev (= ${binary:Version})
+Section: libdevel
+Depends: ${misc:Depends}, pkg-config, dmiget (= ${binary:Version})
+Description: libdmiget development files.
+ Development headers for dmiget
+
+Package: dmiget-dbg
+Architecture: any
+Depends: dmiget (= ${binary:Version})
+Description: Debugging symbols for dmiget
+ This package contains the debugging symbols for dmiget.
+

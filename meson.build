@@ -255,7 +255,7 @@ endif
 # Check for python
 #
 if not meson.is_cross_build()
-  py = dependency('python3',required:false)
+  py = dependency('python3',required:false,method : 'pkg-config')
   if py.found()
     import('python').find_installation().extension_module(
       'smbios',
