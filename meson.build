@@ -224,7 +224,7 @@ if cxx.get_id() == 'msvc'
     config_src + [ 'src/dmiget/dmiget.cc' ],
     install: true,
     link_with : static,
-    install_dir: get_option('sbindir'),
+    install_dir: get_option('bindir'),
     include_directories: includes_dir
   )
 
