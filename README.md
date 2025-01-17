@@ -1,5 +1,7 @@
 # Linux/Windows tool and library to get DMI data
 
+A versatile toolkit for accessing and extracting System Management BIOS (SMBIOS) data, available as a cross-platform Python, C, and C++ library with a convenient command-line interface.  This tool provides comprehensive support for parsing and interpreting SMBIOS structures, enabling retrieval of detailed system information such as hardware components, firmware versions, and manufacturer details.
+
 ![Platform: Linux/Windows](https://img.shields.io/badge/Platform-Linux/Windows-blue.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CodeQL Advanced](https://github.com/PerryWerneck/dmiget/actions/workflows/codeql.yml/badge.svg)](https://github.com/PerryWerneck/dmiget/actions/workflows/codeql.yml)
