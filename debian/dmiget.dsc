@@ -1,6 +1,6 @@
 Format: 1.0
 Source: dmiget
-Version: 2.2.0
+Version: 1.2.6+git20241213
 Binary: dmiget
 Maintainer: Perry Werneck <perry.werneck@gmail.com>
 Architecture: any

@@ -1,4 +1,19 @@
 -------------------------------------------------------------------
+Mon Jan 13 14:13:01 UTC 2025 - perry.werneck@gmail.com
+
+- Update to version 1.2.6+git20241213:
+  * Debugging deb package.
+  * Fixing warning.
+  * Publishing updated version 1.2.6
+  * Adding windows resource with version info.
+  * Tagging version 1.2.6
+  * Fixing pkgconfig files.
+  * Cleaning unused code.
+  * Fixing mingw package
+  * Debugging win package.
+  * Version 1.2.6
+
+-------------------------------------------------------------------
 Tue Oct  5 15:28:09 UTC 2021 - Perry Werneck <perry.werneck@gmail.com>
 
 - First build on OBS. 

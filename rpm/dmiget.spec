@@ -18,7 +18,7 @@
 
 Summary:		Get DMI information using URL format
 Name:			dmiget
-Version: 1.2.7
+Version:		1.2.6+git20241213
 Release:		0
 License:		LGPL-3.0
 Source:			%{name}-%{version}.tar.xz
@@ -28,17 +28,8 @@ URL:			https://github.com/PerryWerneck/dmiget.git
 Group:			Development/Libraries/C and C++
 BuildRoot:		/var/tmp/%{name}-%{version}
 
-BuildRequires:	binutils
-BuildRequires:	coreutils
-
-%if "%{_vendor}" == "debbuild"
-BuildRequires:  meson-deb-macros
-BuildRequires:  python3-dev
-%else
 BuildRequires:	gcc-c++ >= 5
-%endif
-
-BuildRequires:  meson >= 0.61.4
+BuildRequires:	meson
 
 %description
 Tool to get information from DMI table using an url-like format.
@@ -51,10 +42,6 @@ Tool to get information from DMI table using an url-like format.
 Summary:    Core library for %{name}
 Group:      Development/Libraries/C and C++
 
-%if "%{_vendor}" == "debbuild"
-Provides:   lib%{name}%{_libvrs} = %{version}
-%endif
-
 %description -n lib%{name}%{_libvrs}
 C++ library to get DMI information using an URL-like format.
 
@@ -62,10 +49,6 @@ C++ library to get DMI information using an URL-like format.
 Summary:    C++ development files for lib%{name}
 Requires:   lib%{name}%{_libvrs} = %{version}
 Group:      Development/Libraries/C and C++
-
-%if "%{_vendor}" == "debbuild"
-Provides:  libdmiget-dev
-%endif
 
 %description devel
 Header files for the %{name} library.
