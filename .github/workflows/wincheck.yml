@@ -1,4 +1,4 @@
-name: check-win64
+name: WinCheck
 on:
   push:
     branches: [ "win" ]
@@ -44,4 +44,4 @@ jobs:
       - name: Prepare Build
         run: meson setup --reconfigure .build
       - name: Run Build
-        run: meson compile -v -C .build dmiget:static_library
+        run: meson compile -v -C .build
