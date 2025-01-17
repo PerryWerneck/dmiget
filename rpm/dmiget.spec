@@ -18,7 +18,7 @@
 
 Summary:		Get DMI information using URL format
 Name:			dmiget
-Version: 1.2.6
+Version: 1.2.7
 Release:		0
 License:		LGPL-3.0
 Source:			%{name}-%{version}.tar.xz
