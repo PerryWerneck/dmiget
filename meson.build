@@ -204,7 +204,15 @@ endif
 if cxx.get_id() == 'msvc'
 
   static = static_library(
-    'lib'+ meson.project_name(), 
+    meson.project_name(), 
+    config_src + lib_src,
+    install: true,
+    dependencies: lib_deps,
+    include_directories: includes_dir
+  )
+
+  shared_library(
+    meson.project_name(), 
     config_src + lib_src,
     install: true,
     dependencies: lib_deps,
