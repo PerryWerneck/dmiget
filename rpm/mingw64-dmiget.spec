@@ -29,11 +29,7 @@ URL:			https://github.com/PerryWerneck/dmiget.git
 Group:			Development/Libraries/C and C++
 BuildRoot:		/var/tmp/%{name}-%{version}
 
-BuildRequires:	autoconf >= 2.61
-BuildRequires:	automake
-BuildRequires:	libtool
-BuildRequires:	coreutils
-
+BuildRequires:  mingw64-cross-meson
 BuildRequires:	mingw64-cross-binutils
 BuildRequires:	mingw64-cross-gcc-c++ >= 9.0
 BuildRequires:	mingw64-cross-pkg-config
@@ -42,17 +38,22 @@ BuildRequires:	mingw64-filesystem
 %description
 Tool to get information from DMI table using an url-like format.
 
-%package -n mingw64-libdmiget
+%define MAJOR_VERSION %(echo %{version} | cut -d. -f1)
+%define MINOR_VERSION %(echo %{version} | cut -d. -f2 | cut -d+ -f1)
+%define _libvrs %{MAJOR_VERSION}_%{MINOR_VERSION}
+
+%package -n mingw64-libdmiget%{_libvrs}
 Summary:    Core library for %{name}
 Group:      Development/Libraries/C and C++
 
-%description -n mingw64-libdmiget
+%description -n mingw64-libdmiget%{_libvrs}
 C++ library to get DMI information using an URL-like format.
 
 %package devel
-Summary:    C++ development files for lib%{name}
-Requires:   mingw64-libdmiget = %{version}
-Group:      Development/Libraries/C and C++
+Summary:	C++ development files for lib%{name}
+Group:		Development/Libraries/C and C++
+Requires:	mingw64-libdmiget%{_libvrs} = %{version}
+Provides:	mingw64(lib::libdmiget.a)
 
 %description devel
 Header files for the %{name} library.
@@ -60,18 +61,14 @@ Header files for the %{name} library.
 #---[ Build & Install ]-----------------------------------------------------------------------------------------------
 
 %prep
-%setup -n dmiget-%{version}
-
-NOCONFIGURE=1 \
-	./autogen.sh
-
-%{_mingw64_configure}
+%autosetup
+%_mingw64_meson
 
 %build
-make all %{?_smp_mflags}
+%_mingw64_meson_build
 
 %install
-%{_mingw64_make} DESTDIR=%{buildroot} install
+%_mingw64_meson_install
 
 %files
 %doc README.md
@@ -80,20 +77,21 @@ make all %{?_smp_mflags}
 %dir %{_mingw64_sbindir}
 %{_mingw64_sbindir}/dmiget.exe
 
-%files -n mingw64-libdmiget
+%files -n mingw64-libdmiget%{_libvrs}
 %defattr(-,root,root)
 %doc README.md
 %license LICENSE
 %{_mingw64_bindir}/*.dll
 
 %files devel
+%defattr(-,root,root)
 %doc README.md
 %license LICENSE
-%defattr(-,root,root)
 %{_mingw64_libdir}/pkgconfig/*.pc
 %{_mingw64_libdir}/*.a
 %dir %{_mingw64_includedir}/dmiget
-%{_mingw64_includedir}/dmiget/*.h
+%dir %{_mingw64_includedir}/dmiget/smbios
+%{_mingw64_includedir}/dmiget/smbios/*.h
 
 %exclude %{_mingw64_datadir}/dmiget
 

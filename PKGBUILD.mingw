@@ -1,22 +1,36 @@
 # Maintainer: Perry Werneck <perry.werneck@gmail.com>
 # References: https://www.msys2.org/wiki/Creating-Packages/
 
-_realname=dmiget
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
+# Copyright (C) 2024 Perry Werneck <perry.werneck@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+_realname="dmiget"
+pkgver="1.2.6"
+
 pkgname=${MINGW_PACKAGE_PREFIX}-${_realname}
 source=()
 
-#pkgver() {
-#  grep AC_INIT ${startdir}/configure.ac | cut -d[ -f3 | cut -d] -f1
-#}
-
-pkgver=1.1
-pkgrel=1
-pkgdesc="Get DMI information using URL format"
-url="https://github.com/PerryWerneck/dmiget"
+pkgrel=0
+pkgdesc="Library and application to read data from SMBIOS/DMI"
+url="https://github.com/PerryWerneck/${_realname}"
 arch=(i686 x86_64)
-license=(GPL)
+license=(LGPL-3.0-or-later)
 depends=()
-makedepends=(autoconf automake make libtool gzip)
+makedepends=(pkgconf gzip dos2unix ${MINGW_PACKAGE_PREFIX}-meson ${MINGW_PACKAGE_PREFIX}-gcc ${MINGW_PACKAGE_PREFIX}-gettext)
 checkdepends=()
 
 provides=($pkgname) 
@@ -24,27 +38,23 @@ conflicts=($pkgname)
 
 prepare() {
   rm -fr "$srcdir/$pkgname"
-  ln -snf "$startdir" "$srcdir/$pkgname"
+  mkdir -p "$srcdir/$pkgname"
+  cd ${startdir}
+  meson \
+    setup \
+      --prefix=/c/${MINGW_PREFIX} \
+      --reconfigure \
+      --wipe \
+      "$srcdir/$pkgname"
+
 }
 
 build() {
-  cd $pkgname
-  ./autogen.sh \
-    --prefix=${MINGW_PREFIX} \
-    --build=${MINGW_CHOST} \
-    --host=${MINGW_CHOST} \
-    --target=${MINGW_CHOST}
- 
-  make all
+  cd ${startdir}  
+  ninja -C "$srcdir/$pkgname"
 }
 
 package() {
-  cd $pkgname
-  make DESTDIR="${pkgdir}" install
-  install \
-    -Dm644 \
-    "LICENSE" \
-    "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  cd ${startdir} 
+  DESTDIR="${pkgdir}" meson install --tags=devel,runtime -C "$srcdir/$pkgname"
 }
-
-

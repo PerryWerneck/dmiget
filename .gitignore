@@ -54,7 +54,6 @@ vgcore.*
 ABOUT-NLS
 intl
 m4
-po
 
 # CodeBlocks
 *.layout
@@ -68,6 +67,6 @@ dist
 *.txt
 *.egg-info
 
-
-
-
+.vscode
+*.whl
+*.pdf

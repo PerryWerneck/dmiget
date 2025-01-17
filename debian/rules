@@ -8,11 +8,8 @@ export DH_VERBOSE=1
 # This is the debhelper compatibility version to use.
 export DH_COMPAT=9
 
-# Name of the library
-LIBRARY_NAME=libdmiget
-
 # Name of the package
-APPLICATION_NAME=dmiget
+PACKAGE_NAME=dmiget
 
 CFLAGS = -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -26,9 +23,7 @@ build-stamp:
 	dh_testdir
 
 	# Add here commands to compile the package.
-	NOCONFIGURE=1 ./autogen.sh 
-	./configure --prefix=/usr
-	make all
+	meson setup --prefix=/usr .build
 	# --- end custom part for compiling
 
 	touch build-stamp
@@ -51,17 +46,14 @@ install: build
 	dh_installdirs
 
 	# Build package
-	make all
-
-	# Install module
-	make DESTDIR=$(PWD)/debian/$(APPLICATION_NAME) install-application
+	meson compile -C .build
 
 	# Install library
-	make DESTDIR=$(PWD)/debian/$(LIBRARY_NAME) install-linux-lib
-	
+	DESTDIR=$(PWD)/debian/$(PACKAGE_NAME) meson install -C .build --tags runtime
+
 	# Install dev
-	make DESTDIR=$(PWD)/debian/$(LIBRARY_NAME)-dev install-devel
-  
+	DESTDIR=$(PWD)/debian/$(PACKAGE_NAME)-dev meson install -C .build --tags devel
+
 	# --- end custom part for installing
 
 # Build architecture-independent files here.
@@ -87,7 +79,7 @@ binary-arch: build install
 #	dh_undocumented
 	dh_installchangelogs
 	dh_link
-	dh_strip --dbg-package=$(LIBRARY_NAME)-dbg
+	dh_strip --dbg-package=$(PACKAGE_NAME)-dbg
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs

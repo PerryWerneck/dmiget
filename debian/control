@@ -2,34 +2,27 @@ Source: dmiget
 Section: unknown
 Priority: optional
 Maintainer: Perry Werneck <perry.werneck@gmail.com>
-Build-Depends: debhelper (>= 7), autotools-dev, autoconf, automake, pkg-config, gettext, python3-dev, python3-setuptools
-
-Package: libdmiget
-Architecture: any
-Section: libs
-Depends: ${misc:Depends}, ${shlibs:Depends}
-Provides: libdmiget (= ${binary:Version}), libdmiget (= 1.1)
-Description: Udjat core library.
- Get DMI information using URL format.
+Build-Depends: debhelper (>= 7), meson, pkg-config, python3-dev
 
 Package: dmiget
 Architecture: any
 Section: libs
-Depends: ${misc:Depends}, libdmiget (= ${binary:Version})
-Description: libudjat development files.
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Provides: dmiget (= ${binary:Version}), libdmiget (= ${binary:Version})
+Description: Tool & library to get DMI/SMBIOS info.
  Get DMI information using URL format.
 
-Package: libdmiget-dev
+Package: dmiget-dev
 Architecture: any
-Provides: libdmiget-dev (= ${binary:Version})
+Provides: dmiget-dev (= ${binary:Version}), libdmiget-dev (= ${binary:Version})
 Section: libdevel
-Depends: ${misc:Depends}, pkg-config, libdmiget (= ${binary:Version})
-Description: libudjat development files.
- Development files for libdmiget.
+Depends: ${misc:Depends}, pkg-config, dmiget (= ${binary:Version})
+Description: libdmiget development files.
+ Development headers for dmiget
 
-Package: libdmiget-dbg
+Package: dmiget-dbg
 Architecture: any
-Depends: libudjat (= ${binary:Version})
-Description: Debugging symbols for libdmiget
- This package contains the debugging symbols for libdmiget.
+Depends: dmiget (= ${binary:Version})
+Description: Debugging symbols for dmiget
+ This package contains the debugging symbols for dmiget.
 

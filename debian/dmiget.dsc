@@ -1,13 +1,13 @@
 Format: 1.0
 Source: dmiget
-Version: 1.0-0
+Version: 2.2.0
 Binary: dmiget
 Maintainer: Perry Werneck <perry.werneck@gmail.com>
 Architecture: any
-Build-Depends: debhelper (>= 7), autotools-dev, autoconf, automake, pkg-config, gettext, python3-dev, python3-setuptools
+Build-Depends: debhelper (>= 7), meson, pkg-config, python3-dev
 Standards-Version: 3.9.1.0
 DEBTRANSFORM-RELEASE: 1
 Files: 
- 00000000000000000000000000000000 000000 dmiget-1.0.tar.bz2
+ 00000000000000000000000000000000 000000 dmiget-2.2.0.tar.bz2
 
 

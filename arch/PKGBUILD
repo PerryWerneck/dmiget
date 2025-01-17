@@ -9,7 +9,7 @@ url="https://github.com/PerryWerneck/dmiget"
 arch=(i686 x86_64)
 license=(GPL)
 depends=()
-makedepends=(autoconf automake make python)
+makedepends=(meson make python)
 checkdepends=()
 
 #groups=(gnome)
@@ -22,20 +22,19 @@ conflicts=($pkgname)
 
 prepare() {
   cd $pkgname-$pkgver
-  mkdir -p scripts
-  touch scripts/config.rpath
-  NOCONFIGURE=1 ./autogen.sh
-  ./configure --prefix=/usr
+  meson \
+    setup \
+      --reconfigure \
+      --wipe \
+      ".build"
 }
 
 build() {
   cd $pkgname-$pkgver
-  make all
+  meson compile -C ".build"
 }
 
 package() {
   cd $pkgname-$pkgver
-  DESTDIR="$pkgdir" make install
+  DESTDIR="${pkgdir}" meson install -C ".build"
 }
-
-

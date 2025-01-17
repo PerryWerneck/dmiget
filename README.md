@@ -2,7 +2,7 @@
 
 ![Platform: Linux/Windows](https://img.shields.io/badge/Platform-Linux/Windows-blue.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![CodeQL](https://github.com/PerryWerneck/dmiget/workflows/CodeQL/badge.svg?branch=master)
+[![CodeQL Advanced](https://github.com/PerryWerneck/dmiget/actions/workflows/codeql.yml/badge.svg)](https://github.com/PerryWerneck/dmiget/actions/workflows/codeql.yml)
 [![build result](https://build.opensuse.org/projects/home:PerryWerneck:udjat/packages/dmiget/badge.svg?type=percent)](https://build.opensuse.org/package/show/home:PerryWerneck:udjat/dmiget)
 [![PyPI version](https://badge.fury.io/py/smbios.svg)](https://badge.fury.io/py/smbios)
 
