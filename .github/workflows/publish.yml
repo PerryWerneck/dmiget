@@ -44,6 +44,11 @@ jobs:
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v3
+      - uses: oprypin/find-latest-tag@v1
+        id: gettag
+        with:
+          repository: PerryWerneck/dmiget
+          releases-only: true
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -62,8 +67,18 @@ jobs:
         run: meson install --no-rebuild --destdir=package -C .build
       - name: Pack
         run: |
-          cd build\package
+          cd .build\package
           7z a -r ..\..\msvc-dmiget-x86_64.zip .
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.gettag.outputs.tag }}
+          artifacts: "msvc-dmiget-x86_64.zip"
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          omitBody: true
+          omitPrereleaseDuringUpdate: true
+          replacesArtifacts: true
 #  pypi:
 #    runs-on: ubuntu-latest
 #    name: Publish to pypi
