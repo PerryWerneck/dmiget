@@ -62,14 +62,14 @@
 	static const Decoder::Item *EmptyTable = &null_item;
 	static const Decoder::String decoder_string;
 
-	static const Decoder::Item chassis_serial = { 
+	static const Decoder::Item chassis_serial{ 
 		"serial",			
 		decoder_string,					
 		0x07,	
 		"Serial Number"				
 	};
 
-	static const Decoder::Item chassis_atag = { 
+	static const Decoder::Item chassis_atag{ 
 		"atag",			
 		decoder_string,					
 		0x08,	
@@ -82,7 +82,7 @@
 		null_item
 	};
 
-	static const Decoder::Item baseboard_atag = { 
+	static const Decoder::Item baseboard_atag{ 
 		"atag",			
 		decoder_string,					
 		0x08,		
