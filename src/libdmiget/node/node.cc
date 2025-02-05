@@ -30,6 +30,7 @@
  #include <smbios/node.h>
  #include <private/data.h>
  #include <private/decoders.h>
+ #include <system_error>
 
  using namespace std;
 
