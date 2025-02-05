@@ -34,6 +34,10 @@
  //		 https://github.com/acidanthera/dmidecode
  //
 
+ #ifdef HAVE_CONFIG_H
+	#include <config.h>
+ #endif // HAVE_CONFIG_H
+
  #include <smbios/defs.h>
  #include <private/decoders.h>
  #include <private/decoders/memory.h>
@@ -50,6 +54,11 @@
  using namespace std;
 
  namespace SMBios {
+ #ifdef LEGACY_COMPILER
+
+
+
+ #else
 
 	static const Decoder::Item EmptyTable[] = {
 		{}
@@ -632,5 +641,6 @@
 		return get(*data->get(offset));
 	}
 
+#endif // LEGACY_COMPILER
  }
 
