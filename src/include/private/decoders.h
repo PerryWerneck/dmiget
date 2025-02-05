@@ -35,6 +35,9 @@
  #include <private/data.h>
  #include <smbios/value.h>
  #include <smbios/node.h>
+ #include <system_error>
+
+ using namespace std;
 
  namespace SMBios {
 
