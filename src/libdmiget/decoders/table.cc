@@ -54,9 +54,61 @@
  using namespace std;
 
  namespace SMBios {
+
  #ifdef LEGACY_COMPILER
 
+	static const Decoder::Item null_item;
+	static const Decoder::Item *EmptyTable = &null_item;
+	static const Decoder::String decoder_string;
 
+	static const Decoder::Item chassis_serial = { 
+		"serial",			
+		decoder_string,					
+		0x07,	
+		"Serial Number"				
+	};
+
+	static const Decoder::Item chassis_atag = { 
+		"atag",			
+		decoder_string,					
+		0x08,	
+		"Asset Tag"					
+	};
+
+	static const Decoder::Item Chassis[] = {
+		chassis_serial,
+		chassis_atag,
+		null_item
+	};
+
+	static const Decoder::Item baseboard_atag = { 
+		"atag",			
+		decoder_string,					
+		0x08,		
+		"Asset Tag"				
+	};
+
+	static const Decoder::Item BaseBoard[] = {
+		baseboard_atag,
+		null_item	
+	};
+
+	static const Decoder::Type decoders[] = {
+		{
+			2,
+			false,
+			"BaseBoard",
+			"Base Board",
+			BaseBoard
+		},
+		{
+			3,
+			false,
+			"Chassis",
+			"Chassis Information",
+			Chassis
+		},
+	};
 
  #else
 
@@ -576,6 +628,8 @@
 
 	};
 
+#endif // LEGACY_COMPILER
+
 	const Decoder::Type * Decoder::get(const uint8_t type) {
 
 		if(type >= 128) {
@@ -641,6 +695,5 @@
 		return get(*data->get(offset));
 	}
 
-#endif // LEGACY_COMPILER
  }
 
