@@ -48,6 +48,7 @@
  #include <private/decoders/chassis.h>
  #include <private/decoders/baseboard.h>
  #include <private/decoders/tpm.h>
+ #include <system_error>
 
  #include <stdexcept>
 
