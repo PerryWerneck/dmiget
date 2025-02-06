@@ -31,6 +31,7 @@
 
  #pragma once
 
+ #include <config.h>
  #include <smbios/defs.h>
  #include <private/data.h>
  #include <smbios/value.h>
@@ -102,6 +103,14 @@
 			uint8_t offset = 0xFF;
 			const char *description = nullptr;
 
+#ifdef LEGACY_COMPILER
+			constexpr Item(const Worker &w) : worker{w} {
+			}
+
+			constexpr Item(const char *n, const Worker &w, uint8_t o, const char *d) : name{n}, worker{w}, offset{o}, description{d} {
+			}
+#endif // LEGACY_COMPILER
+
 		};
 
 		struct Type {
@@ -114,9 +123,11 @@
 
 			std::shared_ptr<SMBios::Value> (*factory)(const Decoder::Type &type, std::shared_ptr<Data> data, int offset, size_t item) = Value::factory;
 
+#ifdef LEGACY_COMPILER
 			constexpr Type(uint8_t t, bool m, const char *n, const char *d, const Item *i)
 				: type{t},multiple{m},name{n},description{d},itens{i} {
 			}
+#endif // LEGACY_COMPILER
 
 		};
 

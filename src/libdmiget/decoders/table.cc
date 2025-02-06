@@ -58,7 +58,8 @@
 
  #ifdef LEGACY_COMPILER
 
-	static const Decoder::Item null_item;
+	static const Decoder::Worker null_worker;
+	static const Decoder::Item null_item{null_worker};
 	static const Decoder::Item *EmptyTable = &null_item;
 	static const Decoder::String decoder_string;
 
