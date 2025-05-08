@@ -49,7 +49,6 @@ compiler_flags_common = [
   '-fvisibility=hidden',
   '-DHAVE_CONFIG_H=1',
   '-ggdb3',
-  '-ffat-lto-objects',
   '-fPIC',
 	]
 
@@ -234,6 +233,7 @@ else
     meson.project_name(), 
     config_src + lib_src,
     install: true,
+    cpp_args: [ '-ffat-lto-objects' ],
     gnu_symbol_visibility: 'hidden',
     dependencies: lib_deps,
     soversion: pkg_major_version,
