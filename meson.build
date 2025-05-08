@@ -244,6 +244,7 @@ else
     meson.project_name(), 
     config_src + lib_src,
     install: true,
+    cpp_args: [ '-fno-lto' ],
     dependencies: lib_deps,
     include_directories: includes_dir
   )
