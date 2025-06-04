@@ -121,6 +121,21 @@
 
 	}
 
+	bool Node::for_each(const std::function<bool(const char *value)> &call) const {
+
+		if(*this) {
+			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
+				std::string str = value->as_string();
+				if(!str.empty() && call(str.c_str())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	
+	}
+
 	bool Node::for_each(const std::function<bool(const Node &node, const size_t index, const Value &v)> &call) {
 
 		size_t indexes[0x0100];
