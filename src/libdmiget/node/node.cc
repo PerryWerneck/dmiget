@@ -212,4 +212,21 @@
 
 	}
 
+	std::vector<std::string> Node::values() const {
+
+		std::vector<std::string> values;
+
+		if(*this) {
+			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
+				std::string str = value->as_string();
+				if(!str.empty()) {
+					values.push_back(str);
+				}
+			}
+		}
+
+		return values;
+	
+	}
+
  }
