@@ -210,7 +210,7 @@ if cxx.get_id() == 'msvc'
     include_directories: includes_dir
   )
 
-  shared_library(
+  dynamic = shared_library(
     meson.project_name(), 
     config_src + lib_src,
     install: true,
@@ -262,6 +262,11 @@ endif
 
 static_library = declare_dependency(
   link_with : static,
+  include_directories : includes_dir,
+) 
+
+dynamic_library = declare_dependency(
+  link_with : dynamic,
   include_directories : includes_dir,
 ) 
 
