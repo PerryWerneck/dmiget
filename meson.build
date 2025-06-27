@@ -260,6 +260,11 @@ else
   
 endif
 
+static_library = declare_dependency(
+  link_with : static,
+  include_directories : includes_dir,
+) 
+
 #
 # Check for python
 #
