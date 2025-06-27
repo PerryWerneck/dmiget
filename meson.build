@@ -20,7 +20,7 @@
 project(
 	'dmiget', 
 	['c', 'cpp'],
-	version: '1.2.6',
+	version: '1.2.8',
 	default_options : ['c_std=c11', 'cpp_std=c++17'],
 	license: 'GPL-3.0-or-later',
 )
@@ -49,7 +49,6 @@ compiler_flags_common = [
   '-fvisibility=hidden',
   '-DHAVE_CONFIG_H=1',
   '-ggdb3',
-  '-ffat-lto-objects',
   '-fPIC',
 	]
 
@@ -204,7 +203,15 @@ endif
 if cxx.get_id() == 'msvc'
 
   static = static_library(
-    'lib'+ meson.project_name(), 
+    meson.project_name(), 
+    config_src + lib_src,
+    install: true,
+    dependencies: lib_deps,
+    include_directories: includes_dir
+  )
+
+  dynamic = shared_library(
+    meson.project_name(), 
     config_src + lib_src,
     install: true,
     dependencies: lib_deps,
@@ -216,7 +223,7 @@ if cxx.get_id() == 'msvc'
     config_src + [ 'src/dmiget/dmiget.cc' ],
     install: true,
     link_with : static,
-    install_dir: get_option('sbindir'),
+    install_dir: get_option('bindir'),
     include_directories: includes_dir
   )
 
@@ -226,6 +233,7 @@ else
     meson.project_name(), 
     config_src + lib_src,
     install: true,
+    cpp_args: [ '-ffat-lto-objects' ],
     gnu_symbol_visibility: 'hidden',
     dependencies: lib_deps,
     soversion: pkg_major_version,
@@ -236,6 +244,7 @@ else
     meson.project_name(), 
     config_src + lib_src,
     install: true,
+    cpp_args: [ '-fno-lto' ],
     dependencies: lib_deps,
     include_directories: includes_dir
   )
@@ -250,6 +259,16 @@ else
   )
   
 endif
+
+static_library = declare_dependency(
+  link_with : static,
+  include_directories : includes_dir,
+) 
+
+dynamic_library = declare_dependency(
+  link_with : dynamic,
+  include_directories : includes_dir,
+) 
 
 #
 # Check for python

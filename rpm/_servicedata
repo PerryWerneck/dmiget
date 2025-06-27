@@ -1,0 +1,4 @@
+<servicedata>
+<service name="tar_scm">
+                <param name="url">https://github.com/PerryWerneck/dmiget.git</param>
+              <param name="changesrevision">4c6324ced32c1da71bd550b845ad50a7fd3258f0</param></service></servicedata>

@@ -109,6 +109,8 @@
 		bool for_each(const std::function<bool(const Value &v)> &call) const;
 		bool for_each(const std::function<bool(std::shared_ptr<Value> value)> &call) const;
 
+		std::vector<std::string> values() const;
+
 		Value::Iterator begin();
 		Value::Iterator end();
 

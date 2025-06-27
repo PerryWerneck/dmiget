@@ -30,6 +30,7 @@
  #include <smbios/node.h>
  #include <private/data.h>
  #include <private/decoders.h>
+ #include <system_error>
 
  using namespace std;
 
@@ -209,6 +210,23 @@
 
 		throw std::system_error(ENOENT,std::system_category());
 
+	}
+
+	std::vector<std::string> Node::values() const {
+
+		std::vector<std::string> values;
+
+		if(*this) {
+			for(auto value = decoder->factory(*decoder,data,offset,0);*value;value->next()) {
+				std::string str = value->as_string();
+				if(!str.empty()) {
+					values.push_back(str);
+				}
+			}
+		}
+
+		return values;
+	
 	}
 
  }
