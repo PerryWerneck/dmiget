@@ -94,9 +94,6 @@ config_src = [
 #
 # Dependencies
 #
-lib_deps = [
-]
-
 app_src = [ 
   'src/dmiget/dmiget.cc' 
 ]
@@ -170,9 +167,6 @@ if host_machine.system() == 'windows'
     'src/libdmiget/os/windows/fromfile.cc',
   ]
 
-	lib_deps += [
-	]
-
 else
 
   pkg.generate(
@@ -193,8 +187,7 @@ else
     'src/libdmiget/os/linux/factory.cc',
     'src/libdmiget/os/linux/sysfs.cc',
   ]
-	lib_deps += [
-	]
+
 endif
 
 #
@@ -206,7 +199,6 @@ if cxx.get_id() == 'msvc'
     meson.project_name(), 
     config_src + lib_src,
     install: true,
-    dependencies: lib_deps,
     include_directories: includes_dir
   )
 
@@ -214,7 +206,6 @@ if cxx.get_id() == 'msvc'
     meson.project_name(), 
     config_src + lib_src,
     install: true,
-    dependencies: lib_deps,
     include_directories: includes_dir
   )
 
@@ -235,7 +226,6 @@ else
     install: true,
     cpp_args: [ '-ffat-lto-objects' ],
     gnu_symbol_visibility: 'hidden',
-    dependencies: lib_deps,
     soversion: pkg_major_version,
     include_directories: includes_dir
   )
@@ -245,7 +235,6 @@ else
     config_src + lib_src,
     install: true,
     cpp_args: [ '-fno-lto' ],
-    dependencies: lib_deps,
     include_directories: includes_dir
   )
 
@@ -290,7 +279,7 @@ if not meson.is_cross_build()
       ],
       install_tag: 'python',
       install: true,
-      dependencies: lib_deps + [ py ],
+      dependencies: [ py ],
       link_with : static,
       include_directories: includes_dir
     )
