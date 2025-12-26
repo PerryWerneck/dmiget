@@ -154,7 +154,7 @@ AS_VAR_POPDEF([CACHEVAR])dnl
 AX_CHECK_COMPILE_FLAG([-std=c++1z], [CPPFLAGS="$CPPFLAGS -std=c++1z"], [app_cv_c17=no])
 
 if test "$app_cv_c17" == "no"; then
-	AX_CHECK_COMPILE_FLAG([-std=c++11], [CPPFLAGS="$CPPFLAGS -std=c++11 -DLEGACY_COMPILES=1"], [app_cv_c11=no])
+	AX_CHECK_COMPILE_FLAG([-std=c++11], [CPPFLAGS="$CPPFLAGS -std=c++11 -DLEGACY_COMPILER=1"], [app_cv_c11=no])
 fi
 
 dnl ---------------------------------------------------------------------------
