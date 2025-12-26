@@ -9,10 +9,10 @@ src/libdmiget/decoders/probes.cc
 src/libdmiget/decoders/processor.cc
 src/libdmiget/decoders/string.cc
 src/libdmiget/decoders/system.cc
-src/libdmiget/decoders/tools.cc
-src/libdmiget/decoders/value.cc
 src/libdmiget/decoders/table.cc
+src/libdmiget/decoders/tools.cc
 src/libdmiget/decoders/tpm.cc
+src/libdmiget/decoders/value.cc
 src/libdmiget/node/foreach.cc
 src/libdmiget/node/iterator.cc
 src/libdmiget/node/next.cc
