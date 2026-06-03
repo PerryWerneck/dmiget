@@ -45,7 +45,10 @@
 		// https://chen-jiao.github.io/articles/2016/11/09/How-to-access-SMBIOS-in-Windows.html
 		// Use GetSystemFirmwareTable
 
+		#pragma GCC diagnostic push
+		#pragma GCC diagnostic ignored "-Wmultichar"
 		DWORD smbiosdatasize = GetSystemFirmwareTable('RSMB',0,NULL,0);
+		#pragma GCC diagnostic pop
 
 		if(smbiosdatasize) {
 
@@ -53,7 +56,10 @@
 
 			try {
 
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wmultichar"
 				DWORD bytesread = GetSystemFirmwareTable('RSMB',0,buffer,smbiosdatasize);
+				#pragma GCC diagnostic pop
 
 				if(bytesread == smbiosdatasize) {
 
