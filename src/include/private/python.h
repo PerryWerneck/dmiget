@@ -23,10 +23,10 @@
 
  #pragma once
 
- #include <smbios/defs.h>
-
  #define PY_SSIZE_T_CLEAN
  #include <Python.h>
+
+ #include <smbios/defs.h>
 
  #ifdef __cplusplus
  #include <memory>
