@@ -20,8 +20,13 @@
 project(
 	'dmiget', 
 	['c', 'cpp'],
-	version: '1.2.8',
-	default_options : ['c_std=c11', 'cpp_std=c++17'],
+	version: '1.2.9',
+	default_options : [
+    'c_std=c11', 
+    'cpp_std=c++17', 
+    'buildtype=release', 
+    'default_library=both',
+  ],
 	license: 'GPL-3.0-or-later',
 )
 
@@ -176,13 +181,6 @@ else
     libraries: [ '-ldmiget' ]
   )
 
-  pkg.generate(
-    name: meson.project_name() + '-static',
-    description: project_description,
-    extra_cflags: [ '-I${includedir}/dmiget' ],
-    libraries: [ '-l:libdmiget.a' ]
-  )
-
   lib_src += [
     'src/libdmiget/os/linux/factory.cc',
     'src/libdmiget/os/linux/sysfs.cc',
@@ -195,14 +193,7 @@ endif
 #
 if cxx.get_id() == 'msvc'
 
-  static = static_library(
-    meson.project_name(), 
-    config_src + lib_src,
-    install: true,
-    include_directories: includes_dir
-  )
-
-  dynamic = shared_library(
+  libdmiget = library(
     meson.project_name(), 
     config_src + lib_src,
     install: true,
@@ -213,14 +204,14 @@ if cxx.get_id() == 'msvc'
     meson.project_name(),
     config_src + [ 'src/dmiget/dmiget.cc' ],
     install: true,
-    link_with : static,
+    link_with : libdmiget,
     install_dir: get_option('bindir'),
     include_directories: includes_dir
   )
 
 else
 
-  dynamic = shared_library(
+  libdmiget = library(
     meson.project_name(), 
     config_src + lib_src,
     install: true,
@@ -230,32 +221,19 @@ else
     include_directories: includes_dir
   )
 
-  static = static_library(
-    meson.project_name(), 
-    config_src + lib_src,
-    install: true,
-    cpp_args: [ '-fno-lto' ],
-    include_directories: includes_dir
-  )
-
   executable(
     meson.project_name(),
     config_src + app_src,
     install: true,
-    link_with : dynamic,
+    link_with : libdmiget,
     install_dir: get_option('sbindir'),
     include_directories: includes_dir
   )
   
 endif
 
-static_library = declare_dependency(
-  link_with : static,
-  include_directories : includes_dir,
-) 
-
-dynamic_library = declare_dependency(
-  link_with : dynamic,
+libdmiget_dep = declare_dependency(
+  link_with : libdmiget,
   include_directories : includes_dir,
 ) 
 
@@ -267,7 +245,7 @@ if not meson.is_cross_build()
   if py.found()
     import('python').find_installation().extension_module(
       'smbios',
-      config_src + [ 
+      config_src + lib_src + [ 
         'src/python/init.c',
         'src/python/memsize.cc',
         'src/python/moduleinfo.cc',
@@ -280,7 +258,6 @@ if not meson.is_cross_build()
       install_tag: 'python',
       install: true,
       dependencies: [ py ],
-      link_with : static,
       include_directories: includes_dir
     )
   endif
