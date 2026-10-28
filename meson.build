@@ -202,9 +202,8 @@ if cxx.get_id() == 'msvc'
 
   executable(
     meson.project_name(),
-    config_src + [ 'src/dmiget/dmiget.cc' ],
+    config_src + lib_src + [ 'src/dmiget/dmiget.cc' ],
     install: true,
-    link_with : libdmiget,
     install_dir: get_option('bindir'),
     include_directories: includes_dir
   )
